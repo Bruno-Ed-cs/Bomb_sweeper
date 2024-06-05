@@ -13,6 +13,9 @@
 
 
 Player player = { 0 };
+Vector2 last_pos = { 0,0 };
+extern double dt;
+extern Tile tilemap[10][10];
 
 void PlayerInit()
 {
@@ -28,10 +31,22 @@ void PlayerInit()
 
 };
 
+void IsPlayerMoving()
+{
+    if (player.position.x == last_pos.x && player.position.y == last_pos.y)
+    {
+        player.move = false;
+    } else 
+    {
+        player.move = true;
+    }
+
+    last_pos = player.position;
+
+}
+
 
 void PlayerMovement() {
-
-    extern double dt;
 
     if (IsKeyDown(KEY_W) || IsGamepadButtonDown(0 , GAMEPAD_BUTTON_LEFT_FACE_UP)) {
         player.position.y -= player.speed * dt;
@@ -50,25 +65,53 @@ void PlayerMovement() {
         player.direction = LEFT;
     }
 
-    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D)
-        || IsGamepadButtonDown(0 , GAMEPAD_BUTTON_LEFT_FACE_DOWN)
-        || IsGamepadButtonDown(0 , GAMEPAD_BUTTON_LEFT_FACE_LEFT)
-        || IsGamepadButtonDown(0 , GAMEPAD_BUTTON_LEFT_FACE_RIGHT)
-        || IsGamepadButtonDown(0 , GAMEPAD_BUTTON_LEFT_FACE_UP)
-    )
+}
+
+void PlayerCollision()
+{
+    for (int i = 0; i < 10; i++) 
     {
-        player.move = true;
-    } else {
-        player.move = false;
+        for (int j = 0; j < 10; j++) {
+
+            if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
+            {
+                if (tilemap[i][j].type == WALL)
+                {
+
+                    switch (player.direction) {
+
+                        case UP:
+                            player.position.y += player.speed * dt; 
+                            break;
+                        case DOWN:
+                            player.position.y -= player.speed * dt; 
+                            break;
+
+                        case LEFT:
+                            player.position.x += player.speed * dt; 
+                            break;
+
+                        case RIGHT:
+                            player.position.x -= player.speed * dt; 
+                            break;
+                    }
+
+
+                }
+            }
+
+
+        }
+
     }
-
-
 }
 
 void PlayerUpdate(){
 
 
     PlayerMovement();
+    IsPlayerMoving();
+    PlayerCollision();
     player.view.x = player.position.x - (player.view.width /2) ;
     player.view.y = player.position.y - (player.view.height /1.5);
     player.hitbox.x = player.position.x - (player.hitbox.width /2);

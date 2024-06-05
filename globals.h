@@ -21,6 +21,18 @@
 #define LEFT 3
 #define RIGHT 2
 
+#define AIR 0
+#define FLOOR 2
+#define WALL 1
+
+typedef struct Tile{
+
+	Vector2 tile_pos;
+	int type;
+	Rectangle tile;
+
+} Tile;
+
 typedef struct Player {
 
 	Vector2 position;
@@ -38,4 +50,9 @@ typedef struct Player {
 void PlayerInit();
 void PlayerMovement();
 void PlayerUpdate();
+void IsPlayerMoving();
+void PlayerCollision();
+
+
+void PopulateTilemap(int size, Tile tilemap[size][size], int origin[size][size]);
 

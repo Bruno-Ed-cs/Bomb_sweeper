@@ -19,15 +19,19 @@ bool debug = true;
 
 int main()
 {
-   
+
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screen.width, screen.height, "Bombsweeper 0.0 Pre-alpha");
 
     SetWindowMinSize(INIT_WIDTH, INIT_HEIGHT);
- 
+
     extern Player player;
+    extern int map[10][10];
+    extern Tile tilemap[10][10];
+
 
     PlayerInit();
+    PopulateTilemap(10, tilemap, map);
 
     camera.target = (Vector2){player.position.x, player.position.y};
     camera.zoom = 3.0f;
@@ -43,10 +47,24 @@ int main()
         {
             screen.height = GetMonitorHeight(GetCurrentMonitor());
             screen.width = GetMonitorWidth(GetCurrentMonitor());
+
         } else 
-        {
+    {
             screen.height = GetScreenHeight();
             screen.width = GetScreenWidth();
+
+        }
+
+
+        if (IsKeyPressed(KEY_ENTER) && IsKeyDown(KEY_LEFT_ALT))
+        {
+
+            ToggleFullscreen();
+
+
+            SetWindowSize(screen.width, screen.height); //quando a tela cheia é ativada ou desativada atualizamos o tamanho da janela para que todos os valores dependent delas continuem corretos
+
+
         }
 
         PlayerUpdate();
@@ -59,10 +77,6 @@ int main()
             debug = !debug;    
         }
 
-        if (IsKeyPressed(KEY_ENTER) && IsKeyDown(KEY_LEFT_ALT))
-        {
-            ToggleFullscreen();
-        }
 
         BeginDrawing();
 
@@ -86,6 +100,15 @@ int main()
         {
             DrawRectangleLinesEx(player.hitbox, 1.0f, RED);
             DrawCircleV(player.position, 2.0f, RED);
+            for (int i = 0; i < 10; i++) 
+            {
+                for (int j = 0; j < 10; j++) {
+
+                    DrawRectangleLinesEx(tilemap[i][j].tile, 1.0f, RED);
+
+               }
+
+            }
         }
 
         EndMode2D();
@@ -94,9 +117,12 @@ int main()
         if (debug)
         {
             char debug_pos[200];
+            char debug_move[200];
             sprintf(debug_pos, "X = %.2lf\nY = %.2lf\n", player.position.x, player.position.y);
+            sprintf(debug_move, "Moving = %d", player.move);
 
             DrawText(debug_pos, screen.width -200, screen.height -40, 20, GREEN);
+            DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
 
             DrawFPS(0, 0);
 
