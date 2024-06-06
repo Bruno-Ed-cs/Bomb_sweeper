@@ -13,27 +13,28 @@
 
 
 Player player = { 0 };
-Vector2 last_pos = { 0,0 };
 extern double dt;
 extern Tile tilemap[10][10];
 
 void PlayerInit()
 {
 
-    player.position = (Vector2){0, 0};
-    player.hitbox = (Rectangle){INIT_X, INIT_Y, TILE_SIZE -4, TILE_SIZE -4};
+    player.position = (Vector2){50, 50};
+    player.hitbox = (Rectangle){INIT_X, INIT_Y, TILE_SIZE -8, TILE_SIZE -8};
     player.frame = (Rectangle){0, 0, TILE_SIZE, TILE_SIZE * 2};
     player.view = (Rectangle){INIT_X, INIT_Y, TILE_SIZE, TILE_SIZE * 2};
     player.sprite = LoadTexture("./assets/sprites/Connor_fodder.png");
-    player.speed = 150.0f;
+    player.speed = 50.0f;
     player.move = false;
+    player.colliding = false;
     player.direction = DOWN;
+    player.previous_pos = (Vector2){0, 0};
 
 };
 
 void IsPlayerMoving()
 {
-    if (player.position.x == last_pos.x && player.position.y == last_pos.y)
+    if (player.position.x == player.previous_pos.x && player.position.y == player.previous_pos.y)
     {
         player.move = false;
     } else 
@@ -41,31 +42,36 @@ void IsPlayerMoving()
         player.move = true;
     }
 
-    last_pos = player.position;
-
 }
 
 
 void PlayerMovement() {
 
-    if (IsKeyDown(KEY_W) || IsGamepadButtonDown(0 , GAMEPAD_BUTTON_LEFT_FACE_UP)) {
+    if (IsKeyDown(KEY_W)) {
         player.position.y -= player.speed * dt;
+
+        player.hitbox.y = player.position.y- (player.hitbox.height /2);
         player.direction = UP;
     }
-    else if (IsKeyDown(KEY_S)|| IsGamepadButtonDown(0 , GAMEPAD_BUTTON_LEFT_FACE_DOWN)) {
+    else if (IsKeyDown(KEY_S) && !(player.colliding)) {
         player.position.y += player.speed * dt;
+        player.hitbox.y = player.position.y- (player.hitbox.height /2);
         player.direction = DOWN;
     }
-    else if (IsKeyDown(KEY_D)|| IsGamepadButtonDown(0 , GAMEPAD_BUTTON_LEFT_FACE_RIGHT)) {
+    if (IsKeyDown(KEY_D) && !(player.colliding)) {
         player.position.x  += player.speed * dt;
+        player.hitbox.x = player.position.x- (player.hitbox.width /2);
         player.direction = RIGHT;
     }
-    else if (IsKeyDown(KEY_A)|| IsGamepadButtonDown(0 , GAMEPAD_BUTTON_LEFT_FACE_LEFT)) {
+    else if(IsKeyDown(KEY_A) && !(player.colliding)) {
         player.position.x -= player.speed * dt;
+        player.hitbox.x = player.position.x- (player.hitbox.width /2);
         player.direction = LEFT;
     }
+    
 
 }
+
 
 void PlayerCollision()
 {
@@ -75,28 +81,58 @@ void PlayerCollision()
 
             if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
             {
+
                 if (tilemap[i][j].type == WALL)
                 {
+                    player.colliding = true;
 
-                    switch (player.direction) {
+                    player.position = player.previous_pos;
 
-                        case UP:
-                            player.position.y += player.speed * dt; 
-                            break;
-                        case DOWN:
-                            player.position.y -= player.speed * dt; 
-                            break;
+                    player.hitbox.y = player.position.y- (player.hitbox.height /2);
 
-                        case LEFT:
-                            player.position.x += player.speed * dt; 
-                            break;
+                    player.hitbox.x = player.position.x- (player.hitbox.width /2);
 
-                        case RIGHT:
-                            player.position.x -= player.speed * dt; 
-                            break;
+
+                    // Resolve collision by moving the player out of the tile
+                    for (int k = 0; k < 20; k++)
+                    {
+                        Rectangle overlap = GetCollisionRec(player.hitbox, tilemap[i][j].tile);
+                        double step = 0.0000001f;
+
+
+                        if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
+                        {
+                            if (overlap.width < overlap.height)
+                            {
+                                // Horizontal collision
+                                if (player.hitbox.x < tilemap[i][j].tile.x)
+                                {
+                                    player.position.x -= (overlap.width + step) *dt;
+                                    player.hitbox.x = player.position.x- (player.hitbox.width /2);
+                                }
+                                else
+                            {
+                                    player.position.x += (overlap.width + step ) *dt;
+                                    player.hitbox.x = player.position.x- (player.hitbox.width /2);
+                                }
+                            }
+                            else
+                       {
+                                // Vertical collision
+                                if (player.hitbox.y < tilemap[i][j].tile.y)
+                                {
+                                    player.position.y -= (overlap.width + step) *dt;
+                                    player.hitbox.y = player.position.y- (player.hitbox.height /2);
+                                }
+                                else
+                            {
+                                    player.position.y += (overlap.width + step) *dt;
+                                    player.hitbox.y = player.position.y- (player.hitbox.height/2);
+                                }
+
+                            }
+                        }
                     }
-
-
                 }
             }
 
@@ -109,12 +145,18 @@ void PlayerCollision()
 void PlayerUpdate(){
 
 
-    PlayerMovement();
-    IsPlayerMoving();
+
     PlayerCollision();
+
+    player.previous_pos = player.position;
+    PlayerMovement();
+    PlayerCollision();
+    IsPlayerMoving();
     player.view.x = player.position.x - (player.view.width /2) ;
-    player.view.y = player.position.y - (player.view.height /1.5);
+    player.view.y = player.position.y - (player.view.height /1.4);
     player.hitbox.x = player.position.x - (player.hitbox.width /2);
     player.hitbox.y = player.position.y - (player.hitbox.height /2);
+
+    player.colliding = false;
 
 }

@@ -28,10 +28,14 @@ int main()
     extern Player player;
     extern int map[10][10];
     extern Tile tilemap[10][10];
+    extern Rectangle tile_frame, tile_view;
 
+    Color taint = RED;
 
     PlayerInit();
     PopulateTilemap(10, tilemap, map);
+    
+extern Texture2D tileset;
 
     camera.target = (Vector2){player.position.x, player.position.y};
     camera.zoom = 3.0f;
@@ -39,6 +43,7 @@ int main()
     camera.rotation = 0.0f;
 
 
+    SetTargetFPS(-1);
     while (!WindowShouldClose()) {
 
         dt = GetFrameTime();
@@ -67,6 +72,14 @@ int main()
 
         }
 
+        if (debug)
+        {
+            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+            {
+                player.position = GetScreenToWorld2D(GetMousePosition(), camera);
+                
+            }
+        }
         PlayerUpdate();
         camera.target = (Vector2){player.position.x, player.position.y};
         camera.offset = (Vector2){screen.width /2, screen.height /2};
@@ -88,6 +101,29 @@ int main()
                  50 - 10,
                  20,
                  GREEN);
+            for (int i = 0; i < 10; i++) 
+            {
+                for (int j = 0; j < 10; j++) {
+
+                tile_view = tilemap[i][j].tile;
+
+                    if (tilemap[i][j].type == WALL)
+                    {
+                    tile_frame.x = TILE_SIZE;
+                        
+                    }else {
+                        
+                        tile_frame.x = 0;
+                    }
+
+                DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
+
+
+
+               }
+
+            }
+ 
 
         DrawTexturePro(player.sprite,
                        player.frame,
@@ -104,7 +140,16 @@ int main()
             {
                 for (int j = 0; j < 10; j++) {
 
-                    DrawRectangleLinesEx(tilemap[i][j].tile, 1.0f, RED);
+                    if (tilemap[i][j].type == WALL)
+                    {
+                        taint = BLUE;
+
+                    }else {
+                        
+                        taint = RED;
+                    }
+
+                    DrawRectangleLinesEx(tilemap[i][j].tile, 1.0f, taint);
 
                }
 

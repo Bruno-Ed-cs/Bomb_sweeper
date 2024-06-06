@@ -16,10 +16,10 @@
 #define INIT_X 0
 #define INIT_Y 0
 
-#define UP 0
-#define DOWN 1
-#define LEFT 3
-#define RIGHT 2
+#define UP 1
+#define DOWN -1
+#define LEFT -1
+#define RIGHT 1
 
 #define AIR 0
 #define FLOOR 2
@@ -36,11 +36,13 @@ typedef struct Tile{
 typedef struct Player {
 
 	Vector2 position;
+	Vector2 previous_pos;
 	Rectangle hitbox;
 	Rectangle frame;
 	Rectangle view;
 	Texture2D sprite;
 	bool move;
+	bool colliding;
 	int direction;
 	double speed;
 

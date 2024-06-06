@@ -27,6 +27,9 @@ int map[10][10] = {
 };
 
 Tile tilemap[10][10];
+Rectangle tile_frame = {0, 0, TILE_SIZE, TILE_SIZE};
+Rectangle tile_view = {0, 0, TILE_SIZE, TILE_SIZE};
+Texture2D tileset = {0}; 
 
 void PopulateTilemap(int size, Tile tilemap[size][size], int origin[size][size])
 {
@@ -53,6 +56,8 @@ void PopulateTilemap(int size, Tile tilemap[size][size], int origin[size][size])
         }
 
     }
+
+    tileset = LoadTexture("./assets/sprites/tileset.png");
     
 
 }
