@@ -18,8 +18,8 @@
 
 #define UP 1
 #define DOWN -1
-#define LEFT -1
-#define RIGHT 1
+#define LEFT -2
+#define RIGHT 2
 
 #define AIR 0
 #define FLOOR 2
@@ -54,6 +54,7 @@ void PlayerMovement();
 void PlayerUpdate();
 void IsPlayerMoving();
 void PlayerCollision();
+void AnimationHandler();
 
 
 void PopulateTilemap(int size, Tile tilemap[size][size], int origin[size][size]);

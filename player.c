@@ -15,6 +15,10 @@
 Player player = { 0 };
 extern double dt;
 extern Tile tilemap[10][10];
+double frametime = 0;
+int cur_frame = 0;
+int animation_index = 0;
+
 
 void PlayerInit()
 {
@@ -23,7 +27,8 @@ void PlayerInit()
     player.hitbox = (Rectangle){INIT_X, INIT_Y, TILE_SIZE -8, TILE_SIZE -8};
     player.frame = (Rectangle){0, 0, TILE_SIZE, TILE_SIZE * 2};
     player.view = (Rectangle){INIT_X, INIT_Y, TILE_SIZE, TILE_SIZE * 2};
-    player.sprite = LoadTexture("./assets/sprites/Connor_fodder.png");
+    player.sprite = LoadTexture("./assets/sprites/Connor_fodder-sheet.png");
+
     player.speed = 50.0f;
     player.move = false;
     player.colliding = false;
@@ -47,6 +52,17 @@ void IsPlayerMoving()
 
 void PlayerMovement() {
 
+    extern bool debug;
+    extern Camera2D camera;
+    if (debug)
+    {
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+        {
+            player.position = GetScreenToWorld2D(GetMousePosition(), camera);
+
+        }
+    }
+
     if (IsKeyDown(KEY_W)) {
         player.position.y -= player.speed * dt;
 
@@ -58,7 +74,7 @@ void PlayerMovement() {
         player.hitbox.y = player.position.y- (player.hitbox.height /2);
         player.direction = DOWN;
     }
-    if (IsKeyDown(KEY_D) && !(player.colliding)) {
+    else if (IsKeyDown(KEY_D) && !(player.colliding)) {
         player.position.x  += player.speed * dt;
         player.hitbox.x = player.position.x- (player.hitbox.width /2);
         player.direction = RIGHT;
@@ -68,7 +84,67 @@ void PlayerMovement() {
         player.hitbox.x = player.position.x- (player.hitbox.width /2);
         player.direction = LEFT;
     }
+
+
+}
+
+void AnimationHandler()
+{
+    frametime += dt;
+
+    if (player.move)
+    {
+
+        if (frametime >= (1.0f / 6.0f))
+        {
+
+
+            frametime = 0.0f;
+            cur_frame++;
+
+            if (cur_frame >= 3)
+            {
+
+                cur_frame = 0;
+            }        
+
+        }
+    } else {
+
+        cur_frame = 0;
+    }
+
+    switch (player.direction) {
+
+        case UP:
+            animation_index = 1;
+            
+            player.frame.width = TILE_SIZE; 
+        break;
+
+        case DOWN:
+            animation_index = 0;
+
+            player.frame.width = TILE_SIZE; 
+        break;
+
+        case LEFT:
+            animation_index = 2;
+
+            player.frame.width = -TILE_SIZE; 
+        break;
+
+        case RIGHT:
+            animation_index = 2;
+
+            player.frame.width = TILE_SIZE; 
+        break;
     
+    }
+
+    player.frame.x = TILE_SIZE * cur_frame;
+    player.frame.y = (TILE_SIZE * 2) * animation_index;
+
 
 }
 
@@ -105,7 +181,7 @@ void PlayerCollision()
                             if (overlap.width < overlap.height)
                             {
                                 // Horizontal collision
-                                if (player.hitbox.x < tilemap[i][j].tile.x)
+                                if (player.hitbox.x <= tilemap[i][j].tile.x)
                                 {
                                     player.position.x -= (overlap.width + step) *dt;
                                     player.hitbox.x = player.position.x- (player.hitbox.width /2);
@@ -119,7 +195,7 @@ void PlayerCollision()
                             else
                        {
                                 // Vertical collision
-                                if (player.hitbox.y < tilemap[i][j].tile.y)
+                                if (player.hitbox.y <= tilemap[i][j].tile.y)
                                 {
                                     player.position.y -= (overlap.width + step) *dt;
                                     player.hitbox.y = player.position.y- (player.hitbox.height /2);
@@ -152,6 +228,7 @@ void PlayerUpdate(){
     PlayerMovement();
     PlayerCollision();
     IsPlayerMoving();
+    AnimationHandler();
     player.view.x = player.position.x - (player.view.width /2) ;
     player.view.y = player.position.y - (player.view.height /1.4);
     player.hitbox.x = player.position.x - (player.hitbox.width /2);

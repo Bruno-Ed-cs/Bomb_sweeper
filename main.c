@@ -72,14 +72,6 @@ extern Texture2D tileset;
 
         }
 
-        if (debug)
-        {
-            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
-            {
-                player.position = GetScreenToWorld2D(GetMousePosition(), camera);
-                
-            }
-        }
         PlayerUpdate();
         camera.target = (Vector2){player.position.x, player.position.y};
         camera.offset = (Vector2){screen.width /2, screen.height /2};
