@@ -8,6 +8,15 @@
 #error "Unknown compiler. Please define the appropriate include file for your compiler."
 #endif
 
+#include <string.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <time.h>
+#include <stdio.h>
+#include <string.h>
+
+
+
 #define TILE_SIZE 16
 
 #define INIT_WIDTH 1280
@@ -25,18 +34,38 @@
 #define FLOOR 2
 #define WALL 1
 
-typedef struct Tile{
+typedef struct GridPos
+{
+	int x;
+	int y;
 
-	Vector2 tile_pos;
+} GridPos ;
+
+typedef struct Tile
+{
+
+	GridPos tile_pos;
 	int type;
 	Rectangle tile;
+	int sorrounding_mines;
+	bool visible;
+
 
 } Tile;
+
+typedef struct Mine
+{
+	GridPos grid_pos;
+	Rectangle hitbox;
+
+} Mine;
 
 typedef struct Player {
 
 	Vector2 position;
 	Vector2 previous_pos;
+	GridPos grid_pos;
+	GridPos spawn;
 	Rectangle hitbox;
 	Rectangle frame;
 	Rectangle view;
@@ -58,4 +87,8 @@ void AnimationHandler();
 
 
 void PopulateTilemap(int size, Tile tilemap[size][size], int origin[size][size]);
-
+void GenerateMinefild(Mine *mine_arr);
+void GetSorroundingMines();
+Mine * MineListInit();
+void RenderMines(Mine *minefild);
+void MapMines(Mine * minefild);

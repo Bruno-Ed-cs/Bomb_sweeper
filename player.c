@@ -9,12 +9,11 @@
 #endif
 
 #include "globals.h"
-#include <stdbool.h>
-
 
 Player player = { 0 };
 extern double dt;
 extern Tile tilemap[10][10];
+extern GridPos spawn_tile;
 double frametime = 0;
 int cur_frame = 0;
 int animation_index = 0;
@@ -23,17 +22,19 @@ int animation_index = 0;
 void PlayerInit()
 {
 
-    player.position = (Vector2){50, 50};
     player.hitbox = (Rectangle){INIT_X, INIT_Y, TILE_SIZE -8, TILE_SIZE -8};
     player.frame = (Rectangle){0, 0, TILE_SIZE, TILE_SIZE * 2};
     player.view = (Rectangle){INIT_X, INIT_Y, TILE_SIZE, TILE_SIZE * 2};
     player.sprite = LoadTexture("./assets/sprites/Connor_fodder-sheet.png");
-
+    player.grid_pos = (GridPos){1, 1};
     player.speed = 50.0f;
     player.move = false;
     player.colliding = false;
     player.direction = DOWN;
     player.previous_pos = (Vector2){0, 0};
+    player.spawn = spawn_tile;
+    player.position = (Vector2){tilemap[player.spawn.x][player.spawn.y].tile.x + (TILE_SIZE /2.0f), tilemap[player.spawn.x][player.spawn.y].tile.y + (TILE_SIZE /2.0f) };
+
 
 };
 
@@ -155,8 +156,16 @@ void PlayerCollision()
     {
         for (int j = 0; j < 10; j++) {
 
+            if (CheckCollisionPointRec(player.position, tilemap[i][j].tile))
+            {
+                player.grid_pos = (GridPos){i, j};
+
+            }
+
+
             if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
             {
+                player.grid_pos = (GridPos){i, j};
 
                 if (tilemap[i][j].type == WALL)
                 {
@@ -220,12 +229,9 @@ void PlayerCollision()
 
 void PlayerUpdate(){
 
-
-
-    PlayerCollision();
-
     player.previous_pos = player.position;
     PlayerMovement();
+
     PlayerCollision();
     IsPlayerMoving();
     AnimationHandler();
