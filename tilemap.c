@@ -124,15 +124,16 @@ void GenerateMinefild(Mine *mine_arr, Tile **tilemap)
     {
         for (int j = 0;j < 10; j++) 
         {
-            if (i != player.spawn.y && j != player.spawn.x &&
-                i != player.spawn.y +1 && j != player.spawn.x +1 &&
-                i != player.spawn.y +1 && j != player.spawn.x -1 &&
-                i != player.spawn.y +1 && j != player.spawn.x &&
-                i != player.spawn.y -1 && j != player.spawn.x +1 &&
-                i != player.spawn.y -1 && j != player.spawn.x -1 &&
-                i != player.spawn.y -1 && j != player.spawn.x &&
-                i != player.spawn.y && j != player.spawn.x +1 &&
-                i != player.spawn.y && j != player.spawn.x -1)
+            if (!( (i == player.spawn.y && j == player.spawn.x) ||
+                (i == player.spawn.y + 1 && j == player.spawn.x + 1) ||
+                (i == player.spawn.y + 1 && j == player.spawn.x - 1) ||
+                (i == player.spawn.y + 1 && j == player.spawn.x) ||
+                (i == player.spawn.y - 1 && j == player.spawn.x + 1) ||
+                (i == player.spawn.y - 1 && j == player.spawn.x - 1) ||
+                (i == player.spawn.y - 1 && j == player.spawn.x) ||
+                (i == player.spawn.y && j == player.spawn.x + 1) ||
+                (i == player.spawn.y && j == player.spawn.x - 1) ))            //if para deixar os espaços ao redor do spawn do jogador sem minas
+            //eu sei que é uma atrocidade
             {
 
                 prob = rand() % 100;

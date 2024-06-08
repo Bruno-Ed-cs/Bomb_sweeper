@@ -10,7 +10,7 @@ int main()
 {
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(screen.width, screen.height, "Bombsweeper 0.0 Pre-alpha");
+    InitWindow(screen.width, screen.height, "Bombsweeper 1.0 Alpha");
 
     SetWindowMinSize(INIT_WIDTH, INIT_HEIGHT);
 

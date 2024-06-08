@@ -78,6 +78,7 @@ typedef struct Player {
 
 } Player;
 
+//funçoes do jogador
 void PlayerInit(Tile **tilemap);
 void PlayerMovement();
 
@@ -86,7 +87,7 @@ void IsPlayerMoving();
 void PlayerCollision(Tile **tilemap);
 void AnimationHandler();
 
-
+// funçoes do mapa e minas
 Tile **InitMap(void);
 int **InitOrigin(void);
 void PopulateTilemap(Tile **tilemap, int **origin);
