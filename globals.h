@@ -78,17 +78,23 @@ typedef struct Player {
 
 } Player;
 
-void PlayerInit();
+void PlayerInit(Tile **tilemap);
 void PlayerMovement();
-void PlayerUpdate();
+
+void PlayerUpdate(Tile **tilemap);
 void IsPlayerMoving();
-void PlayerCollision();
+void PlayerCollision(Tile **tilemap);
 void AnimationHandler();
 
 
-void PopulateTilemap(int size, Tile tilemap[size][size], int origin[size][size]);
-void GenerateMinefild(Mine *mine_arr);
-void GetSorroundingMines();
-Mine * MineListInit();
+Tile **InitMap(void);
+int **InitOrigin(void);
+void PopulateTilemap(Tile **tilemap, int **origin);
+Mine *MineListInit(void);
+void GenerateMinefild(Mine *mine_arr, Tile **tilemap);
+void MapMines(Mine *minefild, Tile **tilemap);
+void GetSorroundingMines(Tile **tilemap);
 void RenderMines(Mine *minefild);
-void MapMines(Mine * minefild);
+void RevealTiles(GridPos tile_pos, Tile **tilemap);
+Mine * ResetLevel(Mine *minefild, Tile **tilemap);
+

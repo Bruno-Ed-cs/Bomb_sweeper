@@ -12,14 +12,13 @@
 
 Player player = { 0 };
 extern double dt;
-extern Tile tilemap[10][10];
 extern GridPos spawn_tile;
 double frametime = 0;
 int cur_frame = 0;
 int animation_index = 0;
 
 
-void PlayerInit()
+void PlayerInit(Tile **tilemap)
 {
 
     player.hitbox = (Rectangle){INIT_X, INIT_Y, TILE_SIZE -8, TILE_SIZE -8};
@@ -150,7 +149,7 @@ void AnimationHandler()
 }
 
 
-void PlayerCollision()
+void PlayerCollision(Tile **tilemap)
 {
     for (int i = 0; i < 10; i++) 
     {
@@ -158,14 +157,13 @@ void PlayerCollision()
 
             if (CheckCollisionPointRec(player.position, tilemap[i][j].tile))
             {
-                player.grid_pos = (GridPos){i, j};
+                player.grid_pos = (GridPos){j, i};
 
             }
 
 
             if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
             {
-                player.grid_pos = (GridPos){i, j};
 
                 if (tilemap[i][j].type == WALL)
                 {
@@ -227,12 +225,13 @@ void PlayerCollision()
     }
 }
 
-void PlayerUpdate(){
+void PlayerUpdate(Tile **tilemap)
+{
 
     player.previous_pos = player.position;
     PlayerMovement();
-
-    PlayerCollision();
+    PlayerCollision(tilemap);
+    RevealTiles(player.grid_pos, tilemap);
     IsPlayerMoving();
     AnimationHandler();
     player.view.x = player.position.x - (player.view.width /2) ;

@@ -1,13 +1,3 @@
-#if defined(__MINGW32__) || defined(__MINGW64__)
-// MinGW-w64 compiler
-#include "libW/include/raylib.h"
-#elif defined(__GNUC__)
-// GCC compiler
-#include "lib/raylib.h"
-#else
-#error "Unknown compiler. Please define the appropriate include file for your compiler."
-#endif
-
 #include "globals.h"
 
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};
@@ -25,16 +15,18 @@ int main()
     SetWindowMinSize(INIT_WIDTH, INIT_HEIGHT);
 
     extern Player player;
-    extern int map[10][10];
-    extern Tile tilemap[10][10];
+
     extern Rectangle tile_frame, tile_view;
     extern int mine_index;
+    
+    int **map = InitOrigin();
 
     Color taint = RED;
+    Tile **tilemap = InitMap();
 
-    PopulateTilemap(10, tilemap, map);
+    PopulateTilemap(tilemap, map);
 
-    PlayerInit();
+    PlayerInit(tilemap);
     extern Texture2D tileset;
 
     camera.target = (Vector2){player.position.x, player.position.y};
@@ -43,9 +35,9 @@ int main()
     camera.rotation = 0.0f;
 
     Mine *minefild = MineListInit();
-    GenerateMinefild(minefild);
-    MapMines(minefild);
-    GetSorroundingMines();
+    GenerateMinefild(minefild, tilemap);
+    MapMines(minefild, tilemap);
+    GetSorroundingMines(tilemap);
 
     SetTargetFPS(-1);
     while (!WindowShouldClose()) {
@@ -72,10 +64,7 @@ int main()
         {
             if (IsKeyReleased(KEY_R)) 
             {
-                free(minefild);
-                mine_index = 0;
-                minefild = MineListInit(); 
-                GenerateMinefild(minefild);
+                minefild = ResetLevel(minefild, tilemap);
 
             }
         }
@@ -107,7 +96,7 @@ int main()
         if (!pause)
         {
 
-            PlayerUpdate();
+            PlayerUpdate(tilemap);
             camera.target = (Vector2){player.position.x, player.position.y};
             camera.offset = (Vector2){screen.width /2, screen.height /2};
             camera.zoom = (screen.width / INIT_WIDTH) + 3;
@@ -143,7 +132,7 @@ int main()
                     tile_frame.x = 0;
                 }
 
-                if (tilemap[i][j].visible || CheckCollisionPointRec(player.position, tilemap[i][j].tile))
+                if (tilemap[i][j].visible)
                 {
 
                     DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
@@ -156,7 +145,10 @@ int main()
                 char num[10];
                 sprintf(num, "%d" ,tilemap[i][j].sorrounding_mines);
 
-                DrawText(num, (tilemap[i][j].tile.x + (TILE_SIZE /2.0f)) -2, (tilemap[i][j].tile.y + (TILE_SIZE /2.0f)) - 5, 11, WHITE);
+                if (tilemap[i][j].type == FLOOR && tilemap[i][j].sorrounding_mines > 0 && tilemap[i][j].visible)
+                {
+                    DrawText(num, (tilemap[i][j].tile.x + (TILE_SIZE /2.0f)) -2, (tilemap[i][j].tile.y + (TILE_SIZE /2.0f)) - 5, 11, WHITE);
+                }
 
 
 
