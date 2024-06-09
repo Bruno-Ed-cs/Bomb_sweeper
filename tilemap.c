@@ -1,39 +1,21 @@
 #include "globals.h"
-#include <stdbool.h>
-
-int map[10][10] = {
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 2, 2, 2, 2, 2, 2, 2, 2, 1},
-    {1, 2, 2, 2, 2, 2, 2, 2, 2, 1},
-    {1, 2, 2, 2, 2, 2, 2, 2, 2, 1},
-    {1, 2, 2, 2, 2, 2, 2, 1, 2, 1},
-    {1, 2, 2, 1, 2, 1, 2, 2, 2, 1},
-    {1, 2, 2, 1, 2, 2, 2, 2, 2, 1},
-    {1, 2, 2, 1, 1, 2, 2, 2, 2, 1},
-    {1, 2, 2, 2, 2, 2, 2, 2, 2, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-};
-
-Rectangle tile_frame = {0, 0, TILE_SIZE, TILE_SIZE};
-Rectangle tile_view = {0, 0, TILE_SIZE, TILE_SIZE};
-Texture2D tileset = {0}; 
-int qtd_floor = 0;
-int mine_index = 0;
-GridPos spawn_tile = {1, 1};
-Vector2 world_origin = {0, 0};
-int map_width = 10;
-int map_height = 10;
-extern Player player;
 
 Tile ** InitMap()
 {
 
-    Tile **tilemap = malloc((map_width * sizeof(Tile *)));
-
+    Tile **tilemap = malloc((map_height * sizeof(Tile *)));
+    if (tilemap == NULL) {
+        fprintf(stderr, "Memory allocation failed for tilemap\n");
+        exit(1);
+    }
 
 
     for (int i = 0; i < map_height; i++) {
         tilemap[i] = malloc(map_width * sizeof(Tile));
+        if (tilemap == NULL) {
+            fprintf(stderr, "Memory allocation failed for tilemap[%d]\n", i);
+            exit(1);
+        }
     }
 
 
@@ -70,7 +52,7 @@ int **InitOrigin()
 }
 
 
-void PopulateTilemap(Tile **tilemap, int **origin)
+void PopulateTilemap(Tile **tilemap)
 {
     qtd_floor = 0;
     for (int i = 0; i < map_height; i++)
@@ -78,11 +60,11 @@ void PopulateTilemap(Tile **tilemap, int **origin)
         for (int j = 0; j < map_width; j++) {
 
             tilemap[i][j].visible = true;
-            tilemap[i][j].tile_pos = (GridPos){i, j};
-            tilemap[i][j].tile = (Rectangle){world_origin.x + (i * TILE_SIZE), world_origin.y + (j * TILE_SIZE), TILE_SIZE, TILE_SIZE};
+            tilemap[i][j].tile_pos = (GridPos){j, i};
+            tilemap[i][j].tile = (Rectangle){world_origin.x + (j * TILE_SIZE), world_origin.y + (i * TILE_SIZE), TILE_SIZE, TILE_SIZE};
             tilemap[i][j].sorrounding_mines = 0;
 
-            switch (origin[i][j]) {
+            switch (map[i][j]) {
 
                 case WALL: tilemap[i][j].type = WALL;
                     break;
@@ -120,9 +102,9 @@ void GenerateMinefild(Mine *mine_arr, Tile **tilemap)
     srand(time(NULL));
     int prob;
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < map_height; i++)
     {
-        for (int j = 0;j < 10; j++) 
+        for (int j = 0;j < map_width; j++) 
         {
             if (!( (i == player.spawn.y && j == player.spawn.x) ||
                 (i == player.spawn.y + 1 && j == player.spawn.x + 1) ||
@@ -143,7 +125,7 @@ void GenerateMinefild(Mine *mine_arr, Tile **tilemap)
                     {
 
                         mine_arr[mine_index] = (Mine){ 
-                            (GridPos){ i, j}, 
+                            (GridPos){ j, i}, 
                             (Rectangle){
                                 tilemap[i][j].tile.x, 
                                 tilemap[i][j].tile.y,
@@ -189,16 +171,16 @@ void MapMines(Mine * minefild, Tile **tilemap)
 {
     bool is_mine = false;
 
-    for (int x = 0; x < 10; x++) {
-        for (int y = 0; y < 10; y++) {
+    for (int y = 0; y < map_height; y++) {
+        for (int x = 0; x < map_width; x++) {
 
             tilemap[y][x].sorrounding_mines = 0;
         }
     }
 
 
-    for (int x = 0; x < 10; x++) {
-        for (int y = 0; y < 10; y++) {
+    for (int y = 0; y < map_height; y++) {
+        for (int x = 0; x < map_width; x++) {
 
             is_mine = false;
 
@@ -212,7 +194,7 @@ void MapMines(Mine * minefild, Tile **tilemap)
 
             }
 
-            if (is_mine) tilemap[x][y].sorrounding_mines = -1;
+            if (is_mine) tilemap[y][x].sorrounding_mines = -1;
         }
     }
 
@@ -221,19 +203,18 @@ void MapMines(Mine * minefild, Tile **tilemap)
 
 void GetSorroundingMines(Tile **tilemap) {
     int mines = 0;
-    int max_tile = map_height;  
 
-    for (int y = 0; y < max_tile; y++) {
+    for (int y = 0; y < map_height; y++) {
         for (int x = 0; x < map_width; x++) {
 
             if (tilemap[y][x].sorrounding_mines > -1) {
                 mines = 0;
 
-                if (x + 1 < max_tile && tilemap[y][x + 1].sorrounding_mines == -1) mines++;
+                if (x + 1 < map_width && tilemap[y][x + 1].sorrounding_mines == -1) mines++;
                 if (x - 1 >= 0 && tilemap[y][x - 1].sorrounding_mines == -1) mines++;
-                if (y + 1 < max_tile && x + 1 < map_width && tilemap[y + 1][x + 1].sorrounding_mines == -1) mines++;
-                if (y + 1 < max_tile && x - 1 >= 0 && tilemap[y + 1][x - 1].sorrounding_mines == -1) mines++;
-                if (y + 1 < max_tile && tilemap[y + 1][x].sorrounding_mines == -1) mines++;
+                if (y + 1 < map_height && x + 1 < map_width && tilemap[y + 1][x + 1].sorrounding_mines == -1) mines++;
+                if (y + 1 < map_height && x - 1 >= 0 && tilemap[y + 1][x - 1].sorrounding_mines == -1) mines++;
+                if (y + 1 < map_height && tilemap[y + 1][x].sorrounding_mines == -1) mines++;
                 if (y - 1 >= 0 && x + 1 < map_width && tilemap[y - 1][x + 1].sorrounding_mines == -1) mines++;
                 if (y - 1 >= 0 && x - 1 >= 0 && tilemap[y - 1][x - 1].sorrounding_mines == -1) mines++;
                 if (y - 1 >= 0 && tilemap[y - 1][x].sorrounding_mines == -1) mines++;

@@ -1,11 +1,5 @@
 #include "globals.h"
 
-Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};
-double dt = 0;
-Camera2D camera = { 0 };
-bool debug = true;
-bool pause = false;
-
 int main()
 {
 
@@ -14,20 +8,12 @@ int main()
 
     SetWindowMinSize(INIT_WIDTH, INIT_HEIGHT);
 
-    extern Player player;
-
-    extern Rectangle tile_frame, tile_view;
-    extern int mine_index;
-    
-    int **map = InitOrigin();
-
     Color taint = RED;
-    Tile **tilemap = InitMap();
+    Tile** tilemap = InitMap();
 
-    PopulateTilemap(tilemap, map);
+    PopulateTilemap(tilemap);
 
     PlayerInit(tilemap);
-    extern Texture2D tileset;
 
     camera.target = (Vector2){player.position.x, player.position.y};
     camera.zoom = 3.0f;
@@ -118,9 +104,9 @@ int main()
                  50 - 10,
                  20,
                  GREEN);
-        for (int i = 0; i < 10; i++) 
+        for (int i = 0; i < map_height; i++) 
         {
-            for (int j = 0; j < 10; j++) {
+            for (int j = 0; j < map_width; j++) {
 
                 tile_view = tilemap[i][j].tile;
                 if (tilemap[i][j].type == WALL)
@@ -170,9 +156,9 @@ int main()
         {
             DrawRectangleLinesEx(player.hitbox, 1.0f, RED);
             DrawCircleV(player.position, 2.0f, RED);
-            for (int i = 0; i < 10; i++) 
+            for (int i = 0; i < map_height; i++) 
             {
-                for (int j = 0; j < 10; j++) {
+                for (int j = 0; j < map_width; j++) {
 
                     if (tilemap[i][j].type == WALL)
                     {
@@ -228,6 +214,11 @@ int main()
     }
 
     free(minefild);
+    for (int i = 0; i < map_height; i++) {
+        free(tilemap[i]);
+    }
+    free(tilemap);
+
     CloseWindow();
     return 0;
 }

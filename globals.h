@@ -78,6 +78,34 @@ typedef struct Player {
 
 } Player;
 
+//declaração das variáveis globais
+//main globals
+extern Rectangle screen;
+extern double dt;
+extern Camera2D camera;
+extern bool debug;
+extern bool pause;
+
+//player globals
+extern Player player;
+extern double frametime;
+extern int cur_frame;
+extern int animation_index;
+
+
+//tilemap globals
+extern int map[20][10];
+
+extern Rectangle tile_frame;
+extern Rectangle tile_view;
+extern Texture2D tileset; 
+extern int qtd_floor;
+extern int mine_index;
+extern GridPos spawn_tile;
+extern Vector2 world_origin;
+extern int map_width;
+extern int map_height;
+
 //funçoes do jogador
 void PlayerInit(Tile **tilemap);
 void PlayerMovement();
@@ -90,7 +118,7 @@ void AnimationHandler();
 // funçoes do mapa e minas
 Tile **InitMap(void);
 int **InitOrigin(void);
-void PopulateTilemap(Tile **tilemap, int **origin);
+void PopulateTilemap(Tile **tilemap);
 Mine *MineListInit(void);
 void GenerateMinefild(Mine *mine_arr, Tile **tilemap);
 void MapMines(Mine *minefild, Tile **tilemap);

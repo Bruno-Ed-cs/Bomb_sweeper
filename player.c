@@ -1,22 +1,4 @@
-#if defined(__MINGW32__) || defined(__MINGW64__)
-// MinGW-w64 compiler
-#include "libW/include/raylib.h"
-#elif defined(__GNUC__)
-// GCC compiler
-#include "lib/raylib.h"
-#else
-#error "Unknown compiler. Please define the appropriate include file for your compiler."
-#endif
-
 #include "globals.h"
-
-Player player = { 0 };
-extern double dt;
-extern GridPos spawn_tile;
-double frametime = 0;
-int cur_frame = 0;
-int animation_index = 0;
-
 
 void PlayerInit(Tile **tilemap)
 {
@@ -32,7 +14,7 @@ void PlayerInit(Tile **tilemap)
     player.direction = DOWN;
     player.previous_pos = (Vector2){0, 0};
     player.spawn = spawn_tile;
-    player.position = (Vector2){tilemap[player.spawn.x][player.spawn.y].tile.x + (TILE_SIZE /2.0f), tilemap[player.spawn.x][player.spawn.y].tile.y + (TILE_SIZE /2.0f) };
+    player.position = (Vector2){tilemap[player.spawn.y][player.spawn.x].tile.x + (TILE_SIZE /2.0f), tilemap[player.spawn.y][player.spawn.x].tile.y + (TILE_SIZE /2.0f) };
 
 
 };
@@ -52,8 +34,6 @@ void IsPlayerMoving()
 
 void PlayerMovement() {
 
-    extern bool debug;
-    extern Camera2D camera;
     if (debug)
     {
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
@@ -151,9 +131,9 @@ void AnimationHandler()
 
 void PlayerCollision(Tile **tilemap)
 {
-    for (int i = 0; i < 10; i++) 
+    for (int i = 0; i < map_height; i++) 
     {
-        for (int j = 0; j < 10; j++) {
+        for (int j = 0; j < map_width; j++) {
 
             if (CheckCollisionPointRec(player.position, tilemap[i][j].tile))
             {
