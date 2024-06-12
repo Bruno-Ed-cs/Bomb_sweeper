@@ -9,21 +9,21 @@ int main()
     SetWindowMinSize(INIT_WIDTH, INIT_HEIGHT);
 
     Color taint = RED;
-    Tile** tilemap = InitMap();
 
-    PopulateTilemap(tilemap);
+    InitMap();
+    PopulateTilemap();
 
-    PlayerInit(tilemap);
+    PlayerInit();
 
     camera.target = (Vector2){player.position.x, player.position.y};
     camera.zoom = 3.0f;
     camera.offset = (Vector2){screen.width /2, screen.height /2};
     camera.rotation = 0.0f;
 
-    Mine *minefild = MineListInit();
-    GenerateMinefild(minefild, tilemap);
-    MapMines(minefild, tilemap);
-    GetSorroundingMines(tilemap);
+    MineListInit();
+    GenerateMinefild();
+    MapMines();
+    GetSorroundingMines();
 
     SetTargetFPS(-1);
     while (!WindowShouldClose()) {
@@ -50,7 +50,7 @@ int main()
         {
             if (IsKeyReleased(KEY_R)) 
             {
-                minefild = ResetLevel(minefild, tilemap);
+                ResetLevel();
 
             }
         }
@@ -82,7 +82,7 @@ int main()
         if (!pause)
         {
 
-            PlayerUpdate(tilemap);
+            PlayerUpdate();
             camera.target = (Vector2){player.position.x, player.position.y};
             camera.offset = (Vector2){screen.width /2, screen.height /2};
             camera.zoom = (screen.width / INIT_WIDTH) + 3;
@@ -142,7 +142,7 @@ int main()
 
         }
 
-        RenderMines(minefild);
+        RenderMines();
 
 
         DrawTexturePro(player.sprite,

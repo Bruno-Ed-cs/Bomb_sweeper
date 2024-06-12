@@ -1,6 +1,6 @@
 #include "globals.h"
 
-void PlayerInit(Tile **tilemap)
+void PlayerInit()
 {
 
     player.hitbox = (Rectangle){INIT_X, INIT_Y, TILE_SIZE -8, TILE_SIZE -8};
@@ -129,7 +129,7 @@ void AnimationHandler()
 }
 
 
-void PlayerCollision(Tile **tilemap)
+void PlayerCollision()
 {
     for (int i = 0; i < map_height; i++) 
     {
@@ -205,13 +205,13 @@ void PlayerCollision(Tile **tilemap)
     }
 }
 
-void PlayerUpdate(Tile **tilemap)
+void PlayerUpdate()
 {
 
     player.previous_pos = player.position;
     PlayerMovement();
-    PlayerCollision(tilemap);
-    RevealTiles(player.grid_pos, tilemap);
+    PlayerCollision();
+    RevealTiles(player.grid_pos);
     IsPlayerMoving();
     AnimationHandler();
     player.view.x = player.position.x - (player.view.width /2) ;

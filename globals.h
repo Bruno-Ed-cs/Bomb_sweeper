@@ -94,7 +94,7 @@ extern int animation_index;
 
 
 //tilemap globals
-extern int map[20][10];
+extern int map[80][50];
 
 extern Rectangle tile_frame;
 extern Rectangle tile_view;
@@ -105,25 +105,27 @@ extern GridPos spawn_tile;
 extern Vector2 world_origin;
 extern int map_width;
 extern int map_height;
+extern Tile **tilemap;
+extern Mine *minefild;
 
 //funçoes do jogador
-void PlayerInit(Tile **tilemap);
+void PlayerInit();
 void PlayerMovement();
 
-void PlayerUpdate(Tile **tilemap);
+void PlayerUpdate();
 void IsPlayerMoving();
-void PlayerCollision(Tile **tilemap);
+void PlayerCollision();
 void AnimationHandler();
 
 // funçoes do mapa e minas
-Tile **InitMap(void);
+void InitMap(void);
 int **InitOrigin(void);
-void PopulateTilemap(Tile **tilemap);
-Mine *MineListInit(void);
-void GenerateMinefild(Mine *mine_arr, Tile **tilemap);
-void MapMines(Mine *minefild, Tile **tilemap);
-void GetSorroundingMines(Tile **tilemap);
-void RenderMines(Mine *minefild);
-void RevealTiles(GridPos tile_pos, Tile **tilemap);
-Mine * ResetLevel(Mine *minefild, Tile **tilemap);
+void PopulateTilemap();
+void MineListInit();
+void GenerateMinefild();
+void MapMines();
+void GetSorroundingMines();
+void RenderMines();
+void RevealTiles(GridPos tile_pos);
+void ResetLevel();
 

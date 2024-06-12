@@ -1,9 +1,9 @@
 #include "globals.h"
 
-Tile ** InitMap()
+void InitMap()
 {
 
-    Tile **tilemap = malloc((map_height * sizeof(Tile *)));
+    tilemap = malloc((map_height * sizeof(Tile *)));
     if (tilemap == NULL) {
         fprintf(stderr, "Memory allocation failed for tilemap\n");
         exit(1);
@@ -17,9 +17,6 @@ Tile ** InitMap()
             exit(1);
         }
     }
-
-
-    return tilemap;
 
 }
 
@@ -52,7 +49,7 @@ int **InitOrigin()
 }
 
 
-void PopulateTilemap(Tile **tilemap)
+void PopulateTilemap()
 {
     qtd_floor = 0;
     for (int i = 0; i < map_height; i++)
@@ -89,15 +86,13 @@ void PopulateTilemap(Tile **tilemap)
 
 };
 
-Mine * MineListInit()
+void MineListInit()
 {
-    Mine *mine_array = malloc(sizeof(Mine) * qtd_floor);
-
-    return mine_array;
+    minefild = malloc(sizeof(Mine) * qtd_floor);
 
 };
 
-void GenerateMinefild(Mine *mine_arr, Tile **tilemap)
+void GenerateMinefild()
 {
     srand(time(NULL));
     int prob;
@@ -124,7 +119,7 @@ void GenerateMinefild(Mine *mine_arr, Tile **tilemap)
                     if (prob <= 40)
                     {
 
-                        mine_arr[mine_index] = (Mine){ 
+                        minefild[mine_index] = (Mine){ 
                             (GridPos){ j, i}, 
                             (Rectangle){
                                 tilemap[i][j].tile.x, 
@@ -153,7 +148,7 @@ void GenerateMinefild(Mine *mine_arr, Tile **tilemap)
             grid_y = rand() % 10;       
         }
 
-        mine_arr[mine_index] = (Mine){ 
+        minefild[mine_index] = (Mine){ 
             (GridPos){ grid_x, grid_y}, 
             (Rectangle){
                 tilemap[grid_x][grid_y].tile.x, 
@@ -167,7 +162,7 @@ void GenerateMinefild(Mine *mine_arr, Tile **tilemap)
 
 };
 
-void MapMines(Mine * minefild, Tile **tilemap)
+void MapMines()
 {
     bool is_mine = false;
 
@@ -201,7 +196,7 @@ void MapMines(Mine * minefild, Tile **tilemap)
 };
 
 
-void GetSorroundingMines(Tile **tilemap) {
+void GetSorroundingMines(){
     int mines = 0;
 
     for (int y = 0; y < map_height; y++) {
@@ -225,7 +220,7 @@ void GetSorroundingMines(Tile **tilemap) {
     }
 }
 
-void RenderMines(Mine *minefild)
+void RenderMines()
 {
     tile_frame.x = TILE_SIZE * 2; 
 
@@ -242,7 +237,7 @@ void RenderMines(Mine *minefild)
 };
 
 
-void RevealTiles(GridPos tile_pos, Tile **tilemap)
+void RevealTiles(GridPos tile_pos)
 {
 
     if (tilemap[tile_pos.y][tile_pos.x].type == FLOOR && !tilemap[tile_pos.y][tile_pos.x].visible)
@@ -256,7 +251,7 @@ void RevealTiles(GridPos tile_pos, Tile **tilemap)
                 (tile_pos.x ) >= 0 && 
                 (tile_pos.x ) < map_width)
             {
-                RevealTiles((GridPos){tile_pos.x, (tile_pos.y +1)}, tilemap);
+                RevealTiles((GridPos){tile_pos.x, (tile_pos.y +1)});
             }
 
             if ((tile_pos.y -1) >= 0 && 
@@ -264,7 +259,7 @@ void RevealTiles(GridPos tile_pos, Tile **tilemap)
                 (tile_pos.x ) >= 0 && 
                 (tile_pos.x ) < map_width)
             {
-                RevealTiles((GridPos){tile_pos.x, (tile_pos.y -1)}, tilemap);
+                RevealTiles((GridPos){tile_pos.x, (tile_pos.y -1)});
             }
 
             if ((tile_pos.y ) >= 0 && 
@@ -272,7 +267,7 @@ void RevealTiles(GridPos tile_pos, Tile **tilemap)
                 (tile_pos.x +1) >= 0 && 
                 (tile_pos.x +1) < map_width)
             {
-                RevealTiles((GridPos){(tile_pos.x +1), tile_pos.y}, tilemap);
+                RevealTiles((GridPos){(tile_pos.x +1), tile_pos.y});
             }
 
             if ((tile_pos.y ) >= 0 && 
@@ -280,14 +275,14 @@ void RevealTiles(GridPos tile_pos, Tile **tilemap)
                 (tile_pos.x -1) >= 0 && 
                 (tile_pos.x -1) < map_width)
             {
-                RevealTiles((GridPos){(tile_pos.x -1), tile_pos.y}, tilemap);
+                RevealTiles((GridPos){(tile_pos.x -1), tile_pos.y});
             }
         }
     }
 
 };
 
-Mine * ResetLevel(Mine *minefild, Tile **tilemap)
+void ResetLevel() 
 {
     mine_index = 0;
 
@@ -300,11 +295,10 @@ Mine * ResetLevel(Mine *minefild, Tile **tilemap)
         }
     }
 
-    minefild = MineListInit(); 
-    GenerateMinefild(minefild, tilemap);
-    MapMines(minefild, tilemap);
-    GetSorroundingMines(tilemap);
+    MineListInit(); 
+    GenerateMinefild();
+    MapMines();
+    GetSorroundingMines();
 
-    return minefild;
 
-};
+}
