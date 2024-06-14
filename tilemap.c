@@ -116,7 +116,7 @@ void GenerateMinefild()
                 prob = rand() % 100;
                 if (tilemap[i][j].type == FLOOR)
                 {
-                    if (prob <= 40)
+                    if (prob <= 20)
                     {
 
                         minefild[mine_index] = (Mine){ 
@@ -301,4 +301,32 @@ void ResetLevel()
     GetSorroundingMines();
 
 
-}
+};
+
+GridPos GetMatrixBegin(GridPos origin, int radius)
+{
+    GridPos begining;
+
+    begining.x = origin.x - radius;
+    begining.y = origin.y - radius;
+
+    if (begining.x < 0) begining.x = 0;
+    if (begining.y < 0) begining.y = 0;
+
+    return begining;
+
+};
+
+GridPos GetMatrixEnd(GridPos origin, int radius)
+{
+    GridPos end;
+
+    end.x = origin.x + radius;
+    end.y = origin.y + radius;
+
+    if (end.x > map_width) end.x = map_width;
+    if (end.y > map_width) end.y = map_height;
+
+    return end;
+
+};

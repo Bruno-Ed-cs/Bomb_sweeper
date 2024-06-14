@@ -1,12 +1,13 @@
 #if defined(__MINGW32__) || defined(__MINGW64__)
 // MinGW-w64 compiler
-#include "libW/include/raylib.h"
+#include "include/Windows/raylib.h"
 #elif defined(__GNUC__)
 // GCC compiler
-#include "lib/include/raylib.h"
+#include "include/Linux/raylib.h"
 #else
 #error "Unknown compiler. Please define the appropriate include file for your compiler."
 #endif
+
 
 #include <string.h>
 #include <stdbool.h>
@@ -111,7 +112,7 @@ extern Mine *minefild;
 //funçoes do jogador
 void PlayerInit();
 void PlayerMovement();
-
+void DrawPlayer();
 void PlayerUpdate();
 void IsPlayerMoving();
 void PlayerCollision();
@@ -128,4 +129,5 @@ void GetSorroundingMines();
 void RenderMines();
 void RevealTiles(GridPos tile_pos);
 void ResetLevel();
-
+GridPos GetMatrixBegin(GridPos origin, int radius);
+GridPos GetMatrixEnd(GridPos origin, int radius);

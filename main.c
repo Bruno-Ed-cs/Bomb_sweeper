@@ -1,5 +1,5 @@
 #include "globals.h"
-#include "lib/include/raylib.h"
+
 
 int main()
 {
@@ -94,6 +94,9 @@ int main()
         {
             debug = !debug;    
         }
+        
+        GridPos mat_begin = GetMatrixBegin(player.grid_pos, 13);
+        GridPos mat_end = GetMatrixEnd(player.grid_pos, 13);
 
 
         BeginDrawing();
@@ -107,42 +110,42 @@ int main()
                  20,
                  GREEN);
 
-        for (int i = 0; i < map_height; i++) 
-        {
-            for (int j = 0; j < map_width; j++) {
 
-                if (sqrt(pow(j - player.grid_pos.x, 2) + pow(i - player.grid_pos.y, 2)) <= 14.0f)
+        for (int i = mat_begin.y; i < mat_end.y; i++) 
+        {
+            for (int j = mat_begin.x; j < mat_end.x; j++) {
+
+
+
+                tile_view = tilemap[i][j].tile;
+                if (tilemap[i][j].type == WALL)
+                {
+                    tile_frame.x = TILE_SIZE;
+
+                }else {
+
+                    tile_frame.x = 0;
+                }
+
+                if (tilemap[i][j].visible)
                 {
 
-                    tile_view = tilemap[i][j].tile;
-                    if (tilemap[i][j].type == WALL)
-                    {
-                        tile_frame.x = TILE_SIZE;
+                    DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
+                } else {
 
-                    }else {
-
-                        tile_frame.x = 0;
-                    }
-
-                    if (tilemap[i][j].visible)
-                    {
-
-                        DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
-                    } else {
-
-                        DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, ColorTint(PURPLE, GRAY));
-
-                    }
-
-                    char num[10];
-                    sprintf(num, "%d" ,tilemap[i][j].sorrounding_mines);
-
-                    if (tilemap[i][j].type == FLOOR && tilemap[i][j].sorrounding_mines > 0 && tilemap[i][j].visible)
-                    {
-                        DrawText(num, (tilemap[i][j].tile.x + (TILE_SIZE /2.0f)) -2, (tilemap[i][j].tile.y + (TILE_SIZE /2.0f)) - 5, 11, WHITE);
-                    }
+                    DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, ColorTint(PURPLE, GRAY));
 
                 }
+
+                char num[10];
+                sprintf(num, "%d" ,tilemap[i][j].sorrounding_mines);
+
+                if (tilemap[i][j].type == FLOOR && tilemap[i][j].sorrounding_mines > 0 && tilemap[i][j].visible)
+                {
+                    DrawText(num, (tilemap[i][j].tile.x + (TILE_SIZE /2.0f)) -2, (tilemap[i][j].tile.y + (TILE_SIZE /2.0f)) - 5, 11, WHITE);
+                }
+
+
 
 
 
@@ -152,21 +155,17 @@ int main()
 
         RenderMines();
 
-
-        DrawTexturePro(player.sprite,
-                       player.frame,
-                       player.view,
-                       (Vector2){0, 0},
-                       0.0f,
-                       WHITE);
+        DrawPlayer();
 
         if (debug)
         {
             DrawRectangleLinesEx(player.hitbox, 1.0f, RED);
             DrawCircleV(player.position, 2.0f, RED);
-            for (int i = 0; i < map_height; i++) 
+
+            for (int i = mat_begin.y; i < mat_end.y; i++) 
             {
-                for (int j = 0; j < map_width; j++) {
+                for (int j = mat_begin.x; j < mat_end.x; j++) 
+                {
 
                     if (tilemap[i][j].type == WALL)
                     {
@@ -209,7 +208,6 @@ int main()
             DrawText(debug_pos, screen.width -200, screen.height -40, 20, GREEN);
             DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
 
-            DrawFPS(0, 0);
 
         }
         if (pause)
@@ -217,6 +215,8 @@ int main()
             DrawText("Pause", screen.width /2, screen.height /2, 50, WHITE);
 
         }
+
+            DrawFPS(0, 0);
         EndDrawing();
 
     }

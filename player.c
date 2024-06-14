@@ -29,7 +29,7 @@ void IsPlayerMoving()
         player.move = true;
     }
 
-}
+};
 
 
 void PlayerMovement() {
@@ -66,7 +66,7 @@ void PlayerMovement() {
     }
 
 
-}
+};
 
 void AnimationHandler()
 {
@@ -126,14 +126,31 @@ void AnimationHandler()
     player.frame.y = (TILE_SIZE * 2) * animation_index;
 
 
-}
+};
+
+void DrawPlayer()
+{
+    DrawTexturePro(player.sprite,
+                   player.frame,
+                   player.view,
+                   (Vector2){0, 0},
+                   0.0f,
+                   WHITE);
+};
+
+
 
 
 void PlayerCollision()
 {
-    for (int i = 0; i < map_height; i++) 
+
+    GridPos mat_begin = GetMatrixBegin(player.grid_pos, 13);
+    GridPos mat_end = GetMatrixEnd(player.grid_pos, 13);
+
+
+    for (int i = mat_begin.y; i < mat_end.y; i++) 
     {
-        for (int j = 0; j < map_width; j++) {
+        for (int j = mat_begin.x; j < mat_end.x; j++) {
 
             if (CheckCollisionPointRec(player.position, tilemap[i][j].tile))
             {
@@ -141,61 +158,58 @@ void PlayerCollision()
 
             }
 
-            if (sqrt(pow(j - player.grid_pos.x, 2) + pow(i - player.grid_pos.y, 2)) <= 5.0f)
+
+            if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
             {
 
-                if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
+                if (tilemap[i][j].type == WALL)
                 {
+                    player.colliding = true;
 
-                    if (tilemap[i][j].type == WALL)
+                    player.position = player.previous_pos;
+
+                    player.hitbox.y = player.position.y- (player.hitbox.height /2);
+
+                    player.hitbox.x = player.position.x- (player.hitbox.width /2);
+
+
+                    // Resolve collision by moving the player out of the tile
+                    for (int k = 0; k < 20; k++)
                     {
-                        player.colliding = true;
-
-                        player.position = player.previous_pos;
-
-                        player.hitbox.y = player.position.y- (player.hitbox.height /2);
-
-                        player.hitbox.x = player.position.x- (player.hitbox.width /2);
+                        Rectangle overlap = GetCollisionRec(player.hitbox, tilemap[i][j].tile);
+                        double step = 0.0000001f;
 
 
-                        // Resolve collision by moving the player out of the tile
-                        for (int k = 0; k < 20; k++)
+                        if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
                         {
-                            Rectangle overlap = GetCollisionRec(player.hitbox, tilemap[i][j].tile);
-                            double step = 0.0000001f;
-
-
-                            if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
+                            if (overlap.width < overlap.height)
                             {
-                                if (overlap.width < overlap.height)
+                                // Horizontal collision
+                                if (player.hitbox.x <= tilemap[i][j].tile.x)
                                 {
-                                    // Horizontal collision
-                                    if (player.hitbox.x <= tilemap[i][j].tile.x)
-                                    {
-                                        player.position.x -= (overlap.width + step) *dt;
-                                        player.hitbox.x = player.position.x- (player.hitbox.width /2);
-                                    }
-                                    else
-                                {
-                                        player.position.x += (overlap.width + step ) *dt;
-                                        player.hitbox.x = player.position.x- (player.hitbox.width /2);
-                                    }
+                                    player.position.x -= (overlap.width + step) *dt;
+                                    player.hitbox.x = player.position.x- (player.hitbox.width /2);
                                 }
                                 else
                             {
-                                    // Vertical collision
-                                    if (player.hitbox.y <= tilemap[i][j].tile.y)
-                                    {
-                                        player.position.y -= (overlap.width + step) *dt;
-                                        player.hitbox.y = player.position.y- (player.hitbox.height /2);
-                                    }
-                                    else
-                                {
-                                        player.position.y += (overlap.width + step) *dt;
-                                        player.hitbox.y = player.position.y- (player.hitbox.height/2);
-                                    }
-
+                                    player.position.x += (overlap.width + step ) *dt;
+                                    player.hitbox.x = player.position.x- (player.hitbox.width /2);
                                 }
+                            }
+                            else
+                        {
+                                // Vertical collision
+                                if (player.hitbox.y <= tilemap[i][j].tile.y)
+                                {
+                                    player.position.y -= (overlap.width + step) *dt;
+                                    player.hitbox.y = player.position.y- (player.hitbox.height /2);
+                                }
+                                else
+                            {
+                                    player.position.y += (overlap.width + step) *dt;
+                                    player.hitbox.y = player.position.y- (player.hitbox.height/2);
+                                }
+
                             }
                         }
                     }
@@ -206,7 +220,7 @@ void PlayerCollision()
         }
 
     }
-}
+};
 
 void PlayerUpdate()
 {
@@ -224,4 +238,4 @@ void PlayerUpdate()
 
     player.colliding = false;
 
-}
+};
