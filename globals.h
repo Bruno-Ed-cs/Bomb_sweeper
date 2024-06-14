@@ -3,7 +3,7 @@
 #include "libW/include/raylib.h"
 #elif defined(__GNUC__)
 // GCC compiler
-#include "lib/raylib.h"
+#include "lib/include/raylib.h"
 #else
 #error "Unknown compiler. Please define the appropriate include file for your compiler."
 #endif
@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
-#include <string.h>
+#include <math.h>
 
 
 

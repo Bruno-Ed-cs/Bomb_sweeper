@@ -141,58 +141,61 @@ void PlayerCollision()
 
             }
 
-
-            if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
+            if (sqrt(pow(j - player.grid_pos.x, 2) + pow(i - player.grid_pos.y, 2)) <= 5.0f)
             {
 
-                if (tilemap[i][j].type == WALL)
+                if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
                 {
-                    player.colliding = true;
 
-                    player.position = player.previous_pos;
-
-                    player.hitbox.y = player.position.y- (player.hitbox.height /2);
-
-                    player.hitbox.x = player.position.x- (player.hitbox.width /2);
-
-
-                    // Resolve collision by moving the player out of the tile
-                    for (int k = 0; k < 20; k++)
+                    if (tilemap[i][j].type == WALL)
                     {
-                        Rectangle overlap = GetCollisionRec(player.hitbox, tilemap[i][j].tile);
-                        double step = 0.0000001f;
+                        player.colliding = true;
+
+                        player.position = player.previous_pos;
+
+                        player.hitbox.y = player.position.y- (player.hitbox.height /2);
+
+                        player.hitbox.x = player.position.x- (player.hitbox.width /2);
 
 
-                        if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
+                        // Resolve collision by moving the player out of the tile
+                        for (int k = 0; k < 20; k++)
                         {
-                            if (overlap.width < overlap.height)
-                            {
-                                // Horizontal collision
-                                if (player.hitbox.x <= tilemap[i][j].tile.x)
-                                {
-                                    player.position.x -= (overlap.width + step) *dt;
-                                    player.hitbox.x = player.position.x- (player.hitbox.width /2);
-                                }
-                                else
-                            {
-                                    player.position.x += (overlap.width + step ) *dt;
-                                    player.hitbox.x = player.position.x- (player.hitbox.width /2);
-                                }
-                            }
-                            else
-                       {
-                                // Vertical collision
-                                if (player.hitbox.y <= tilemap[i][j].tile.y)
-                                {
-                                    player.position.y -= (overlap.width + step) *dt;
-                                    player.hitbox.y = player.position.y- (player.hitbox.height /2);
-                                }
-                                else
-                            {
-                                    player.position.y += (overlap.width + step) *dt;
-                                    player.hitbox.y = player.position.y- (player.hitbox.height/2);
-                                }
+                            Rectangle overlap = GetCollisionRec(player.hitbox, tilemap[i][j].tile);
+                            double step = 0.0000001f;
 
+
+                            if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
+                            {
+                                if (overlap.width < overlap.height)
+                                {
+                                    // Horizontal collision
+                                    if (player.hitbox.x <= tilemap[i][j].tile.x)
+                                    {
+                                        player.position.x -= (overlap.width + step) *dt;
+                                        player.hitbox.x = player.position.x- (player.hitbox.width /2);
+                                    }
+                                    else
+                                {
+                                        player.position.x += (overlap.width + step ) *dt;
+                                        player.hitbox.x = player.position.x- (player.hitbox.width /2);
+                                    }
+                                }
+                                else
+                            {
+                                    // Vertical collision
+                                    if (player.hitbox.y <= tilemap[i][j].tile.y)
+                                    {
+                                        player.position.y -= (overlap.width + step) *dt;
+                                        player.hitbox.y = player.position.y- (player.hitbox.height /2);
+                                    }
+                                    else
+                                {
+                                        player.position.y += (overlap.width + step) *dt;
+                                        player.hitbox.y = player.position.y- (player.hitbox.height/2);
+                                    }
+
+                                }
                             }
                         }
                     }

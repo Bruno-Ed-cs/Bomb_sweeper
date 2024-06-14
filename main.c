@@ -1,9 +1,12 @@
 #include "globals.h"
+#include "lib/include/raylib.h"
 
 int main()
 {
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+
+    //SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(screen.width, screen.height, "Bombsweeper 1.0 Alpha");
 
     SetWindowMinSize(INIT_WIDTH, INIT_HEIGHT);
@@ -57,6 +60,7 @@ int main()
 
         if (IsWindowFullscreen())
         {
+
             screen.height = GetMonitorHeight(GetCurrentMonitor());
             screen.width = GetMonitorWidth(GetCurrentMonitor());
 
@@ -73,20 +77,18 @@ int main()
 
             ToggleFullscreen();
 
-
             SetWindowSize(screen.width, screen.height); //quando a tela cheia é ativada ou desativada atualizamos o tamanho da janela para que todos os valores dependent delas continuem corretos
-
-
         }
 
         if (!pause)
         {
 
             PlayerUpdate();
-            camera.target = (Vector2){player.position.x, player.position.y};
-            camera.offset = (Vector2){screen.width /2, screen.height /2};
-            camera.zoom = (screen.width / INIT_WIDTH) + 3;
         }
+        camera.target = (Vector2){player.position.x, player.position.y};
+        camera.offset = (Vector2){screen.width /2, screen.height /2};
+        camera.zoom = (screen.width / INIT_WIDTH) * 3.5;
+
 
         if (IsKeyReleased(KEY_F3))
         {
@@ -104,36 +106,42 @@ int main()
                  50 - 10,
                  20,
                  GREEN);
+
         for (int i = 0; i < map_height; i++) 
         {
             for (int j = 0; j < map_width; j++) {
 
-                tile_view = tilemap[i][j].tile;
-                if (tilemap[i][j].type == WALL)
-                {
-                    tile_frame.x = TILE_SIZE;
-
-                }else {
-
-                    tile_frame.x = 0;
-                }
-
-                if (tilemap[i][j].visible)
+                if (sqrt(pow(j - player.grid_pos.x, 2) + pow(i - player.grid_pos.y, 2)) <= 14.0f)
                 {
 
-                    DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
-                } else {
+                    tile_view = tilemap[i][j].tile;
+                    if (tilemap[i][j].type == WALL)
+                    {
+                        tile_frame.x = TILE_SIZE;
 
-                    DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, ColorTint(PURPLE, GRAY));
+                    }else {
 
-                }
+                        tile_frame.x = 0;
+                    }
 
-                char num[10];
-                sprintf(num, "%d" ,tilemap[i][j].sorrounding_mines);
+                    if (tilemap[i][j].visible)
+                    {
 
-                if (tilemap[i][j].type == FLOOR && tilemap[i][j].sorrounding_mines > 0 && tilemap[i][j].visible)
-                {
-                    DrawText(num, (tilemap[i][j].tile.x + (TILE_SIZE /2.0f)) -2, (tilemap[i][j].tile.y + (TILE_SIZE /2.0f)) - 5, 11, WHITE);
+                        DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
+                    } else {
+
+                        DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, ColorTint(PURPLE, GRAY));
+
+                    }
+
+                    char num[10];
+                    sprintf(num, "%d" ,tilemap[i][j].sorrounding_mines);
+
+                    if (tilemap[i][j].type == FLOOR && tilemap[i][j].sorrounding_mines > 0 && tilemap[i][j].visible)
+                    {
+                        DrawText(num, (tilemap[i][j].tile.x + (TILE_SIZE /2.0f)) -2, (tilemap[i][j].tile.y + (TILE_SIZE /2.0f)) - 5, 11, WHITE);
+                    }
+
                 }
 
 

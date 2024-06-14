@@ -1,6 +1,5 @@
 
 #include "globals.h"
-#include "lib/raylib.h"
 
 //main globals
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};
