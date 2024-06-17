@@ -15,6 +15,7 @@ flags do make:
 
     WINE=true||false, default = false
     OS=Windows||Linux
+    X11=true||false #falso compila para wayland
 
 
 

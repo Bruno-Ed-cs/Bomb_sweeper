@@ -1,13 +1,4 @@
-#if defined(__MINGW32__) || defined(__MINGW64__)
-// MinGW-w64 compiler
-#include "include/Windows/raylib.h"
-#elif defined(__GNUC__)
-// GCC compiler
-#include "lib/Linux/dynamic/include/raylib.h"
-#else
-#error "Unknown compiler. Please define the appropriate include file for your compiler."
-#endif
-
+#include "raylib.h"
 
 #include <string.h>
 #include <stdbool.h>
