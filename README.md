@@ -4,10 +4,12 @@ Trabalho para introdução de programação, intodução a programação
 **Compilação 
 
 Windows:
-make
+
+    make
 
 Linux:
-make OS=Linux
+
+    make OS=Linux
 
 flags do make:
 
