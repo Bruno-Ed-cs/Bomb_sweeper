@@ -1,4 +1,18 @@
-#include "raylib.h"
+#ifdef WINDOWS
+	#include "include/Windows/raylib.h"
+#endif 
+#ifdef X11 
+	#include "include/Linux/x11/raylib.h"
+#endif 
+#ifdef WAYLAND
+	#include "include/Linux/wayland/raylib.h"
+#endif 
+
+#define CODING 0
+
+#ifdef CODING
+#include "include/Linux/wayland/raylib.h"
+#endif 
 
 #include <string.h>
 #include <stdbool.h>

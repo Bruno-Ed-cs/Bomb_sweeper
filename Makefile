@@ -5,7 +5,7 @@ WINE := false
 CC:= gcc
 WINECC := x86_64-w64-mingw32-gcc
 TARGET := bombsweeper.exe
-INCLUDE ?= -I ./include/Windows/
+INCLUDE ?= WINDOWS 
 X11 ?= true
 
 ifeq ($(WINE), true)
@@ -20,13 +20,13 @@ else ifeq ($(X11), true)
 	
 	libs :=-Wl,-R ./lib -L ./lib/Linux/x11/lib -lraylib -lm
 	TARGET := bombsweeper.bin
-	INCLUDE := -I ./include/Linux/x11
+	INCLUDE := X11
 
 else 
 	libs :=-L ./lib/Linux/wayland -lraylib -lm
 	TARGET := bombsweeper.bin
 
-	INCLUDE := -I ./include/Linux/wayland
+	INCLUDE := WAYLAND
 
 endif
 
@@ -41,7 +41,7 @@ ifeq ($(X11), true)
 	cp -r ./lib/Linux/x11/lib ./build/
 endif
 
-	$(CC) main.c player.c tilemap.c globals.c $(INCLUDE) $(libs) $(CFLAGS) -o ./build/$(TARGET)
+	$(CC) main.c player.c tilemap.c globals.c -UCODING -D$(INCLUDE) $(libs) $(CFLAGS) -o ./build/$(TARGET)
 
 clean :
 	rm -rf build

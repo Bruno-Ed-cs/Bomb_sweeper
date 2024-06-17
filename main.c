@@ -1,9 +1,7 @@
 #include "globals.h"
-
-
+ 
 int main()
 {
-
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
     //SetConfigFlags(FLAG_VSYNC_HINT);
