@@ -3,7 +3,7 @@
 #include "include/Windows/raylib.h"
 #elif defined(__GNUC__)
 // GCC compiler
-#include "include/Linux/raylib.h"
+#include "lib/Linux/x11/raylib.h"
 #else
 #error "Unknown compiler. Please define the appropriate include file for your compiler."
 #endif

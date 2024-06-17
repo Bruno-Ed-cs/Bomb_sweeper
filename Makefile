@@ -14,7 +14,7 @@ ifeq ($(OS), Windows)
 	libs :=  -L ./lib/Windows/ -lraylib -lm -lgdi32 -lwinmm 
 
 else
-	libs := -L ./lib/Linux -lraylib -lm
+	libs := -L ./lib/Linux/x11 -lraylib -lm
 	TARGET := bombsweeper.bin
 endif
 
