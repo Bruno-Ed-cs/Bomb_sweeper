@@ -13,17 +13,17 @@ ifeq ($(WINE), true)
 endif
 
 ifeq ($(OS), Windows)
-	libs :=  -L ./lib/Windows/ -lraylib -lm -lgdi32 -lwinmm -lcjson
+	libs :=  -L ./lib/Windows/ -lraylib -lm -lgdi32 -lwinmm
 	X11 = false
 
 else ifeq ($(X11), true)
 	
-	libs :=-Wl,-R ./lib -L ./lib/Linux/x11/lib -lraylib -lm -lcjson
+	libs :=-Wl,-R ./lib -L ./lib/Linux/x11/lib -lraylib -lm 
 	TARGET := bombsweeper.bin
 	INCLUDE := X11
 
 else 
-	libs :=-L ./lib/Linux/wayland -lraylib -lm -lcjson
+	libs :=-L ./lib/Linux/wayland -lraylib -lm
 	TARGET := bombsweeper.bin
 	INCLUDE := WAYLAND
 
@@ -31,7 +31,7 @@ endif
 
 CFLAGS := -Wall -O3 -g
 
-./build/$(TARGET) : clean player.c main.c globals.c tilemap.c 
+./build/$(TARGET) : clean player.c main.c globals.c tilemap.c cJSON.c
 	echo "$(OS)"
 	mkdir build
 	cp -r ./assets ./build/
@@ -40,7 +40,7 @@ ifeq ($(X11), true)
 	cp -r ./lib/Linux/x11/lib ./build/
 endif
 
-	$(CC) main.c player.c tilemap.c globals.c -D$(INCLUDE) $(libs) $(CFLAGS) -o ./build/$(TARGET)
+	$(CC) main.c player.c tilemap.c globals.c cJSON.c -D$(INCLUDE) $(libs) $(CFLAGS) -o ./build/$(TARGET)
 
 clean :
 	rm -rf build

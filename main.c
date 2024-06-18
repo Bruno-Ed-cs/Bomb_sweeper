@@ -219,9 +219,7 @@ int main()
     }
 
     free(minefild);
-    for (int i = 0; i < map_height; i++) {
-        free(tilemap[i]);
-    }
+    UnloadLevel();
     free(tilemap);
 
     CloseWindow();

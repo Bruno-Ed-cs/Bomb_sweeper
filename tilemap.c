@@ -1,8 +1,8 @@
 #include "globals.h"
-#include <cjson/cJSON.h>
 #include <stdio.h>
 
 void AllocMap() {
+
     tilemap = malloc(map_height * sizeof(Tile *));
     if (tilemap == NULL) {
         fprintf(stderr, "Memory allocation failed for tilemap\n");
@@ -22,6 +22,7 @@ void AllocMap() {
         }
     }
 }
+
 void LoadLevel(char *level)
 {
     qtd_floor = 0;
@@ -106,6 +107,17 @@ void LoadLevel(char *level)
 
     cJSON_Delete(json);
     free(buffer);
+
+};
+
+void UnloadLevel()
+{
+    for (int i = 0; i < map_height; i++) {
+
+        free(tilemap[i]);
+    
+    }
+    printf("Level unloaded\n");
 
 };
 

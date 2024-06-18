@@ -15,7 +15,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <math.h>
-#include <cjson/cJSON.h>
+#include "include/cJSON.h"
 
 
 
@@ -128,5 +128,6 @@ void GetSorroundingMines();
 void RenderMines();
 void RevealTiles(GridPos tile_pos);
 void ResetLevel();
+void UnloadLevel();
 GridPos GetMatrixBegin(GridPos origin, int radius);
 GridPos GetMatrixEnd(GridPos origin, int radius);
