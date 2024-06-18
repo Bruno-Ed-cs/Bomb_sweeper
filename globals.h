@@ -1,18 +1,13 @@
-#ifdef WINDOWS
-	#include "include/Windows/raylib.h"
-#endif 
-#ifdef X11 
-	#include "include/Linux/x11/raylib.h"
-#endif 
-#ifdef WAYLAND
-	#include "include/Linux/wayland/raylib.h"
-#endif 
+#ifdef _WIN32
 
-#define CODING 0
+#include "include/Windows/raylib.h"
+#elif X11
 
-#ifdef CODING
+#include "include/Linux/x11/raylib.h"
+#elif __linux__
+
 #include "include/Linux/wayland/raylib.h"
-#endif 
+#endif
 
 #include <string.h>
 #include <stdbool.h>
@@ -20,6 +15,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <math.h>
+#include <cjson/cJSON.h>
 
 
 
@@ -100,7 +96,6 @@ extern int animation_index;
 
 
 //tilemap globals
-extern int map[80][50];
 
 extern Rectangle tile_frame;
 extern Rectangle tile_view;
@@ -124,9 +119,8 @@ void PlayerCollision();
 void AnimationHandler();
 
 // funçoes do mapa e minas
-void InitMap(void);
-int **InitOrigin(void);
-void PopulateTilemap();
+void AllocMap();
+void LoadLevel(char *level);
 void MineListInit();
 void GenerateMinefild();
 void MapMines();

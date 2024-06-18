@@ -11,9 +11,8 @@ int main()
 
     Color taint = RED;
 
-    InitMap();
-    PopulateTilemap();
 
+    LoadLevel("./assets/levels/mapa1.json");
     PlayerInit();
 
     camera.target = (Vector2){player.position.x, player.position.y};

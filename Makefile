@@ -13,19 +13,18 @@ ifeq ($(WINE), true)
 endif
 
 ifeq ($(OS), Windows)
-	libs :=  -L ./lib/Windows/ -lraylib -lm -lgdi32 -lwinmm 
+	libs :=  -L ./lib/Windows/ -lraylib -lm -lgdi32 -lwinmm -lcjson
 	X11 = false
 
 else ifeq ($(X11), true)
 	
-	libs :=-Wl,-R ./lib -L ./lib/Linux/x11/lib -lraylib -lm
+	libs :=-Wl,-R ./lib -L ./lib/Linux/x11/lib -lraylib -lm -lcjson
 	TARGET := bombsweeper.bin
 	INCLUDE := X11
 
 else 
-	libs :=-L ./lib/Linux/wayland -lraylib -lm
+	libs :=-L ./lib/Linux/wayland -lraylib -lm -lcjson
 	TARGET := bombsweeper.bin
-
 	INCLUDE := WAYLAND
 
 endif
@@ -41,7 +40,7 @@ ifeq ($(X11), true)
 	cp -r ./lib/Linux/x11/lib ./build/
 endif
 
-	$(CC) main.c player.c tilemap.c globals.c -UCODING -D$(INCLUDE) $(libs) $(CFLAGS) -o ./build/$(TARGET)
+	$(CC) main.c player.c tilemap.c globals.c -D$(INCLUDE) $(libs) $(CFLAGS) -o ./build/$(TARGET)
 
 clean :
 	rm -rf build

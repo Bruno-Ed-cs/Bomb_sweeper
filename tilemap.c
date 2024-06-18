@@ -1,67 +1,88 @@
 #include "globals.h"
+#include <cjson/cJSON.h>
+#include <stdio.h>
 
-void InitMap()
-{
-
-    tilemap = malloc((map_height * sizeof(Tile *)));
+void AllocMap() {
+    tilemap = malloc(map_height * sizeof(Tile *));
     if (tilemap == NULL) {
         fprintf(stderr, "Memory allocation failed for tilemap\n");
         exit(1);
     }
 
-
     for (int i = 0; i < map_height; i++) {
         tilemap[i] = malloc(map_width * sizeof(Tile));
-        if (tilemap == NULL) {
+        if (tilemap[i] == NULL) {
             fprintf(stderr, "Memory allocation failed for tilemap[%d]\n", i);
+            // Free previously allocated memory before exiting
+            for (int j = 0; j < i; j++) {
+                free(tilemap[j]);
+            }
+            free(tilemap);
             exit(1);
         }
     }
-
 }
-
-
-int **InitOrigin()
-{
-    // Allocate memory for the origin array
-    int **origin = malloc(map_height * sizeof(int *));
-    if (origin == NULL) {
-        fprintf(stderr, "Memory allocation failed for origin\n");
-        exit(1);
-    }
-
-    for (int i = 0; i < map_height; i++) {
-        origin[i] = malloc(map_width * sizeof(int));
-        if (origin[i] == NULL) {
-            fprintf(stderr, "Memory allocation failed for origin[%d]\n", i);
-            exit(1);
-        }
-    }
-
-    // Populate the origin array with values from the map
-    for (int i = 0; i < map_height; i++) {
-        for (int j = 0; j < map_width; j++) {
-            origin[i][j] = map[i][j];
-        }
-    }
-
-    return origin;
-}
-
-
-void PopulateTilemap()
+void LoadLevel(char *level)
 {
     qtd_floor = 0;
+    
+    FILE *file = fopen(level, "r");// abre o arquivo do json
+    
+    //detecta se o arquivo foi carregado
+    if (!file) {
+        fprintf(stderr, "Error opening file: %s\n", level);
+        return;
+    }
+
+    fseek(file, 0, SEEK_END);//coloca o ponteiro do arquivo no final
+    long fileSize = ftell(file);//pegamos o tamanho do arquivo
+    fseek(file, 0, SEEK_SET);//colocamos o ponteiro de volta ao inicio
+
+    char *buffer = (char *)malloc(fileSize + 1);// criamos um buffer para colocar o arquivo
+    fread(buffer, 1, fileSize, file); // colocamos o arquivo no buffer
+    buffer[fileSize] = '\0'; // colocamos o finalizador no buffer
+
+    fclose(file); //fechamos o arquivo ja que ja carregamos ele no buffer
+
+    cJSON *json = cJSON_Parse(buffer); //carrgamos o json
+
+    // verifivação para ver se o carregamento foi bem sucedido
+    if (json == NULL) {
+        const char *error_ptr = cJSON_GetErrorPtr();
+        if (error_ptr != NULL) {
+            fprintf(stderr, "Error before: %s\n", error_ptr);
+        }
+        cJSON_Delete(json);
+        free(buffer);
+        return;
+    }
+
+
+    cJSON *map = cJSON_GetObjectItem(json, "map");// carregamos a matriz do mapa
+    cJSON *spawn_x = cJSON_GetObjectItem(json, "spawn_x");
+    cJSON *spawn_y = cJSON_GetObjectItem(json, "spawn_y");
+
+    map_height = cJSON_GetArraySize(map); // pegamos o tamanho da matriz
+    map_width = cJSON_GetArraySize(cJSON_GetArrayItem(map, 0)); // pegamos o tamanho da linha
+
+    spawn_tile = (GridPos){spawn_x->valueint, spawn_y->valueint}; //pegamos o tile de nascimento
+    AllocMap();
+
     for (int i = 0; i < map_height; i++)
     {
+        cJSON *linha = cJSON_GetArrayItem(map, i);
+
         for (int j = 0; j < map_width; j++) {
+
+            cJSON *item = cJSON_GetArrayItem(linha, j);
+            int tile = item->valueint;
 
             tilemap[i][j].visible = true;
             tilemap[i][j].tile_pos = (GridPos){j, i};
             tilemap[i][j].tile = (Rectangle){world_origin.x + (j * TILE_SIZE), world_origin.y + (i * TILE_SIZE), TILE_SIZE, TILE_SIZE};
             tilemap[i][j].sorrounding_mines = 0;
 
-            switch (map[i][j]) {
+            switch (tile) {
 
                 case WALL: tilemap[i][j].type = WALL;
                     break;
@@ -83,6 +104,8 @@ void PopulateTilemap()
 
     tileset = LoadTexture("./assets/sprites/tileset.png");
 
+    cJSON_Delete(json);
+    free(buffer);
 
 };
 
@@ -324,8 +347,8 @@ GridPos GetMatrixEnd(GridPos origin, int radius)
     end.x = origin.x + radius;
     end.y = origin.y + radius;
 
-    if (end.x > map_width) end.x = map_width;
-    if (end.y > map_width) end.y = map_height;
+    if (end.x >= map_width) end.x = map_width;
+    if (end.y >= map_height) end.y = map_height;
 
     return end;
 

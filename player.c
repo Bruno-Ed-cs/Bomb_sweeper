@@ -144,13 +144,13 @@ void DrawPlayer()
 void PlayerCollision()
 {
 
-    GridPos mat_begin = GetMatrixBegin(player.grid_pos, 13);
+
+    GridPos mat_ini = GetMatrixBegin(player.grid_pos, 13);
     GridPos mat_end = GetMatrixEnd(player.grid_pos, 13);
 
-
-    for (int i = mat_begin.y; i < mat_end.y; i++) 
+    for (int i = mat_ini.y; i < mat_end.y; i++) 
     {
-        for (int j = mat_begin.x; j < mat_end.x; j++) {
+        for (int j = mat_ini.x ; j < mat_end.x; j++) {
 
             if (CheckCollisionPointRec(player.position, tilemap[i][j].tile))
             {
