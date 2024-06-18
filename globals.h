@@ -51,6 +51,7 @@ typedef struct Tile
 	Rectangle tile;
 	int sorrounding_mines;
 	bool visible;
+	bool flaged;
 
 
 } Tile;
@@ -117,6 +118,8 @@ void PlayerUpdate();
 void IsPlayerMoving();
 void PlayerCollision();
 void AnimationHandler();
+void PutFlag();
+int GetTileType(GridPos tile, int type);
 
 // funçoes do mapa e minas
 void AllocMap();

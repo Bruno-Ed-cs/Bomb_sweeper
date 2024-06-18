@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/Linux/wayland/raylib.h"
  
 int main()
 {
@@ -127,7 +128,9 @@ int main()
                 if (tilemap[i][j].visible)
                 {
 
+
                     DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
+
                 } else {
 
                     DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, ColorTint(PURPLE, GRAY));
@@ -137,13 +140,18 @@ int main()
                 char num[10];
                 sprintf(num, "%d" ,tilemap[i][j].sorrounding_mines);
 
-                if (tilemap[i][j].type == FLOOR && tilemap[i][j].sorrounding_mines > 0 && tilemap[i][j].visible)
+                if (tilemap[i][j].type == FLOOR && tilemap[i][j].sorrounding_mines > 0 && tilemap[i][j].visible && !tilemap[i][j].flaged)
                 {
                     DrawText(num, (tilemap[i][j].tile.x + (TILE_SIZE /2.0f)) -2, (tilemap[i][j].tile.y + (TILE_SIZE /2.0f)) - 5, 11, WHITE);
                 }
 
 
+                if (tilemap[i][j].flaged == true)
+                {
 
+                    tile_frame.x = TILE_SIZE * 3;
+                    DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, WHITE);
+                }
 
 
             }

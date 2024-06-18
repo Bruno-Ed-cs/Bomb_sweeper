@@ -79,6 +79,7 @@ void LoadLevel(char *level)
             int tile = item->valueint;
 
             tilemap[i][j].visible = true;
+            tilemap[i][j].flaged = false;
             tilemap[i][j].tile_pos = (GridPos){j, i};
             tilemap[i][j].tile = (Rectangle){world_origin.x + (j * TILE_SIZE), world_origin.y + (i * TILE_SIZE), TILE_SIZE, TILE_SIZE};
             tilemap[i][j].sorrounding_mines = 0;

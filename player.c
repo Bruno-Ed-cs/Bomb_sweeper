@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/Linux/wayland/raylib.h"
 
 void PlayerInit()
 {
@@ -63,6 +64,11 @@ void PlayerMovement() {
         player.position.x -= player.speed * dt;
         player.hitbox.x = player.position.x- (player.hitbox.width /2);
         player.direction = LEFT;
+    }
+
+    if (IsKeyPressed(KEY_SPACE))
+    {
+        PutFlag();
     }
 
 
@@ -220,6 +226,67 @@ void PlayerCollision()
         }
 
     }
+};
+
+void PutFlag()
+{
+    switch (player.direction) {
+
+        case UP:
+
+            if (GetTileType((GridPos){player.grid_pos.x, player.grid_pos.y -1} ,FLOOR) == FLOOR) 
+            {
+                tilemap[player.grid_pos.y -1][player.grid_pos.x].flaged = !tilemap[player.grid_pos.y -1][player.grid_pos.x].flaged;
+
+            }
+
+        break;
+          
+        case DOWN:
+ 
+            if (GetTileType((GridPos){player.grid_pos.x, player.grid_pos.y +1} ,FLOOR) == FLOOR) 
+            {
+                tilemap[player.grid_pos.y +1][player.grid_pos.x].flaged = !tilemap[player.grid_pos.y +1][player.grid_pos.x].flaged;
+
+            }
+
+ 
+        break;
+ 
+        case LEFT:
+
+            if (GetTileType((GridPos){player.grid_pos.x -1, player.grid_pos.y} ,FLOOR) == FLOOR) 
+            {
+                tilemap[player.grid_pos.y ][player.grid_pos.x -1].flaged = !tilemap[player.grid_pos.y ][player.grid_pos.x -1].flaged;
+
+            }
+
+
+        break;
+            
+        case RIGHT:
+
+            if (GetTileType((GridPos){player.grid_pos.x +1, player.grid_pos.y} ,FLOOR) == FLOOR) 
+            {
+                tilemap[player.grid_pos.y][player.grid_pos.x +1].flaged = !tilemap[player.grid_pos.y ][player.grid_pos.x +1].flaged;
+
+            }
+
+
+        break;
+               
+    }
+
+};
+
+int GetTileType(GridPos tile, int type)
+{
+
+    if (tile.y < 0 || tile.y >= map_height) return 0;
+    if (tile.x < 0 || tile.x >= map_width) return 0;
+
+    return tilemap[tile.y][tile.x].type;
+
 };
 
 void PlayerUpdate()
