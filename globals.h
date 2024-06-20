@@ -82,18 +82,21 @@ typedef struct Player {
 } Player;
 
 //declaração das variáveis globais
+//Localização: globals.c
 //main globals
 extern Rectangle screen;
 extern double dt;
 extern Camera2D camera;
 extern bool debug;
 extern bool pause;
+extern double timer;
 
 //player globals
 extern Player player;
 extern double frametime;
 extern int cur_frame;
 extern int animation_index;
+extern Rectangle camera_bounds;
 
 
 //tilemap globals
@@ -109,8 +112,10 @@ extern int map_width;
 extern int map_height;
 extern Tile **tilemap;
 extern Mine *minefild;
+extern Rectangle level_bounds;
 
-//funçoes do jogador
+//funçoes do jogador 
+//Localização: player.c
 void PlayerInit();
 void PlayerMovement();
 void DrawPlayer();
@@ -119,9 +124,10 @@ void IsPlayerMoving();
 void PlayerCollision();
 void AnimationHandler();
 void PutFlag();
-int GetTileType(GridPos tile, int type);
+void CameraUpdate();
 
 // funçoes do mapa e minas
+// Localização: tilemap.c
 void AllocMap();
 void LoadLevel(char *level);
 void MineListInit();
@@ -132,5 +138,12 @@ void RenderMines();
 void RevealTiles(GridPos tile_pos);
 void ResetLevel();
 void UnloadLevel();
-GridPos GetMatrixBegin(GridPos origin, int radius);
+void DrawTiles(GridPos start, GridPos end);
+
+//funções de sistema
+//Localização: system.c
+
+int GetTileType(GridPos tile, int type);
 GridPos GetMatrixEnd(GridPos origin, int radius);
+GridPos GetMatrixBegin(GridPos origin, int radius);
+void InputHandler(int input);

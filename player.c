@@ -8,15 +8,14 @@ void PlayerInit()
     player.frame = (Rectangle){0, 0, TILE_SIZE, TILE_SIZE * 2};
     player.view = (Rectangle){INIT_X, INIT_Y, TILE_SIZE, TILE_SIZE * 2};
     player.sprite = LoadTexture("./assets/sprites/Connor_fodder-sheet.png");
-    player.grid_pos = (GridPos){1, 1};
     player.speed = 50.0f;
     player.move = false;
     player.colliding = false;
     player.direction = DOWN;
     player.previous_pos = (Vector2){0, 0};
     player.spawn = spawn_tile;
+    player.grid_pos = player.spawn;
     player.position = (Vector2){tilemap[player.spawn.y][player.spawn.x].tile.x + (TILE_SIZE /2.0f), tilemap[player.spawn.y][player.spawn.x].tile.y + (TILE_SIZE /2.0f) };
-
 
 };
 
@@ -30,6 +29,60 @@ void IsPlayerMoving()
         player.move = true;
     }
 
+};
+
+void CameraUpdate()
+{
+    camera_bounds.width = GetScreenToWorld2D((Vector2){screen.width, 0}, camera).x - GetScreenToWorld2D((Vector2) {0,0}, camera).x;
+    camera_bounds.height = GetScreenToWorld2D((Vector2){0, screen.height}, camera).y - GetScreenToWorld2D((Vector2) {0,0}, camera).y;
+
+
+    float cameraFocusOffsetX = TILE_SIZE * 9;
+    float cameraFocusOffsetY = TILE_SIZE * 4;
+
+    if (player.position.x <= (level_bounds.width - cameraFocusOffsetX) && player.position.x >= (level_bounds.x + cameraFocusOffsetX))
+    {
+        camera_bounds.x = player.position.x - (camera_bounds.width / 2);
+    }
+
+    if (player.position.y <= (level_bounds.height - cameraFocusOffsetY) && player.position.y >= (level_bounds.y + cameraFocusOffsetY))
+    {
+        camera_bounds.y = player.position.y - (camera_bounds.height / 2);
+    }
+    
+
+    if (camera_bounds.x < (level_bounds.x - (TILE_SIZE * 2)))
+    {
+    
+        camera_bounds.x = level_bounds.x - (TILE_SIZE * 2);
+
+    }
+ 
+    if (camera_bounds.y <= (level_bounds.y - (TILE_SIZE * 2)))
+    {
+    
+        camera_bounds.y = level_bounds.y - (TILE_SIZE * 2);
+
+    }
+
+//dois ifs problematicos, por enquanto so coloque spawn points fora da parte de baixo da fase
+    if ((camera_bounds.y - camera_bounds.height) > (level_bounds.height - (TILE_SIZE * 2)))
+    {
+    
+        camera_bounds.y = (level_bounds.height - camera_bounds.height) - TILE_SIZE * 2;
+
+    }
+
+    if ((camera_bounds.x + camera_bounds.width) > (level_bounds.width + (TILE_SIZE * 2)))
+    {
+    
+        camera_bounds.x = (level_bounds.width - camera_bounds.width) + (TILE_SIZE * 2);
+ 
+    }
+ 
+    camera.target = (Vector2){camera_bounds.x, camera_bounds.y};
+    camera.offset = (Vector2){0, 0};
+    camera.zoom = (screen.width / INIT_WIDTH) * 3.5;
 };
 
 
@@ -276,16 +329,6 @@ void PutFlag()
         break;
                
     }
-
-};
-
-int GetTileType(GridPos tile, int type)
-{
-
-    if (tile.y < 0 || tile.y >= map_height) return 0;
-    if (tile.x < 0 || tile.x >= map_width) return 0;
-
-    return tilemap[tile.y][tile.x].type;
 
 };
 

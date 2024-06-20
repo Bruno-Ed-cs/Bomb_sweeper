@@ -31,7 +31,7 @@ endif
 
 CFLAGS := -Wall -O3 -g
 
-./build/$(TARGET) : clean player.c main.c globals.c tilemap.c cJSON.c
+./build/$(TARGET) : clean player.c main.c globals.c tilemap.c cJSON.c system.c
 	echo "$(OS)"
 	mkdir build
 	cp -r ./assets ./build/
@@ -40,7 +40,7 @@ ifeq ($(X11), true)
 	cp -r ./lib/Linux/x11/lib ./build/
 endif
 
-	$(CC) main.c player.c tilemap.c globals.c cJSON.c -D$(INCLUDE) $(libs) $(CFLAGS) -o ./build/$(TARGET)
+	$(CC) main.c player.c tilemap.c globals.c cJSON.c system.c -D$(INCLUDE) $(libs) $(CFLAGS) -o ./build/$(TARGET)
 
 clean :
 	rm -rf build

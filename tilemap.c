@@ -69,6 +69,11 @@ void LoadLevel(char *level)
     spawn_tile = (GridPos){spawn_x->valueint, spawn_y->valueint}; //pegamos o tile de nascimento
     AllocMap();
 
+    level_bounds.x = world_origin.x;
+    level_bounds.y = world_origin.y;
+    level_bounds.width = map_width * TILE_SIZE; 
+    level_bounds.height = map_height * TILE_SIZE;
+
     for (int i = 0; i < map_height; i++)
     {
         cJSON *linha = cJSON_GetArrayItem(map, i);
@@ -339,30 +344,54 @@ void ResetLevel()
 
 };
 
-GridPos GetMatrixBegin(GridPos origin, int radius)
+void DrawTiles(GridPos start, GridPos end)
 {
-    GridPos begining;
 
-    begining.x = origin.x - radius;
-    begining.y = origin.y - radius;
+    for (int i = start.y; i < end.y; i++) 
+    {
+        for (int j = start.x; j < end.x; j++) {
 
-    if (begining.x < 0) begining.x = 0;
-    if (begining.y < 0) begining.y = 0;
+            tile_view = tilemap[i][j].tile;
+            if (tilemap[i][j].type == WALL)
+            {
+                tile_frame.x = TILE_SIZE;
 
-    return begining;
+            }else {
 
-};
+                tile_frame.x = 0;
+            }
 
-GridPos GetMatrixEnd(GridPos origin, int radius)
-{
-    GridPos end;
+            if (tilemap[i][j].visible)
+            {
+                DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
 
-    end.x = origin.x + radius;
-    end.y = origin.y + radius;
+            } else {
 
-    if (end.x >= map_width) end.x = map_width;
-    if (end.y >= map_height) end.y = map_height;
+                DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, ColorTint(PURPLE, GRAY));
 
-    return end;
+            }
+
+            char num[10];
+            sprintf(num, "%d" ,tilemap[i][j].sorrounding_mines);
+
+            if (tilemap[i][j].type == FLOOR && tilemap[i][j].sorrounding_mines > 0 && tilemap[i][j].visible && !tilemap[i][j].flaged)
+            {
+                DrawText(num, (tilemap[i][j].tile.x + (TILE_SIZE /2.0f)) -2, (tilemap[i][j].tile.y + (TILE_SIZE /2.0f)) - 5, 11, WHITE);
+            }
+
+
+            if (tilemap[i][j].flaged == true)
+            {
+
+                tile_frame.x = TILE_SIZE * 3;
+                DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, WHITE);
+            }
+
+
+        }
+
+    }
+
+
 
 };
