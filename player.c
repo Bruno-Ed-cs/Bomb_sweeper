@@ -37,6 +37,10 @@ void CameraUpdate()
     camera_bounds.height = GetScreenToWorld2D((Vector2){0, screen.height}, camera).y - GetScreenToWorld2D((Vector2) {0,0}, camera).y;
 
 
+    camera_bounds.y = player.position.y - (camera_bounds.height / 2);
+    camera_bounds.x = player.position.x - (camera_bounds.width / 2);
+
+/** todo: isso tudo
     float cameraFocusOffsetX = TILE_SIZE * 9;
     float cameraFocusOffsetY = TILE_SIZE * 4;
 
@@ -65,6 +69,7 @@ void CameraUpdate()
 
     }
 
+
 //dois ifs problematicos, por enquanto so coloque spawn points fora da parte de baixo da fase
     if ((camera_bounds.y - camera_bounds.height) > (level_bounds.height - (TILE_SIZE * 2)))
     {
@@ -80,8 +85,9 @@ void CameraUpdate()
  
     }
  
-    camera.target = (Vector2){camera_bounds.x, camera_bounds.y};
-    camera.offset = (Vector2){0, 0};
+**/
+    camera.target = (Vector2){ player.position.x, player.position.y};
+    camera.offset = (Vector2){screen.width/2, screen.height/2};
     camera.zoom = (screen.width / INIT_WIDTH) * 3.5;
 };
 
