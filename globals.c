@@ -9,6 +9,12 @@ bool debug = false;
 bool pause = false;
 double timer = 0;
 
+
+//Tela de jogo
+GameScreen CurrentScreen = MENU;
+
+
+
 //player globals
 Player player = { 0 };
 double frametime = 0;
@@ -30,6 +36,8 @@ int map_height = 80;
 Tile **tilemap;
 Mine *minefild;
 Rectangle level_bounds = {0};
+
+
 
 
 

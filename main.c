@@ -1,18 +1,9 @@
 #include "globals.h"
 #include "include/Linux/wayland/raylib.h"
- 
-int main()
+
+
+void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar pra reiniciar toda vez que entra no menu
 {
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-
-    //SetConfigFlags(FLAG_VSYNC_HINT);
-    InitWindow(screen.width, screen.height, "Bombsweeper 1.0 Alpha");
-
-    SetWindowMinSize(INIT_WIDTH, INIT_HEIGHT);
-
-    Color taint = RED;
-
-
     LoadLevel("./assets/levels/mapa1.json");
     PlayerInit();
 
@@ -25,16 +16,153 @@ int main()
     MapMines();
     GetSorroundingMines();
 
+    timer = 0;
+    pause = false;
+}
+
+
+ 
+int main()
+{
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+
+    //SetConfigFlags(FLAG_VSYNC_HINT);
+    InitWindow(INIT_WIDTH, INIT_HEIGHT, "Bombsweeper 1.0 Alpha");
+
+    SetWindowMinSize(INIT_WIDTH, INIT_HEIGHT);
+
+
+    Color taint = RED;
+
+    ResetGame();
+
+    //Nao sei como colocar nos globals e ficar funcional
+
+
+    //Tela de Menu
+    Rectangle exit_menu = {INIT_WIDTH / 2 - 55, INIT_HEIGHT  / 2 - 10, 127, 60};
+    Rectangle exit_menu2 = {(INIT_WIDTH / 2 - 55) - 5, (INIT_HEIGHT  / 2 - 10) - 5, 137, 75};
+    Color c_exit_menu = WHITE;
+    Color c_exit_menu2 = WHITE;
+
+    //Tela de Pausa
+    Rectangle exit_pause = {(INIT_WIDTH /2 - 70) + 20, INIT_HEIGHT / 2 - 15, 118, 50};
+    Rectangle exit_pause2 = {((INIT_WIDTH /2 - 70) + 20) - 5, (INIT_HEIGHT / 2 - 15) - 5, 118 + 10, 50 + 10};
+    Rectangle continue_pause = {INIT_WIDTH /2 - 100, 245, 215, 50};
+    Rectangle continue_pause2 = {(INIT_WIDTH /2 - 100) - 5, 240, 225, 60};
+    Color c_exit_pause = LIGHTGRAY;
+    Color c_continue_pause = LIGHTGRAY;
+    Color c_continue_pause2 = WHITE;
+    Color c_jogar = BLACK;
+    Color c_sair = BLACK;
+
+    
+
+   
+    
+
 
 
     SetTargetFPS(-1);
+
     while (!WindowShouldClose()) {
 
+         
+         
+    Vector2 mouse = GetMousePosition();
+
+
+
+        //Trouxe a configuraçao de fullScreen aqui para funcionar no menu
+         if (IsWindowFullscreen())
+        {
+
+            screen.height = GetMonitorHeight(GetCurrentMonitor());
+            screen.width = GetMonitorWidth(GetCurrentMonitor());
+
+        } else 
+        {
+             screen.height = GetScreenHeight();
+            screen.width = GetScreenWidth();
+
+        }
+        //controle de tela cheia
+        if (IsKeyPressed(KEY_ENTER) && IsKeyDown(KEY_LEFT_ALT))
+        {
+
+            ToggleFullscreen();
+
+
+            SetWindowSize(INIT_WIDTH, INIT_HEIGHT); //quando a tela cheia é ativada ou desativada atualizamos o tamanho da janela para que todos os valores dependent delas continuem corretos
+
+        }
+
+        switch(CurrentScreen){
+
+           
+
+            case MENU:
+
+            
+
+             
+            if( CheckCollisionPointRec( mouse, exit_menu ) ){
+
+                c_exit_menu2 = GREEN;
+
+                c_jogar = GREEN;
+
+
+
+                if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+                    ResetGame();
+
+                    CurrentScreen = GAME;
+
+                }
+
+            }else{
+
+                c_exit_menu2 = WHITE;
+
+                c_jogar = BLACK;
+
+            }
+
+                BeginDrawing();
+
+                ClearBackground(WHITE);
+
+                DrawText("BETA",INIT_WIDTH - 100 , INIT_HEIGHT - 50, 20, BLACK);
+
+                DrawText("MENU", INIT_WIDTH / 2 - 70, 20, 50, BLACK);
+
+                DrawRectangleRec(exit_menu2, c_exit_menu2);
+
+                DrawRectangleRec(exit_menu, c_exit_menu);
+
+                DrawText("Jogar", INIT_WIDTH / 2 - 50, INIT_HEIGHT  / 2, 40, c_jogar);
+
+                EndDrawing();
+
+            
+
+             
+                
+                break;
+            
+            //case MENU
+
+
+    case GAME:
 
         if (pause)
         {
 
             dt = 0; 
+
+        
 
         } else 
         {
@@ -49,30 +177,6 @@ int main()
         GridPos mat_end = GetMatrixEnd(player.grid_pos, 20);
 
         InputHandler(GetKeyPressed()); //pega os inputs para o controle do sistema
-        
-        //atualiza as dimensoes da tela
-        if (IsWindowFullscreen())
-        {
-
-            screen.height = GetMonitorHeight(GetCurrentMonitor());
-            screen.width = GetMonitorWidth(GetCurrentMonitor());
-
-        } else 
-        {
-            screen.height = GetScreenHeight();
-            screen.width = GetScreenWidth();
-
-        }
-        //controle de tela cheia
-        if (IsKeyPressed(KEY_ENTER) && IsKeyDown(KEY_LEFT_ALT))
-        {
-
-            ToggleFullscreen();
-
-
-            SetWindowSize(screen.width, screen.height); //quando a tela cheia é ativada ou desativada atualizamos o tamanho da janela para que todos os valores dependent delas continuem corretos
-
-        }
 
         if (!pause)
         {
@@ -149,17 +253,83 @@ int main()
                 sprintf(debug_grid, "Grid X = %d\nGrid Y = %d\n", player.grid_pos.x, player.grid_pos.y);
 
 
-                DrawText(debug_grid, screen.width -200, screen.height - 100, 20, GREEN);
-                DrawText(debug_pos, screen.width -200, screen.height -40, 20, GREEN);
-                DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
+                DrawText(debug_grid, INIT_WIDTH -200, INIT_HEIGHT - 100, 20, GREEN);
+                DrawText(debug_pos, INIT_WIDTH -200, INIT_HEIGHT -40, 20, GREEN);
+                DrawText(debug_move, INIT_WIDTH -200, INIT_HEIGHT -60, 20, GREEN);
 
 
 
             }
             if (pause)
             {
-                DrawText("Pause", screen.width /2, screen.height /2, 50, WHITE);
 
+                 if( CheckCollisionPointRec( mouse, exit_pause ) ){
+
+                c_exit_pause = BLACK;
+
+                c_sair = RED;
+
+
+                DrawRectangleRec(exit_pause2, RED);
+
+                DrawRectangleRec(exit_pause, c_exit_pause);
+                
+
+                if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+                    CurrentScreen = MENU;
+
+                }
+
+
+                }else{
+
+                     c_sair = WHITE;
+
+                }
+
+
+                 if( CheckCollisionPointRec( mouse, continue_pause ) ){
+
+                c_continue_pause = WHITE;
+
+                c_continue_pause2 = GREEN;
+
+                DrawRectangleRec(continue_pause2, c_continue_pause2);
+
+                DrawRectangleRec(continue_pause, c_continue_pause);
+
+                if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+                pause = !pause;
+
+                }
+
+                 }else{
+
+                     c_continue_pause2 = WHITE;
+
+                }
+
+                
+
+                DrawText("Pause", INIT_WIDTH /2 - 64, 100, 50, BLACK );
+
+
+
+                
+
+                DrawText("Continuar", INIT_WIDTH /2 - 90, 250, 40, c_continue_pause2);
+
+
+
+              
+
+                DrawText("Sair", (INIT_WIDTH /2  - 50) + 20, 350, 40, c_sair);
+
+            
+
+            
             }
 
             DrawFPS(0, 0);
@@ -168,10 +338,16 @@ int main()
             sprintf(clock,"Time = %.2lf", timer);
             int str_size = strlen(clock) -1;
 
-            DrawText(clock, (screen.width /2) - (str_size / 2.0f) *10, 10, 20, GREEN);
+            DrawText(clock, (INIT_WIDTH /2) - (str_size / 2.0f) *10, 10, 20, GREEN);
             
         EndDrawing();
+        
+        break;
+        
+            
 
+        }//Switch
+    
     }
 
     free(minefild);
