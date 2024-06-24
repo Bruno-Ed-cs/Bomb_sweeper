@@ -1,5 +1,24 @@
 #include "globals.h"
 
+
+void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar pra reiniciar toda vez que entra no menu
+{
+    LoadLevel("./assets/levels/mapa1.json");
+    PlayerInit();
+
+    camera_bounds.x = player.position.x - (camera_bounds.width / 2);
+    camera_bounds.y = player.position.y - (camera_bounds.height / 2);
+    camera.rotation = 0.0f;
+
+    MineListInit();
+    GenerateMinefild();
+    MapMines();
+    GetSorroundingMines();
+
+    timer = 0;
+    pause = false;
+}
+ 
 void InputHandler(int input)
 {
     switch (input) {

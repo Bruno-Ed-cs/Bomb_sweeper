@@ -2,34 +2,14 @@
 #include "include/Linux/wayland/raylib.h"
 
 
-void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar pra reiniciar toda vez que entra no menu
-{
-    LoadLevel("./assets/levels/mapa1.json");
-    PlayerInit();
-
-    camera_bounds.x = player.position.x - (camera_bounds.width / 2);
-    camera_bounds.y = player.position.y - (camera_bounds.height / 2);
-    camera.rotation = 0.0f;
-
-    MineListInit();
-    GenerateMinefild();
-    MapMines();
-    GetSorroundingMines();
-
-    timer = 0;
-    pause = false;
-}
-
-
- 
 int main()
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
     //SetConfigFlags(FLAG_VSYNC_HINT);
-    InitWindow(INIT_WIDTH, INIT_HEIGHT, "Bombsweeper 1.0 Alpha");
+    InitWindow(screen.width, screen.height, "Bombsweeper 1.0 Alpha");
 
-    SetWindowMinSize(INIT_WIDTH, INIT_HEIGHT);
+    SetWindowMinSize(screen.width, screen.height);
 
 
     Color taint = RED;
@@ -38,36 +18,30 @@ int main()
 
     //Nao sei como colocar nos globals e ficar funcional
 
+    SetTargetFPS(-1);
 
+    while (!WindowShouldClose()) {
+
+        //todo : colocar os menus em uma funcao e dixar as variaveis deles locais
+ 
     //Tela de Menu
-    Rectangle exit_menu = {INIT_WIDTH / 2 - 55, INIT_HEIGHT  / 2 - 10, 127, 60};
-    Rectangle exit_menu2 = {(INIT_WIDTH / 2 - 55) - 5, (INIT_HEIGHT  / 2 - 10) - 5, 137, 75};
+    Rectangle exit_menu = {screen.width / 2 - 55, screen.height/ 2 - 10, 127, 60};
+    Rectangle exit_menu2 = {(screen.width / 2 - 55) - 5, (screen.height  / 2 - 10) - 5, 137, 75};
     Color c_exit_menu = WHITE;
     Color c_exit_menu2 = WHITE;
 
     //Tela de Pausa
-    Rectangle exit_pause = {(INIT_WIDTH /2 - 70) + 20, INIT_HEIGHT / 2 - 15, 118, 50};
-    Rectangle exit_pause2 = {((INIT_WIDTH /2 - 70) + 20) - 5, (INIT_HEIGHT / 2 - 15) - 5, 118 + 10, 50 + 10};
-    Rectangle continue_pause = {INIT_WIDTH /2 - 100, 245, 215, 50};
-    Rectangle continue_pause2 = {(INIT_WIDTH /2 - 100) - 5, 240, 225, 60};
+    Rectangle exit_pause = {(screen.width /2 - 70) + 20, screen.height / 2 - 15, 118, 50};
+    Rectangle exit_pause2 = {((screen.width/2 - 70) + 20) - 5, (screen.height / 2 - 15) - 5, 118 + 10, 50 + 10};
+    Rectangle continue_pause = {screen.width /2 - 100, 245, 215, 50};
+    Rectangle continue_pause2 = {(screen.width /2 - 100) - 5, 240, 225, 60};
     Color c_exit_pause = LIGHTGRAY;
     Color c_continue_pause = LIGHTGRAY;
     Color c_continue_pause2 = WHITE;
     Color c_jogar = BLACK;
     Color c_sair = BLACK;
 
-    
-
-   
-    
-
-
-
-    SetTargetFPS(-1);
-
-    while (!WindowShouldClose()) {
-
-         
+        
          
     Vector2 mouse = GetMousePosition();
 
@@ -93,7 +67,7 @@ int main()
             ToggleFullscreen();
 
 
-            SetWindowSize(INIT_WIDTH, INIT_HEIGHT); //quando a tela cheia é ativada ou desativada atualizamos o tamanho da janela para que todos os valores dependent delas continuem corretos
+            SetWindowSize(screen.width, screen.height); //quando a tela cheia é ativada ou desativada atualizamos o tamanho da janela para que todos os valores dependent delas continuem corretos
 
         }
 
@@ -134,15 +108,15 @@ int main()
 
                 ClearBackground(WHITE);
 
-                DrawText("BETA",INIT_WIDTH - 100 , INIT_HEIGHT - 50, 20, BLACK);
+                DrawText("BETA",screen.width - 100 , screen.height - 50, 20, BLACK);
 
-                DrawText("MENU", INIT_WIDTH / 2 - 70, 20, 50, BLACK);
+                DrawText("MENU", screen.width / 2 - 70, 20, 50, BLACK);
 
                 DrawRectangleRec(exit_menu2, c_exit_menu2);
 
                 DrawRectangleRec(exit_menu, c_exit_menu);
 
-                DrawText("Jogar", INIT_WIDTH / 2 - 50, INIT_HEIGHT  / 2, 40, c_jogar);
+                DrawText("Jogar", screen.width / 2 - 50, screen.height  / 2, 40, c_jogar);
 
                 EndDrawing();
 
@@ -253,9 +227,9 @@ int main()
                 sprintf(debug_grid, "Grid X = %d\nGrid Y = %d\n", player.grid_pos.x, player.grid_pos.y);
 
 
-                DrawText(debug_grid, INIT_WIDTH -200, INIT_HEIGHT - 100, 20, GREEN);
-                DrawText(debug_pos, INIT_WIDTH -200, INIT_HEIGHT -40, 20, GREEN);
-                DrawText(debug_move, INIT_WIDTH -200, INIT_HEIGHT -60, 20, GREEN);
+                DrawText(debug_grid, screen.width -200, screen.height - 100, 20, GREEN);
+                DrawText(debug_pos, screen.width -200, screen.height -40, 20, GREEN);
+                DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
 
 
 
@@ -313,19 +287,19 @@ int main()
 
                 
 
-                DrawText("Pause", INIT_WIDTH /2 - 64, 100, 50, BLACK );
+                DrawText("Pause", screen.width /2 - 64, 100, 50, BLACK );
 
 
 
                 
 
-                DrawText("Continuar", INIT_WIDTH /2 - 90, 250, 40, c_continue_pause2);
+                DrawText("Continuar", screen.width /2 - 90, 250, 40, c_continue_pause2);
 
 
 
               
 
-                DrawText("Sair", (INIT_WIDTH /2  - 50) + 20, 350, 40, c_sair);
+                DrawText("Sair", (screen.width /2  - 50) + 20, 350, 40, c_sair);
 
             
 
@@ -338,7 +312,7 @@ int main()
             sprintf(clock,"Time = %.2lf", timer);
             int str_size = strlen(clock) -1;
 
-            DrawText(clock, (INIT_WIDTH /2) - (str_size / 2.0f) *10, 10, 20, GREEN);
+            DrawText(clock, (screen.width/2) - (str_size / 2.0f) *10, 10, 20, GREEN);
             
         EndDrawing();
         

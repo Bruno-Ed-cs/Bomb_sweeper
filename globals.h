@@ -36,7 +36,10 @@
 #define FLOOR 2
 #define WALL 1
 
-typedef enum GameScreen {MENU, GAME} GameScreen; 
+typedef enum GameScreen 
+{	
+	MENU, GAME
+} GameScreen; 
 
 typedef struct GridPos
 {
@@ -81,12 +84,7 @@ typedef struct Player {
 	double speed;
 
 
-} 
-
-
-
-
-Player;
+} Player;
 
 //declaração das variáveis globais
 //Localização: globals.c
@@ -155,6 +153,7 @@ void DrawTiles(GridPos start, GridPos end);
 //funções de sistema
 //Localização: system.c
 
+void ResetGame();
 int GetTileType(GridPos tile, int type);
 GridPos GetMatrixEnd(GridPos origin, int radius);
 GridPos GetMatrixBegin(GridPos origin, int radius);
