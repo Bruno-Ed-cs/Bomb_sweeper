@@ -18,6 +18,7 @@ void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar
     timer = 0;
     pause = false;
 }
+
  
 void InputHandler(int input)
 {

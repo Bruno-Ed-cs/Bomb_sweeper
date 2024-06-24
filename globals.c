@@ -1,5 +1,4 @@
 #include "globals.h"
-#include "include/Linux/wayland/raylib.h"
 
 //main globals
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};
@@ -8,12 +7,10 @@ Camera2D camera = { 0 };
 bool debug = false;
 bool pause = false;
 double timer = 0;
-
+Vector2 mouse_pos = {0, 0};
 
 //Tela de jogo
-GameScreen CurrentScreen = MENU;
-
-
+GameState state = START_MENU;
 
 //player globals
 Player player = { 0 };

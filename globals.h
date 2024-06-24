@@ -36,10 +36,11 @@
 #define FLOOR 2
 #define WALL 1
 
-typedef enum GameScreen 
+typedef enum GameState 
 {	
-	MENU, GAME
-} GameScreen; 
+	START_MENU,
+	GAME
+} GameState; 
 
 typedef struct GridPos
 {
@@ -95,7 +96,8 @@ extern Camera2D camera;
 extern bool debug;
 extern bool pause;
 extern double timer;
-extern GameScreen CurrentScreen;
+extern GameState state;
+extern Vector2 mouse_pos;
 
 //Menu
 extern Rectangle exit_menu;
@@ -159,4 +161,12 @@ GridPos GetMatrixEnd(GridPos origin, int radius);
 GridPos GetMatrixBegin(GridPos origin, int radius);
 void InputHandler(int input);
 
+//funções dos menus
+//localização : menus.c
 
+void PauseMenu();
+void StartMenu();
+
+//funcao principal do jogo
+// localização game.c
+void Game();
