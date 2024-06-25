@@ -1,4 +1,6 @@
 #include "globals.h"
+#include "include/Linux/wayland/raylib.h"
+#include <stdio.h>
 
 void AllocMap() {
 
@@ -262,17 +264,51 @@ void GetSorroundingMines(){
 
 void RenderMines()
 {
+
     tile_frame.x = TILE_SIZE * 2; 
+    tile_frame.y = 0;
 
-    for (int i = 0; i < mine_index; i++) {
+    if (debug)
+    {
+        for (int i = 0; i < mine_index; i++) {
+            if (CheckCollisionRecs(minefild[i].hitbox, camera_bounds) )
+            {
+                tile_view.x = minefild[i].hitbox.x;
 
-        tile_view.x = minefild[i].hitbox.x;
-
-        tile_view.y = minefild[i].hitbox.y;
+                tile_view.y = minefild[i].hitbox.y;
 
 
-        DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
+                DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
+            }
+        }
+    } else 
+{
+        for (int i = 0; i < mine_index; i++) {
+            if (CheckCollisionRecs(minefild[i].hitbox, camera_bounds))
+            {
+                int x = minefild[i].grid_pos.x;
+                int y = minefild[i].grid_pos.y;
+                //printf("x: %d, y: %d\n", x, y);
+                if (!ValidateGridPos((GridPos){x,y}))
+                {
+                    printf("nono\n");
+                    printf("%d\n", i);
+                    continue;
+                }
+
+                tile_view.x = minefild[i].hitbox.x;
+
+                tile_view.y = minefild[i].hitbox.y;
+
+                if(tilemap[y][x].visible == true)
+                {
+                    DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
+                }
+            }
+
+        }
     }
+
 
 };
 

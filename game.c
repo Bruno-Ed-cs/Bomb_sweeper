@@ -8,13 +8,10 @@ void Game()
 
         dt = 0; 
 
-
-
     } else 
     {
 
         dt = GetFrameTime();
-
     }
 
     timer += dt;
@@ -43,9 +40,7 @@ void Game()
 
     DrawPlayer(); 
 
-
     //DrawRectangle(0, 0, 320, 180, BLUE);
-
 
     if (debug)
     {

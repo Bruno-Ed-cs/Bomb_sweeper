@@ -1,5 +1,4 @@
 #include "globals.h"
-#include "include/Linux/wayland/raylib.h"
 
 void PlayerInit()
 {

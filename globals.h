@@ -161,6 +161,7 @@ GridPos GetMatrixEnd(GridPos origin, int radius);
 GridPos GetMatrixBegin(GridPos origin, int radius);
 void InputHandler(int input);
 
+bool ValidateGridPos(GridPos posisition);
 //funções dos menus
 //localização : menus.c
 

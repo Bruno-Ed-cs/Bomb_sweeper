@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/Linux/wayland/raylib.h"
 
 
 void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar pra reiniciar toda vez que entra no menu
@@ -17,6 +18,7 @@ void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar
 
     timer = 0;
     pause = false;
+
 }
 
  
@@ -82,4 +84,14 @@ int GetTileType(GridPos tile, int type)
 
 };
 
+bool ValidateGridPos(GridPos posisition)
+{
+    if (posisition.y >= map_height || posisition.y < 0)
+        return false;
+
+    if (posisition.x >= map_width || posisition.x < 0)
+        return false;
+
+    return true;
+};
 

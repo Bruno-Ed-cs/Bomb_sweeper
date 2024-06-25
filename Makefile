@@ -7,6 +7,7 @@ WINECC := x86_64-w64-mingw32-gcc
 TARGET := bombsweeper.exe
 INCLUDE ?= WINDOWS 
 X11 ?= true
+OLEVEL := -Og
 
 ifeq ($(WINE), true)
 	CC := $(WINECC)
@@ -29,7 +30,7 @@ else
 
 endif
 
-CFLAGS := -Wall -O3 -g
+CFLAGS := -Wall $(OLEVEL) -g
 
 ./build/$(TARGET) : player.o main.o globals.o tilemap.o cJSON.o system.o game.o menus.o ./build/
 	echo "$(OS)"
