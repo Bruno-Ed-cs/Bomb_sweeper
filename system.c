@@ -1,5 +1,4 @@
 #include "globals.h"
-#include "include/Linux/wayland/raylib.h"
 
 
 void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar pra reiniciar toda vez que entra no menu

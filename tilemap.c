@@ -1,4 +1,6 @@
 #include "globals.h"
+#include <stdbool.h>
+#include <stdio.h>
 
 void AllocMap() {
 
@@ -113,6 +115,8 @@ void LoadLevel(char *level)
     cJSON_Delete(json);
     free(buffer);
 
+    level_loaded = true;
+
 };
 
 void UnloadLevel()
@@ -123,6 +127,7 @@ void UnloadLevel()
     
     }
     printf("Level unloaded\n");
+    level_loaded = false;
 
 };
 
@@ -164,7 +169,9 @@ void GenerateMinefild()
                             (Rectangle){
                                 tilemap[i][j].tile.x, 
                                 tilemap[i][j].tile.y,
-                                TILE_SIZE, TILE_SIZE}};
+                                TILE_SIZE, TILE_SIZE},
+                                false};
+
 
                         mine_index++;
                     }
@@ -309,6 +316,22 @@ void RenderMines()
 
 
 };
+
+void MinesUpdate()
+{
+    for (int i = 0; i < mine_index; i++) {
+        if(!minefild[i].detonated && CheckCollisionPointRec(player.position, minefild[i].hitbox))
+        {
+            minefild[i].detonated = true;
+            
+            if(ValidateGridPos(minefild[i].grid_pos)) CreateExplosion(minefild[i].grid_pos, 2);
+            else
+             printf("Naaaah\n");
+            
+        }
+    }
+
+}
 
 
 void RevealTiles(GridPos tile_pos)

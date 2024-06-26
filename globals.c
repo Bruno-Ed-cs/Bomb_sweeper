@@ -1,4 +1,5 @@
 #include "globals.h"
+#include <stdbool.h>
 
 //main globals
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};
@@ -20,6 +21,9 @@ int animation_index = 0;
 Rectangle camera_bounds = {0, 0, 320, 180};
 Sound footstep_sfx;
 
+//controle de explosoes
+Explosion explosion_buffer[MAX_EXPLOSIONS];
+int explosion_qtd = 0;
 
 //tilemap globals
 Rectangle tile_frame = {0, 0, TILE_SIZE, TILE_SIZE};
@@ -34,6 +38,7 @@ int map_height = 80;
 Tile **tilemap;
 Mine *minefild;
 Rectangle level_bounds = {0};
+bool level_loaded = false;
 
 
 

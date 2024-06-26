@@ -36,6 +36,8 @@
 #define FLOOR 2
 #define WALL 1
 
+#define MAX_EXPLOSIONS 256
+
 typedef enum GameState 
 {	
 	START_MENU,
@@ -66,8 +68,22 @@ typedef struct Mine
 {
 	GridPos grid_pos;
 	Rectangle hitbox;
+	bool detonated;
 
 } Mine;
+
+typedef struct Explosion
+{
+	GridPos grid_pos;
+	int power;
+	Rectangle center;
+	Rectangle top;
+	Rectangle bottom;
+	Rectangle left;
+	Rectangle right;
+	double timer;
+
+} Explosion;
 
 typedef struct Player {
 
@@ -81,6 +97,7 @@ typedef struct Player {
 	Texture2D sprite;
 	bool move;
 	bool colliding;
+	bool dead;
 	int direction;
 	double speed;
 
@@ -125,6 +142,11 @@ extern int map_height;
 extern Tile **tilemap;
 extern Mine *minefild;
 extern Rectangle level_bounds;
+extern bool level_loaded;
+
+//explosion globals
+extern Explosion explosion_buffer[MAX_EXPLOSIONS];
+extern int explosion_qtd ;
 
 //funçoes do jogador 
 //Localização: player.c
@@ -151,6 +173,18 @@ void RevealTiles(GridPos tile_pos);
 void ResetLevel();
 void UnloadLevel();
 void DrawTiles(GridPos start, GridPos end);
+
+void MinesUpdate();
+
+//Funcoes de explosoes
+
+int CreateExplosion(GridPos origin, int power);
+Rectangle GetExplosionRight(int power, Rectangle center, GridPos grid_pos);
+Rectangle GetExplosionLeft(int power, Rectangle center, GridPos grid_pos);
+Rectangle GetExplosionTop(int power, Rectangle center, GridPos grid_pos);
+Rectangle GetExplosionBottom(int power, Rectangle center, GridPos grid_pos);
+void ExplosionsUpdate();
+void DeleteExplosion(int delete_index);
 
 //funções de sistema
 //Localização: system.c

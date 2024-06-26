@@ -9,6 +9,7 @@ void PlayerInit()
     player.sprite = LoadTexture("./assets/sprites/Connor_fodder-sheet.png");
     player.speed = 50.0f;
     player.move = false;
+    player.dead = false;
     player.colliding = false;
     player.direction = DOWN;
     player.previous_pos = (Vector2){0, 0};
@@ -203,6 +204,8 @@ void DrawPlayer()
                    (Vector2){0, 0},
                    0.0f,
                    WHITE);
+    if (player.dead)
+        DrawText("DEAD", player.position.x , player.position.y, 20, RED);
 };
 
 
@@ -214,6 +217,16 @@ void PlayerCollision()
 
     GridPos mat_ini = GetMatrixBegin(player.grid_pos, 13);
     GridPos mat_end = GetMatrixEnd(player.grid_pos, 13);
+
+    for (int i = 0; i < explosion_qtd; i++)
+    {
+
+        if (CheckCollisionRecs(player.hitbox, explosion_buffer[i].center))
+        {
+            player.dead = true;
+        }
+
+    }
 
     for (int i = mat_ini.y; i < mat_end.y; i++) 
     {

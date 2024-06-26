@@ -1,5 +1,4 @@
 #include "globals.h"
-#include "include/Linux/wayland/raylib.h"
 
 int main()
 {
@@ -75,7 +74,7 @@ int main()
     }
 
     free(minefild);
-    UnloadLevel();
+    if (level_loaded) UnloadLevel();
     free(tilemap);
     UnloadSound(footstep_sfx);
 
