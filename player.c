@@ -146,6 +146,8 @@ void AnimationHandler()
             frametime = 0.0f;
             cur_frame++;
 
+            if(cur_frame >=2)PlaySound(footstep_sfx);
+
             if (cur_frame >= 3)
             {
 
@@ -153,6 +155,7 @@ void AnimationHandler()
             }        
 
         }
+
     } else {
 
         cur_frame = 0;

@@ -1,6 +1,4 @@
 #include "globals.h"
-#include "include/Linux/wayland/raylib.h"
-#include <stdio.h>
 
 void AllocMap() {
 
@@ -389,11 +387,29 @@ void DrawTiles(GridPos start, GridPos end)
             tile_view = tilemap[i][j].tile;
             if (tilemap[i][j].type == WALL)
             {
-                tile_frame.x = TILE_SIZE;
 
             }else {
 
                 tile_frame.x = 0;
+            }
+
+            switch (tilemap[i][j].type) {
+
+                case WALL:
+                    tile_frame.x = TILE_SIZE;
+                    tile_frame.y = 0;
+                break;
+
+                case FLOOR:
+                    tile_frame.x = 0;
+                    tile_frame.y = 0;
+                break;
+
+                case AIR:
+                    tile_frame.x = TILE_SIZE * 4;
+                    tile_frame.y = 0;
+                break;
+            
             }
 
             if (tilemap[i][j].visible)

@@ -109,7 +109,7 @@ extern double frametime;
 extern int cur_frame;
 extern int animation_index;
 extern Rectangle camera_bounds;
-
+extern Sound footstep_sfx;
 
 //tilemap globals
 

@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/Linux/wayland/raylib.h"
 
 int main()
 {
@@ -9,8 +10,11 @@ int main()
 
     SetWindowMinSize(screen.width, screen.height);
 
-    ResetGame();
+    
+    InitAudioDevice();
 
+    footstep_sfx = LoadSound("./assets/audio/sfx/Retro FootStep 03.wav");
+    SetSoundVolume(footstep_sfx, 0.5f);
     //Nao sei como colocar nos globals e ficar funcional
 
     SetTargetFPS(-1);
@@ -73,6 +77,7 @@ int main()
     free(minefild);
     UnloadLevel();
     free(tilemap);
+    UnloadSound(footstep_sfx);
 
     CloseWindow();
     return 0;

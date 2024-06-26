@@ -18,6 +18,7 @@ double frametime = 0;
 int cur_frame = 0;
 int animation_index = 0;
 Rectangle camera_bounds = {0, 0, 320, 180};
+Sound footstep_sfx;
 
 
 //tilemap globals
