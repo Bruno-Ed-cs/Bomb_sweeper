@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/Linux/wayland/raylib.h"
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -269,13 +270,18 @@ void GetSorroundingMines(){
 
 void RenderMines()
 {
-
-    tile_frame.x = TILE_SIZE * 2; 
-    tile_frame.y = 0;
-
     if (debug)
     {
         for (int i = 0; i < mine_index; i++) {
+
+                if (minefild[i].detonated)
+                {
+
+                    tile_frame.x = TILE_SIZE * 5; 
+                } else {
+
+                    tile_frame.x = TILE_SIZE * 2; 
+                }
             if (CheckCollisionRecs(minefild[i].hitbox, camera_bounds) )
             {
                 tile_view.x = minefild[i].hitbox.x;
@@ -287,19 +293,29 @@ void RenderMines()
             }
         }
     } else 
-{
+    {
         for (int i = 0; i < mine_index; i++) {
             if (CheckCollisionRecs(minefild[i].hitbox, camera_bounds))
             {
+                if (minefild[i].detonated)
+                {
+
+                    tile_frame.x = TILE_SIZE * 5; 
+                } else {
+
+                    tile_frame.x = TILE_SIZE * 2; 
+                }
                 int x = minefild[i].grid_pos.x;
+
                 int y = minefild[i].grid_pos.y;
                 //printf("x: %d, y: %d\n", x, y);
                 if (!ValidateGridPos((GridPos){x,y}))
                 {
-                    printf("nono\n");
+                    printf("Invalid tilemap\n");
                     printf("%d\n", i);
                     continue;
                 }
+
 
                 tile_view.x = minefild[i].hitbox.x;
 
@@ -322,14 +338,52 @@ void MinesUpdate()
     for (int i = 0; i < mine_index; i++) {
         if(!minefild[i].detonated && CheckCollisionPointRec(player.position, minefild[i].hitbox))
         {
-            minefild[i].detonated = true;
+           
+            DetonateMine(i, 1);
+        }
+        bool explosion_collision = false;
+        int previous_power;
+
+        for (int j = 0; j < explosion_qtd; j++)
+        {
             
-            if(ValidateGridPos(minefild[i].grid_pos)) CreateExplosion(minefild[i].grid_pos, 2);
-            else
-             printf("Naaaah\n");
-            
+            if (CheckCollisionRecs(minefild[i].hitbox, explosion_buffer[j].top)) explosion_collision = true;
+            if (CheckCollisionRecs(minefild[i].hitbox, explosion_buffer[j].bottom)) explosion_collision = true;
+            if (CheckCollisionRecs(minefild[i].hitbox, explosion_buffer[j].left)) explosion_collision = true;
+            if (CheckCollisionRecs(minefild[i].hitbox, explosion_buffer[j].center)) explosion_collision = true;
+            if (CheckCollisionRecs(minefild[i].hitbox, explosion_buffer[j].right)) explosion_collision = true;
+
+
+            if (explosion_collision) previous_power = explosion_buffer[j].power;
+
+        }
+
+        
+
+        if(!minefild[i].detonated && explosion_collision)
+        {
+            previous_power++;
+            if (previous_power >= 50) previous_power = 50;
+
+            DetonateMine(i, previous_power);
+
         }
     }
+
+}
+
+void DetonateMine(int minefild_index, int power)
+{
+    minefild[minefild_index].detonated = true;
+
+    if(ValidateGridPos(minefild[minefild_index].grid_pos)) 
+    {
+        CreateExplosion(minefild[minefild_index].grid_pos, power);
+    }else 
+    {
+        printf("invalid detonation position\n");
+    }
+
 
 }
 
@@ -388,6 +442,7 @@ void ResetLevel()
             if (tilemap[y][x].type == FLOOR)
             {
                 tilemap[y][x].visible = false;
+                tilemap[y][x].flaged = false;
             }
         }
     }
@@ -396,6 +451,7 @@ void ResetLevel()
     GenerateMinefild();
     MapMines();
     GetSorroundingMines();
+    PlayerInit();
 
 
 };

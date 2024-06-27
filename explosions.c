@@ -8,6 +8,7 @@ int CreateExplosion(GridPos origin, int power)
 
     explosion_buffer[explosion_qtd -1].grid_pos = origin;
     explosion_buffer[explosion_qtd -1].timer = 1.0f;
+    explosion_buffer[explosion_qtd -1].power = power;
     explosion_buffer[explosion_qtd -1].center = (Rectangle){tilemap[origin.y][origin.x].tile.x,
                                                             tilemap[origin.y][origin.x].tile.y,
                                                             TILE_SIZE, TILE_SIZE};

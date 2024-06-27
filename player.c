@@ -1,5 +1,7 @@
 #include "globals.h"
 
+
+
 void PlayerInit()
 {
 
@@ -304,54 +306,50 @@ void PlayerCollision()
 
 void PutFlag()
 {
+
+    GridPos target = GetTargetTile();
+
+    if (tilemap[target.y][target.x].type == FLOOR)
+    {
+        
+        tilemap[target.y][target.x].flaged = !tilemap[target.y][target.x].flaged;
+    }
+    
+};
+
+GridPos GetTargetTile()
+{
+    Vector2 target = {0,0};
+
     switch (player.direction) {
-
         case UP:
-
-            if (GetTileType((GridPos){player.grid_pos.x, player.grid_pos.y -1} ,FLOOR) == FLOOR) 
-            {
-                tilemap[player.grid_pos.y -1][player.grid_pos.x].flaged = !tilemap[player.grid_pos.y -1][player.grid_pos.x].flaged;
-
-            }
-
+            target.x = 0;
+            target.y = -1;
         break;
-          
+
         case DOWN:
- 
-            if (GetTileType((GridPos){player.grid_pos.x, player.grid_pos.y +1} ,FLOOR) == FLOOR) 
-            {
-                tilemap[player.grid_pos.y +1][player.grid_pos.x].flaged = !tilemap[player.grid_pos.y +1][player.grid_pos.x].flaged;
-
-            }
-
- 
-        break;
- 
+          target.x = 0;
+          target.y = +1;
+          break;
         case LEFT:
-
-            if (GetTileType((GridPos){player.grid_pos.x -1, player.grid_pos.y} ,FLOOR) == FLOOR) 
-            {
-                tilemap[player.grid_pos.y ][player.grid_pos.x -1].flaged = !tilemap[player.grid_pos.y ][player.grid_pos.x -1].flaged;
-
-            }
-
-
-        break;
-            
+          target.x = -1;
+          target.y = 0;
+          break;
         case RIGHT:
+          target.x = +1;
+          target.y = 0;
+          break;
+        }
 
-            if (GetTileType((GridPos){player.grid_pos.x +1, player.grid_pos.y} ,FLOOR) == FLOOR) 
-            {
-                tilemap[player.grid_pos.y][player.grid_pos.x +1].flaged = !tilemap[player.grid_pos.y ][player.grid_pos.x +1].flaged;
-
-            }
-
-
-        break;
-               
+    if (!ValidateGridPos((GridPos){player.grid_pos.x + target.x, player.grid_pos.y + target.y}))
+    {
+        return (GridPos){0,0};
+        
     }
 
-};
+    
+    return (GridPos){player.grid_pos.x + target.x, player.grid_pos.y + target.y};
+}
 
 void PlayerUpdate()
 {

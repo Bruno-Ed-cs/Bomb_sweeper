@@ -158,6 +158,7 @@ void IsPlayerMoving();
 void PlayerCollision();
 void AnimationHandler();
 void PutFlag();
+GridPos GetTargetTile();
 void CameraUpdate();
 
 // funçoes do mapa e minas
@@ -175,6 +176,7 @@ void UnloadLevel();
 void DrawTiles(GridPos start, GridPos end);
 
 void MinesUpdate();
+void DetonateMine(int minefild_index, int power);
 
 //Funcoes de explosoes
 
