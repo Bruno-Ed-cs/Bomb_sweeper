@@ -1,5 +1,4 @@
 #include "globals.h"
-#include <stdbool.h>
 
 //main globals
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};
@@ -24,6 +23,11 @@ Sound footstep_sfx;
 //controle de explosoes
 Explosion explosion_buffer[MAX_EXPLOSIONS];
 int explosion_qtd = 0;
+
+//bombas
+
+Bomb bombs[MAX_BOMBS];
+int bombs_qtd = 0;
 
 //tilemap globals
 Rectangle tile_frame = {0, 0, TILE_SIZE, TILE_SIZE};

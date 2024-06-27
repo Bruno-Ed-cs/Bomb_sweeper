@@ -50,6 +50,59 @@ void DeleteExplosion(int delete_index)
     explosion_qtd--;
 };
 
+bool IsRectExploded(Rectangle target)
+{
+    bool exploded = false;
+
+    for (int i = 0; i < explosion_qtd; i++)
+    {
+
+        if (CheckCollisionRecs(target, explosion_buffer[i].top)) exploded = true;
+        if (CheckCollisionRecs(target, explosion_buffer[i].bottom)) exploded = true;
+        if (CheckCollisionRecs(target, explosion_buffer[i].left)) exploded = true;
+        if (CheckCollisionRecs(target, explosion_buffer[i].center)) exploded = true;
+        if (CheckCollisionRecs(target, explosion_buffer[i].right)) exploded = true;
+
+    }
+
+    return exploded;
+
+}
+
+bool CheckExplosionCollision(Explosion explosion, Rectangle target)
+{
+    bool exploded = false;
+
+    if (CheckCollisionRecs(target, explosion.top)) exploded = true;
+    if (CheckCollisionRecs(target, explosion.bottom)) exploded = true;
+    if (CheckCollisionRecs(target, explosion.left)) exploded = true;
+    if (CheckCollisionRecs(target, explosion.center)) exploded = true;
+    if (CheckCollisionRecs(target, explosion.right)) exploded = true;
+
+
+    return exploded;
+
+
+}
+
+int GetEplosionPower(Rectangle target)
+{
+    int power = 0;
+
+    for (int i = 0; i < explosion_qtd; i++)
+    {
+
+        if (CheckExplosionCollision(explosion_buffer[i], target))
+        {
+            power = explosion_buffer[i].power;
+        }
+        
+    }
+
+    return power;
+
+}
+
 Rectangle GetExplosionRight(int power, Rectangle center, GridPos grid_pos)
 {
     double x = center.x +TILE_SIZE;
@@ -175,4 +228,3 @@ Rectangle GetExplosionBottom(int power, Rectangle center, GridPos grid_pos)
     return (Rectangle){x, y, width, height};
 
 };
-

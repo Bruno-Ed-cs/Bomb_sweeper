@@ -1,7 +1,4 @@
 #include "globals.h"
-#include "include/Linux/wayland/raylib.h"
-#include <stdbool.h>
-#include <stdio.h>
 
 void AllocMap() {
 
@@ -338,27 +335,34 @@ void MinesUpdate()
     for (int i = 0; i < mine_index; i++) {
         if(!minefild[i].detonated && CheckCollisionPointRec(player.position, minefild[i].hitbox))
         {
-           
+
             DetonateMine(i, 1);
         }
+
         bool explosion_collision = false;
-        int previous_power;
+        int previous_power = 0;
+        
+        for (int j = 0; j < explosion_qtd; j++) {
 
-        for (int j = 0; j < explosion_qtd; j++)
-        {
-            
-            if (CheckCollisionRecs(minefild[i].hitbox, explosion_buffer[j].top)) explosion_collision = true;
-            if (CheckCollisionRecs(minefild[i].hitbox, explosion_buffer[j].bottom)) explosion_collision = true;
-            if (CheckCollisionRecs(minefild[i].hitbox, explosion_buffer[j].left)) explosion_collision = true;
-            if (CheckCollisionRecs(minefild[i].hitbox, explosion_buffer[j].center)) explosion_collision = true;
-            if (CheckCollisionRecs(minefild[i].hitbox, explosion_buffer[j].right)) explosion_collision = true;
+            if (CheckExplosionCollision(explosion_buffer[j], minefild[i].hitbox))
+            {
+                explosion_collision = true;
+                previous_power = explosion_buffer[j].power;
 
-
-            if (explosion_collision) previous_power = explosion_buffer[j].power;
-
+            }
+        
         }
 
-        
+        for (int j = 0; j < bombs_qtd; j++) {
+
+            if (CheckCollisionRecs(bombs[j].hitbox, minefild[i].hitbox))
+            {
+                explosion_collision = true;
+                previous_power++;
+
+            }
+        }
+
 
         if(!minefild[i].detonated && explosion_collision)
         {
@@ -374,11 +378,14 @@ void MinesUpdate()
 
 void DetonateMine(int minefild_index, int power)
 {
+    GridPos pos = minefild[minefild_index].grid_pos;
     minefild[minefild_index].detonated = true;
 
-    if(ValidateGridPos(minefild[minefild_index].grid_pos)) 
+    if(ValidateGridPos(pos)) 
     {
-        CreateExplosion(minefild[minefild_index].grid_pos, power);
+        CreateExplosion(pos, power);
+        tilemap[pos.y][pos.x].visible = true;
+
     }else 
     {
         printf("invalid detonation position\n");

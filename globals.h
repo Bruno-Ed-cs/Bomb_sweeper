@@ -37,6 +37,7 @@
 #define WALL 1
 
 #define MAX_EXPLOSIONS 256
+#define MAX_BOMBS 5
 
 typedef enum GameState 
 {	
@@ -84,6 +85,16 @@ typedef struct Explosion
 	double timer;
 
 } Explosion;
+
+typedef struct Bomb
+{
+	GridPos grid_pos;
+	Rectangle hitbox;
+	double timer;
+	int power;
+	Rectangle frame;
+
+} Bomb;
 
 typedef struct Player {
 
@@ -148,6 +159,13 @@ extern bool level_loaded;
 extern Explosion explosion_buffer[MAX_EXPLOSIONS];
 extern int explosion_qtd ;
 
+//bombs globals
+
+extern Bomb bombs[MAX_BOMBS];
+extern int bombs_qtd;
+
+
+
 //funçoes do jogador 
 //Localização: player.c
 void PlayerInit();
@@ -160,6 +178,8 @@ void AnimationHandler();
 void PutFlag();
 GridPos GetTargetTile();
 void CameraUpdate();
+void PlaceBomb();
+void ApplyCollision(Rectangle rect);
 
 // funçoes do mapa e minas
 // Localização: tilemap.c
@@ -179,6 +199,7 @@ void MinesUpdate();
 void DetonateMine(int minefild_index, int power);
 
 //Funcoes de explosoes
+//local : explosions.c
 
 int CreateExplosion(GridPos origin, int power);
 Rectangle GetExplosionRight(int power, Rectangle center, GridPos grid_pos);
@@ -187,6 +208,17 @@ Rectangle GetExplosionTop(int power, Rectangle center, GridPos grid_pos);
 Rectangle GetExplosionBottom(int power, Rectangle center, GridPos grid_pos);
 void ExplosionsUpdate();
 void DeleteExplosion(int delete_index);
+bool IsRectExploded(Rectangle target);
+bool CheckExplosionCollision(Explosion explosion, Rectangle target);
+int GetEplosionPower(Rectangle target);
+
+
+//Funcoes de bombas
+//local : bombs.c
+
+void CreateBomb(GridPos grid_pos);
+void BombUpdate();
+void DeleteBomb(int bomb_index);
 
 //funções de sistema
 //Localização: system.c

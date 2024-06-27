@@ -1,5 +1,4 @@
 #include "globals.h"
-#include "include/Linux/wayland/raylib.h"
 
 void Game()
 {
@@ -29,6 +28,7 @@ void Game()
         CameraUpdate();
         MinesUpdate();
         ExplosionsUpdate();
+        BombUpdate();
         
     }
 
@@ -54,6 +54,12 @@ void Game()
         DrawRectangleRec(explosion_buffer[i].left, YELLOW);
         DrawRectangleRec(explosion_buffer[i].top, PURPLE);
         DrawRectangleRec(explosion_buffer[i].bottom, BLUE);
+
+    }
+
+    for (int i = 0; i < bombs_qtd; i++)
+    {
+        DrawRectangleRec(bombs[i].hitbox, DARKBLUE);
 
     }
 
@@ -109,13 +115,9 @@ void Game()
         sprintf(debug_move, "Moving = %d", player.move);
         sprintf(debug_grid, "Grid X = %d\nGrid Y = %d\n", player.grid_pos.x, player.grid_pos.y);
 
-
         DrawText(debug_grid, screen.width -200, screen.height - 100, 20, GREEN);
         DrawText(debug_pos, screen.width -200, screen.height -40, 20, GREEN);
         DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
-
-
-
     }
 
     if (pause)

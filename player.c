@@ -127,9 +127,17 @@ void PlayerMovement() {
         player.direction = LEFT;
     }
 
-    if (IsKeyPressed(KEY_SPACE))
+    if (IsKeyPressed(KEY_F))
     {
         PutFlag();
+    }
+
+    if (IsKeyPressed(KEY_SPACE))
+    {
+        if (bombs_qtd < 1)
+        {
+            PlaceBomb();
+        }
     }
 
 
@@ -223,12 +231,13 @@ void PlayerCollision()
     for (int i = 0; i < explosion_qtd; i++)
     {
 
-        if (CheckCollisionRecs(player.hitbox, explosion_buffer[i].center))
+        if (CheckExplosionCollision(explosion_buffer[i], player.hitbox))
         {
             player.dead = true;
         }
 
     }
+
 
     for (int i = mat_ini.y; i < mat_end.y; i++) 
     {
@@ -258,44 +267,31 @@ void PlayerCollision()
                     // Resolve collision by moving the player out of the tile
                     for (int k = 0; k < 20; k++)
                     {
-                        Rectangle overlap = GetCollisionRec(player.hitbox, tilemap[i][j].tile);
-                        double step = 0.0000001f;
-
 
                         if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
                         {
-                            if (overlap.width < overlap.height)
-                            {
-                                // Horizontal collision
-                                if (player.hitbox.x <= tilemap[i][j].tile.x)
-                                {
-                                    player.position.x -= (overlap.width + step) *dt;
-                                    player.hitbox.x = player.position.x- (player.hitbox.width /2);
-                                }
-                                else
-                            {
-                                    player.position.x += (overlap.width + step ) *dt;
-                                    player.hitbox.x = player.position.x- (player.hitbox.width /2);
-                                }
-                            }
-                            else
-                        {
-                                // Vertical collision
-                                if (player.hitbox.y <= tilemap[i][j].tile.y)
-                                {
-                                    player.position.y -= (overlap.width + step) *dt;
-                                    player.hitbox.y = player.position.y- (player.hitbox.height /2);
-                                }
-                                else
-                            {
-                                    player.position.y += (overlap.width + step) *dt;
-                                    player.hitbox.y = player.position.y- (player.hitbox.height/2);
-                                }
-
-                            }
+                            ApplyCollision(tilemap[i][j].tile);
+                            
                         }
+
+
                     }
                 }
+
+                for (int k = 0; k < 20; k++)
+                {
+                    for (int i = 0; i < bombs_qtd; i++)
+                    {
+                        if (CheckCollisionRecs(player.hitbox, bombs[i].hitbox))
+                        {
+                            player.position = player.previous_pos;
+                            ApplyCollision(bombs[i].hitbox);
+                        }
+
+                    }
+                }
+
+
             }
 
 
@@ -303,6 +299,44 @@ void PlayerCollision()
 
     }
 };
+
+void ApplyCollision(Rectangle rect)
+{
+
+    Rectangle overlap = GetCollisionRec(player.hitbox, rect);
+
+    double step = 0.00001f;
+    if (overlap.width < overlap.height)
+    {
+        // Horizontal collision
+        if (player.hitbox.x <= rect.x)
+        {
+            player.position.x -= (overlap.width + step) *dt;
+            player.hitbox.x = player.position.x- (player.hitbox.width /2);
+        }
+        else
+    {
+            player.position.x += (overlap.width + step ) *dt;
+            player.hitbox.x = player.position.x- (player.hitbox.width /2);
+        }
+    }
+    else
+{
+        // Vertical collision
+        if (player.hitbox.y <= rect.y)
+        {
+            player.position.y -= (overlap.width + step) *dt;
+            player.hitbox.y = player.position.y- (player.hitbox.height /2);
+        }
+        else
+    {
+            player.position.y += (overlap.width + step) *dt;
+            player.hitbox.y = player.position.y- (player.hitbox.height/2);
+        }
+    }
+
+
+}
 
 void PutFlag()
 {
@@ -349,6 +383,20 @@ GridPos GetTargetTile()
 
     
     return (GridPos){player.grid_pos.x + target.x, player.grid_pos.y + target.y};
+}
+
+void PlaceBomb()
+{
+    GridPos target = GetTargetTile();
+    Tile tile = tilemap[target.y][target.x];
+
+    if (tile.type == FLOOR)
+    {
+        CreateBomb(target);
+        tilemap[target.y][target.x].visible = true;
+
+    }
+
 }
 
 void PlayerUpdate()

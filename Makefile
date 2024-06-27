@@ -32,13 +32,13 @@ endif
 
 CFLAGS := -Wall $(OLEVEL) -g
 
-./build/$(TARGET) : explosions.o player.o main.o globals.o tilemap.o cJSON.o system.o game.o menus.o ./build/
+./build/$(TARGET) : bombs.o explosions.o player.o main.o globals.o tilemap.o cJSON.o system.o game.o menus.o ./build/
 	echo "$(OS)"
 ifeq ($(X11), true)
 	cp -r ./lib/Linux/x11/lib ./build/
 endif
 
-	$(CC) player.o main.o explosions.o globals.o tilemap.o cJSON.o system.o game.o menus.o -D$(INCLUDE) $(libs) $(CFLAGS) -o ./build/$(TARGET)
+	$(CC) player.o main.o bombs.o explosions.o globals.o tilemap.o cJSON.o system.o game.o menus.o -D$(INCLUDE) $(libs) $(CFLAGS) -o ./build/$(TARGET)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -D$(INCLUDE) $(libs) -c $< -o $@
