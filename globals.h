@@ -35,6 +35,7 @@
 #define AIR 0
 #define FLOOR 2
 #define WALL 1
+#define PORTAL 3
 
 #define MAX_EXPLOSIONS 256
 #define MAX_BOMBS 5
@@ -109,6 +110,7 @@ typedef struct Player {
 	bool move;
 	bool colliding;
 	bool dead;
+	bool win;
 	int direction;
 	double speed;
 

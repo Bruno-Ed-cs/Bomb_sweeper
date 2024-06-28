@@ -12,6 +12,7 @@ void PlayerInit()
     player.speed = 50.0f;
     player.move = false;
     player.dead = false;
+    player.win = false;
     player.colliding = false;
     player.direction = DOWN;
     player.previous_pos = (Vector2){0, 0};
@@ -216,6 +217,8 @@ void DrawPlayer()
                    WHITE);
     if (player.dead)
         DrawText("DEAD", player.position.x , player.position.y, 20, RED);
+    if (player.win)
+        DrawText("YOU WIN", player.position.x , player.position.y, 20, GREEN);
 };
 
 
@@ -252,6 +255,11 @@ void PlayerCollision()
 
             if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
             {
+                if (tilemap[i][j].type == PORTAL)
+                {
+                    if(!player.dead) player.win = true;
+
+                }
 
                 if (tilemap[i][j].type == WALL)
                 {

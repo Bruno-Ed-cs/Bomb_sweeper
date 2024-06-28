@@ -90,6 +90,9 @@ void LoadLevel(char *level)
 
             switch (tile) {
 
+                case PORTAL: tilemap[i][j].type = PORTAL;
+                break;
+
                 case WALL: tilemap[i][j].type = WALL;
                     break;
 
@@ -471,13 +474,6 @@ void DrawTiles(GridPos start, GridPos end)
         for (int j = start.x; j < end.x; j++) {
 
             tile_view = tilemap[i][j].tile;
-            if (tilemap[i][j].type == WALL)
-            {
-
-            }else {
-
-                tile_frame.x = 0;
-            }
 
             switch (tilemap[i][j].type) {
 
@@ -491,6 +487,12 @@ void DrawTiles(GridPos start, GridPos end)
                     tile_frame.y = 0;
                 break;
 
+                case PORTAL:
+                    tile_frame.x = 0;
+                    tile_frame.y = 0;
+                break;
+
+
                 case AIR:
                     tile_frame.x = TILE_SIZE * 4;
                     tile_frame.y = 0;
@@ -500,7 +502,10 @@ void DrawTiles(GridPos start, GridPos end)
 
             if (tilemap[i][j].visible)
             {
-                DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
+                Color color = PURPLE;
+                if (tilemap[i][j].type == PORTAL) color = GREEN;
+
+                DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, color);
 
             } else {
 
@@ -523,7 +528,6 @@ void DrawTiles(GridPos start, GridPos end)
                 tile_frame.x = TILE_SIZE * 3;
                 DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, WHITE);
             }
-
 
         }
 
