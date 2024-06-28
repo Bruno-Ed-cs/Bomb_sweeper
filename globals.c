@@ -36,6 +36,7 @@ Texture2D tileset = {0};
 int qtd_floor = 0;
 int mine_index = 0;
 GridPos spawn_tile = {5, 2};
+GridPos portal_tile = {0,0};
 Vector2 world_origin = {0, 0};
 int map_width = 50;
 int map_height = 80;

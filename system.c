@@ -1,4 +1,5 @@
 #include "globals.h"
+#include <math.h>
 
 
 void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar pra reiniciar toda vez que entra no menu
@@ -94,3 +95,8 @@ bool ValidateGridPos(GridPos posisition)
     return true;
 };
 
+int TileDistance(GridPos a, GridPos b)
+{
+    return sqrt((pow(b.x - a.x, 2)) + (pow(b.y - a.y, 2)));
+
+};

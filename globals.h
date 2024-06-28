@@ -1,13 +1,5 @@
-#ifdef _WIN32
+#include "include/raylib.h"
 
-#include "include/Windows/raylib.h"
-#elif X11
-
-#include "include/Linux/x11/raylib.h"
-#elif __linux__
-
-#include "include/Linux/wayland/raylib.h"
-#endif
 
 #include <string.h>
 #include <stdbool.h>
@@ -62,6 +54,7 @@ typedef struct Tile
 	int sorrounding_mines;
 	bool visible;
 	bool flaged;
+	bool bombed;
 
 
 } Tile;
@@ -156,6 +149,7 @@ extern Tile **tilemap;
 extern Mine *minefild;
 extern Rectangle level_bounds;
 extern bool level_loaded;
+extern GridPos portal_tile;
 
 //explosion globals
 extern Explosion explosion_buffer[MAX_EXPLOSIONS];
@@ -230,8 +224,9 @@ int GetTileType(GridPos tile, int type);
 GridPos GetMatrixEnd(GridPos origin, int radius);
 GridPos GetMatrixBegin(GridPos origin, int radius);
 void InputHandler(int input);
-
+int TileDistance(GridPos a, GridPos b);
 bool ValidateGridPos(GridPos posisition);
+
 //funções dos menus
 //localização : menus.c
 

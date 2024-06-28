@@ -1,5 +1,6 @@
 #include "globals.h"
 
+
 void CreateBomb(GridPos grid_pos)
 {
 

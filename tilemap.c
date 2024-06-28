@@ -1,4 +1,6 @@
 #include "globals.h"
+#include "include/raylib.h"
+#include <stdbool.h>
 
 void AllocMap() {
 
@@ -84,6 +86,7 @@ void LoadLevel(char *level)
 
             tilemap[i][j].visible = true;
             tilemap[i][j].flaged = false;
+            tilemap[i][j].bombed = false;
             tilemap[i][j].tile_pos = (GridPos){j, i};
             tilemap[i][j].tile = (Rectangle){world_origin.x + (j * TILE_SIZE), world_origin.y + (i * TILE_SIZE), TILE_SIZE, TILE_SIZE};
             tilemap[i][j].sorrounding_mines = 0;
@@ -91,6 +94,7 @@ void LoadLevel(char *level)
             switch (tile) {
 
                 case PORTAL: tilemap[i][j].type = PORTAL;
+                    portal_tile = (GridPos){j, i};
                 break;
 
                 case WALL: tilemap[i][j].type = WALL;
@@ -140,29 +144,21 @@ void MineListInit()
 
 void GenerateMinefild()
 {
-    srand(time(NULL));
+    SetRandomSeed(time(NULL));
     int prob;
+    int treshold = 500;
 
     for (int i = 0; i < map_height; i++)
     {
         for (int j = 0;j < map_width; j++) 
         {
-            if (!( (i == player.spawn.y && j == player.spawn.x) ||
-                (i == player.spawn.y + 1 && j == player.spawn.x + 1) ||
-                (i == player.spawn.y + 1 && j == player.spawn.x - 1) ||
-                (i == player.spawn.y + 1 && j == player.spawn.x) ||
-                (i == player.spawn.y - 1 && j == player.spawn.x + 1) ||
-                (i == player.spawn.y - 1 && j == player.spawn.x - 1) ||
-                (i == player.spawn.y - 1 && j == player.spawn.x) ||
-                (i == player.spawn.y && j == player.spawn.x + 1) ||
-                (i == player.spawn.y && j == player.spawn.x - 1) ))            //if para deixar os espaços ao redor do spawn do jogador sem minas
-            //eu sei que é uma atrocidade
+            if (TileDistance(spawn_tile, (GridPos){j, i}) > 1 && TileDistance(portal_tile, (GridPos){j, i}) > 1)
             {
 
-                prob = rand() % 100;
+                prob = GetRandomValue(0, 1000);
                 if (tilemap[i][j].type == FLOOR)
                 {
-                    if (prob <= 20)
+                    if (prob <= treshold)
                     {
 
                         minefild[mine_index] = (Mine){ 
@@ -187,13 +183,14 @@ void GenerateMinefild()
         int grid_x;
         int grid_y;
 
-        grid_x = rand() % 10;
-        grid_y = rand() % 10;
+        grid_x = GetRandomValue(0, 10);
+        grid_y = GetRandomValue(0, 10);
 
         while (tilemap[grid_x][grid_y].type != FLOOR) {
 
-            grid_x = rand() % 10;
-            grid_y = rand() % 10;       
+            grid_x = GetRandomValue(0, 10);
+            grid_y = GetRandomValue(0, 10);
+
         }
 
         minefild[mine_index] = (Mine){ 
@@ -321,7 +318,7 @@ void RenderMines()
 
                 tile_view.y = minefild[i].hitbox.y;
 
-                if(tilemap[y][x].visible == true)
+                if(tilemap[y][x].visible == true && !minefild[i].detonated)
                 {
                     DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
                 }
@@ -388,6 +385,7 @@ void DetonateMine(int minefild_index, int power)
     {
         CreateExplosion(pos, power);
         tilemap[pos.y][pos.x].visible = true;
+        tilemap[pos.y][pos.x].bombed = true;
 
     }else 
     {
@@ -407,37 +405,54 @@ void RevealTiles(GridPos tile_pos)
 
         if (tilemap[tile_pos.y][tile_pos.x].sorrounding_mines == 0)
         {
-            if ((tile_pos.y +1) >= 0 && 
-                (tile_pos.y +1) < map_height &&
-                (tile_pos.x ) >= 0 && 
-                (tile_pos.x ) < map_width)
+
+            if (ValidateGridPos((GridPos){tile_pos.x, tile_pos.y +1}))
             {
                 RevealTiles((GridPos){tile_pos.x, (tile_pos.y +1)});
             }
 
-            if ((tile_pos.y -1) >= 0 && 
-                (tile_pos.y -1) < map_height &&
-                (tile_pos.x ) >= 0 && 
-                (tile_pos.x ) < map_width)
+            if (ValidateGridPos((GridPos){tile_pos.x, tile_pos.y -1}))
             {
                 RevealTiles((GridPos){tile_pos.x, (tile_pos.y -1)});
             }
 
-            if ((tile_pos.y ) >= 0 && 
-                (tile_pos.y ) < map_height &&
-                (tile_pos.x +1) >= 0 && 
-                (tile_pos.x +1) < map_width)
+
+            if (ValidateGridPos((GridPos){tile_pos.x -1, tile_pos.y}))
             {
-                RevealTiles((GridPos){(tile_pos.x +1), tile_pos.y});
+                RevealTiles((GridPos){tile_pos.x -1, (tile_pos.y)});
             }
 
-            if ((tile_pos.y ) >= 0 && 
-                (tile_pos.y ) < map_height &&
-                (tile_pos.x -1) >= 0 && 
-                (tile_pos.x -1) < map_width)
+
+            if (ValidateGridPos((GridPos){tile_pos.x -1, tile_pos.y -1}))
             {
-                RevealTiles((GridPos){(tile_pos.x -1), tile_pos.y});
+                RevealTiles((GridPos){tile_pos.x -1, (tile_pos.y -1)});
             }
+
+
+            if (ValidateGridPos((GridPos){tile_pos.x -1, tile_pos.y +1}))
+            {
+                RevealTiles((GridPos){tile_pos.x -1, (tile_pos.y +1)});
+            }
+
+
+            if (ValidateGridPos((GridPos){tile_pos.x +1, tile_pos.y}))
+            {
+                RevealTiles((GridPos){tile_pos.x +1, (tile_pos.y)});
+            }
+
+
+            if (ValidateGridPos((GridPos){tile_pos.x +1, tile_pos.y +1}))
+            {
+                RevealTiles((GridPos){tile_pos.x +1, (tile_pos.y +1)});
+            }
+
+
+            if (ValidateGridPos((GridPos){tile_pos.x +1, tile_pos.y -1}))
+            {
+                RevealTiles((GridPos){tile_pos.x +1, (tile_pos.y -1)});
+            }
+
+
         }
     }
 
@@ -453,6 +468,7 @@ void ResetLevel()
             {
                 tilemap[y][x].visible = false;
                 tilemap[y][x].flaged = false;
+                tilemap[y][x].bombed = false;
             }
         }
     }
@@ -521,10 +537,20 @@ void DrawTiles(GridPos start, GridPos end)
                 DrawText(num, (tilemap[i][j].tile.x + (TILE_SIZE /2.0f)) -2, (tilemap[i][j].tile.y + (TILE_SIZE /2.0f)) - 5, 11, WHITE);
             }
 
+            if (tilemap[i][j].bombed)
+            {
+                tile_frame.y = 0;
+                tile_frame.x = TILE_SIZE * 5;
+
+
+                DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, WHITE);
+
+            }
 
             if (tilemap[i][j].flaged == true)
             {
 
+                tile_frame.y = 0;
                 tile_frame.x = TILE_SIZE * 3;
                 DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, WHITE);
             }
