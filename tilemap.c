@@ -143,7 +143,7 @@ void GenerateMinefild()
 {
     SetRandomSeed(time(NULL));
     int prob;
-    int treshold = 200;
+    int treshold = 300;
 
     for (int i = 0; i < map_height; i++)
     {
@@ -364,7 +364,7 @@ void MinesUpdate()
         if(!minefild[i].detonated && explosion_collision)
         {
             previous_power++;
-            if (previous_power >= 50) previous_power = 50;
+            if (previous_power >= 5) previous_power = 5;
 
             DetonateMine(i, previous_power);
 
@@ -399,6 +399,8 @@ void RevealTiles(GridPos tile_pos)
     if (tilemap[tile_pos.y][tile_pos.x].type == FLOOR && !tilemap[tile_pos.y][tile_pos.x].visible)
     {
         tilemap[tile_pos.y][tile_pos.x].visible = true;
+
+        player.score += 5;
 
         if (tilemap[tile_pos.y][tile_pos.x].sorrounding_mines == 0)
         {
@@ -458,8 +460,12 @@ void RevealTiles(GridPos tile_pos)
 void ResetLevel() 
 {
     mine_index = 0;
-    bombs_qtd =0;
-    explosion_qtd =0;
+    bombs_qtd = 0;
+    explosion_qtd = 0;
+    timer = 0;
+    minutes = 0;
+    seconds = 0;
+    final_score = 0;
 
     for (int y = 0; y < map_height; y++) {
         for (int x = 0; x < map_width; x++) {

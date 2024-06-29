@@ -14,6 +14,7 @@ void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar
 
     timer = 0;
     pause = false;
+    final_score = 0;
 
 }
 

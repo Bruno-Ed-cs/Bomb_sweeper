@@ -17,6 +17,7 @@ void PlayerInit()
     player.grid_pos = player.spawn;
     player.position = (Vector2){tilemap[player.spawn.y][player.spawn.x].tile.x + (TILE_SIZE /2.0f), tilemap[player.spawn.y][player.spawn.x].tile.y + (TILE_SIZE /2.0f) };
     if (!IsTextureReady(player.sprite)) player.sprite = LoadTexture("./assets/sprites/Connor_fodder-sheet.png");
+    player.score = 0;
 
 };
 

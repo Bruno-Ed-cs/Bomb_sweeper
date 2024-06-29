@@ -32,11 +32,11 @@ endif
 
 CFLAGS := -Wall $(OLEVEL) -g
 
-./build/$(TARGET) : ./build/ bombs.o explosions.o player.o main.o globals.o tilemap.o cJSON.o system.o game.o menus.o
+./build/$(TARGET) : ./build/ score.o bombs.o explosions.o player.o main.o globals.o tilemap.o cJSON.o system.o game.o menus.o
 	echo "$(OS)"
 
 
-	$(CC) player.o main.o bombs.o explosions.o globals.o tilemap.o cJSON.o system.o game.o menus.o -D$(INCLUDE) $(libs) $(CFLAGS) -o ./build/$(TARGET)
+	$(CC) player.o main.o bombs.o score.o explosions.o globals.o tilemap.o cJSON.o system.o game.o menus.o -D$(INCLUDE) $(libs) $(CFLAGS) -o ./build/$(TARGET)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -D$(INCLUDE) $(libs) -c $< -o $@

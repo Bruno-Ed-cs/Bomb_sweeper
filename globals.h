@@ -106,6 +106,7 @@ typedef struct Player {
 	bool win;
 	int direction;
 	double speed;
+	int score;
 
 
 } Player;
@@ -124,6 +125,7 @@ extern Vector2 mouse_pos;
 extern Font custom_font;
 extern double minutes;
 extern double seconds;
+extern int final_score;
 
 //Menu
 extern Rectangle exit_menu;
@@ -240,3 +242,11 @@ void StartMenu();
 void Game();
 void DeathScreen();
 void PauseMenu();
+
+//funcoes da pontuação
+//localização : score.c
+
+int GetTimeBonus();
+int GetRevealedTiles();
+int GetFlagedMines();
+void GetFinalScore();

@@ -11,6 +11,7 @@ double minutes = 0;
 double seconds = 0;
 Vector2 mouse_pos = {0, 0};
 Font custom_font;
+int final_score = 0;
 
 //Tela de jogo
 GameState state = START_MENU;

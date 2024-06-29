@@ -1,5 +1,92 @@
 #include "globals.h"
 
+void VictoryScreen()
+{
+    GetFinalScore();
+
+    Color background_color = {51, 255, 51, 120};
+    Color button_color = {129, 129, 129 ,200};
+
+    char exit_message[50] = "Exit";
+    char respawn_message[50] = "Respawn";
+    char score_message[100];
+    char mine_message[100];
+    char tile_message[100];
+    char time_message[100];
+    
+    sprintf(tile_message, "Revealed Tiles : %d", GetRevealedTiles());
+    sprintf(time_message, "Time Bonus : +%d $", GetTimeBonus());
+    sprintf(mine_message, "Mines : %d/%d +%d $", GetFlagedMines(), mine_index, GetFlagedMines() * 150);
+    sprintf(score_message, "Salary : %d $", final_score);
+
+    Vector2 win_pos = {screen.width/2 - (MeasureText("You Win!", 128) + MeasureText("", 128))/2.0f , screen.height/5.0f};
+
+    Rectangle respawn_button = {(screen.width/2) -150, screen.height /2 + 100, 300, 60};
+    Rectangle exit_button = {respawn_button.x, respawn_button.y + respawn_button.height +10, 300, 60};
+
+    Vector2 exit_text_pos = {exit_button.x + 10, exit_button.y - 5};
+    Vector2 respawn_text_pos = {respawn_button.x + 10, respawn_button.y - 5};
+
+    pause = true;
+    DrawRectangleRec(screen, background_color);
+
+    DrawRectangleRec(respawn_button, button_color);
+    DrawRectangleRec(exit_button, button_color);
+
+    DrawTextEx(custom_font, "You Win!", win_pos, 128, 0, WHITE);
+
+    DrawTextEx(custom_font, tile_message, (Vector2){win_pos.x, win_pos.y + 150 + 32}, 32, 0, WHITE);
+    DrawTextEx(custom_font, time_message, (Vector2){win_pos.x, win_pos.y + 150}, 32, 0, WHITE);
+    DrawTextEx(custom_font, mine_message, (Vector2){win_pos.x, win_pos.y + 150 + (32 *2)}, 32, 0, WHITE);
+    DrawTextEx(custom_font, score_message, (Vector2){win_pos.x, win_pos.y + 150 + (32 *3)}, 32, 0, WHITE);
+
+    DrawTextEx(custom_font, exit_message, exit_text_pos, 64, 0, WHITE);
+    DrawTextEx(custom_font, respawn_message, respawn_text_pos, 64, 0, WHITE);
+
+    if( CheckCollisionPointRec( mouse_pos, respawn_button) ){
+
+
+
+        DrawRectangleLinesEx(respawn_button, 5.0f, WHITE);
+
+
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+            pause = false;
+            ResetLevel();
+        }
+
+
+    }
+    
+    if (IsKeyPressed(KEY_R))
+    {
+        pause = false;
+        ResetLevel();
+    }
+
+    if( CheckCollisionPointRec( mouse_pos, exit_button) ){
+
+
+
+        DrawRectangleLinesEx(exit_button, 5.0f, WHITE);
+
+
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+            UnloadLevel();
+            state = START_MENU;
+
+
+        }
+
+
+    }
+
+
+
+}
+
 void DeathScreen()
 {
     Color background_color = {229, 57, 53, 120};
@@ -85,7 +172,6 @@ void PauseMenu()
     Rectangle continue_pause2 = {(screen.width /2 - 100) - 5, 240, 225, 60};
 
     Rectangle exit_pause = {(screen.width /2 - 70) + 20, continue_pause.y + continue_pause.height *2, 118, 50};
-    Rectangle exit_pause2 = {((screen.width/2 - 70) + 20) - 5, continue_pause.y + continue_pause.height *2, 118 + 10, 50 + 10};
     DrawRectangleRec(screen, background_color);
 
     if( CheckCollisionPointRec( mouse_pos, exit_pause ) ){
@@ -276,19 +362,9 @@ void Game()
         DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
     }
 
-    if (pause && !player.dead)
-    {
-
-        PauseMenu();
-    }
-
-    if (player.dead)
-    {
-        DeathScreen();
-
-    }
-
-
+    char score[100];
+    sprintf(score, "%d $", player.score);
+    DrawTextEx(custom_font, score, (Vector2){(screen.width) - MeasureTextEx(custom_font, score, 32, 1).x - 5, 6}, 32, 1, BLACK);
 
     DrawFPS(0, 0);
 
@@ -298,6 +374,24 @@ void Game()
 
     //DrawText(clock, (screen.width/2) - (str_size / 2.0f) *15, 10, 30, BLACK);
     DrawTextEx(custom_font, clock, (Vector2){(screen.width/2) - (str_size / 2.0f) *16, 10}, 32, 5, BLACK);
+
+    if (pause && !player.dead && !player.win)
+    {
+        PauseMenu();
+    }
+
+    if (player.win)
+    {
+        VictoryScreen();
+    }
+
+    if (player.dead)
+    {
+        DeathScreen();
+
+    }
+
+
 
     EndDrawing();
 
