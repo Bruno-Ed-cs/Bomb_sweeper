@@ -58,12 +58,6 @@ void VictoryScreen()
 
 
     }
-    
-    if (IsKeyPressed(KEY_R))
-    {
-        pause = false;
-        ResetLevel();
-    }
 
     if( CheckCollisionPointRec( mouse_pos, exit_button) ){
 

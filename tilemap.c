@@ -457,36 +457,6 @@ void RevealTiles(GridPos tile_pos)
 
 };
 
-void ResetLevel() 
-{
-    mine_index = 0;
-    bombs_qtd = 0;
-    explosion_qtd = 0;
-    timer = 0;
-    minutes = 0;
-    seconds = 0;
-    final_score = 0;
-
-    for (int y = 0; y < map_height; y++) {
-        for (int x = 0; x < map_width; x++) {
-            if (tilemap[y][x].type == FLOOR)
-            {
-                tilemap[y][x].visible = false;
-                tilemap[y][x].flaged = false;
-                tilemap[y][x].bombed = false;
-            }
-        }
-    }
-
-    MineListInit(); 
-    GenerateMinefild();
-    MapMines();
-    GetSorroundingMines();
-    PlayerInit();
-
-
-};
-
 void DrawTiles(GridPos start, GridPos end)
 {
 

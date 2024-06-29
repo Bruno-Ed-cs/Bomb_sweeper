@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 void PlayerInit()
 {
@@ -222,9 +223,6 @@ void DrawPlayer()
                    (Vector2){0, 0},
                    rotation,
                    WHITE);
-
-    if (player.win)
-        DrawText("YOU WIN", player.position.x , player.position.y, 20, GREEN);
 };
 
 
@@ -269,27 +267,9 @@ void PlayerCollision()
 
                 if (tilemap[i][j].type == WALL)
                 {
-                    player.colliding = true;
-
-                    player.position = player.previous_pos;
-
-                    player.hitbox.y = player.position.y- (player.hitbox.height /2);
-
-                    player.hitbox.x = player.position.x- (player.hitbox.width /2);
-
-
+                    ApplyCollision(tilemap[i][j].tile);
                     // Resolve collision by moving the player out of the tile
-                    for (int k = 0; k < 20; k++)
-                    {
-
-                        if (CheckCollisionRecs(player.hitbox, tilemap[i][j].tile))
-                        {
-                            ApplyCollision(tilemap[i][j].tile);
-                            
-                        }
-
-
-                    }
+                   
                 }
 
                 for (int k = 0; k < 20; k++)
@@ -298,8 +278,7 @@ void PlayerCollision()
                     {
                         if (CheckCollisionRecs(player.hitbox, bombs[i].hitbox))
                         {
-                            player.position = player.previous_pos;
-                            ApplyCollision(bombs[i].hitbox);
+                           ApplyCollision(bombs[i].hitbox);
                         }
 
                     }
@@ -316,10 +295,55 @@ void PlayerCollision()
 
 void ApplyCollision(Rectangle rect)
 {
+    player.colliding = true;
+
+    player.position = player.previous_pos;
+
+    player.hitbox.y = player.position.y- (player.hitbox.height /2);
+
+    player.hitbox.x = player.position.x- (player.hitbox.width /2);
 
     Rectangle overlap = GetCollisionRec(player.hitbox, rect);
+    int direction = 0;
+    Vector2 center = {rect.x + (rect.width/2.0f), rect.y + (rect.height/2.0f)};
 
     double step = 0.00001f;
+
+    if (overlap.width > 0)
+    {
+
+        if (player.position.x >= center.x)
+        {
+            direction = 1;
+        } else if (player.position.x < center.x)
+        {
+            direction = -1;
+        }
+
+        player.position.x += overlap.width * direction;
+        player.hitbox.x = player.position.x- (player.hitbox.width /2);
+
+    }
+
+    direction = 0;
+    if (overlap.height > 0)
+    {
+
+        if (player.position.y >= center.y)
+        {
+            direction = 1;
+        } else if (player.position.y < center.y)
+        {
+            direction = -1;
+        }
+
+        player.position.y += overlap.height * direction;
+        player.hitbox.y = player.position.y- (player.hitbox.height /2);
+
+    }
+
+    /**
+
     if (overlap.width < overlap.height)
     {
         // Horizontal collision
@@ -348,6 +372,7 @@ void ApplyCollision(Rectangle rect)
             player.hitbox.y = player.position.y- (player.hitbox.height/2);
         }
     }
+    **/
 
 
 }

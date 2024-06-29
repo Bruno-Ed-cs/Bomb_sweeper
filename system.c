@@ -4,7 +4,6 @@
 void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar pra reiniciar toda vez que entra no menu
 {
     LoadLevel("./assets/levels/mapa1.json");
-    PlayerInit();
 
     camera_bounds.x = player.position.x - (camera_bounds.width / 2);
     camera_bounds.y = player.position.y - (camera_bounds.height / 2);
@@ -12,11 +11,39 @@ void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar
 
     ResetLevel();
 
+}
+
+void ResetLevel() 
+{
+    mine_index = 0;
+    bombs_qtd = 0;
+    explosion_qtd = 0;
+    minutes = 0;
+    seconds = 0;
     timer = 0;
     pause = false;
     final_score = 0;
 
-}
+    for (int y = 0; y < map_height; y++) {
+        for (int x = 0; x < map_width; x++) {
+            if (tilemap[y][x].type == FLOOR)
+            {
+                tilemap[y][x].visible = false;
+                tilemap[y][x].flaged = false;
+                tilemap[y][x].bombed = false;
+            }
+        }
+    }
+
+    MineListInit(); 
+    GenerateMinefild();
+    MapMines();
+    GetSorroundingMines();
+    PlayerInit();
+
+
+};
+
 
  
 void InputHandler(int input)
@@ -30,7 +57,7 @@ void InputHandler(int input)
 
         case KEY_R:
 
-            if(debug) ResetLevel();
+            if(pause) ResetLevel();
 
         break;
 

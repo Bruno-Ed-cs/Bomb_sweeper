@@ -241,6 +241,7 @@ void StartMenu();
 // localização game.c
 void Game();
 void DeathScreen();
+void VictoryScreen();
 void PauseMenu();
 
 //funcoes da pontuação
