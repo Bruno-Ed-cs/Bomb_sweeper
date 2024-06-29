@@ -1,14 +1,11 @@
 #include "globals.h"
 
-
-
 void PlayerInit()
 {
 
     player.hitbox = (Rectangle){INIT_X, INIT_Y, TILE_SIZE -8, TILE_SIZE -8};
     player.frame = (Rectangle){0, 0, TILE_SIZE, TILE_SIZE * 2};
     player.view = (Rectangle){INIT_X, INIT_Y, TILE_SIZE, TILE_SIZE * 2};
-    player.sprite = LoadTexture("./assets/sprites/Connor_fodder-sheet.png");
     player.speed = 50.0f;
     player.move = false;
     player.dead = false;
@@ -19,6 +16,7 @@ void PlayerInit()
     player.spawn = spawn_tile;
     player.grid_pos = player.spawn;
     player.position = (Vector2){tilemap[player.spawn.y][player.spawn.x].tile.x + (TILE_SIZE /2.0f), tilemap[player.spawn.y][player.spawn.x].tile.y + (TILE_SIZE /2.0f) };
+    if (!IsTextureReady(player.sprite)) player.sprite = LoadTexture("./assets/sprites/Connor_fodder-sheet.png");
 
 };
 
@@ -209,14 +207,21 @@ void AnimationHandler()
 
 void DrawPlayer()
 {
+    double rotation = 0.0f;
+
+    if (player.dead)
+    {
+        player.frame.y = (TILE_SIZE *2) * 3;
+        player.frame.x = 0;
+    }
+
     DrawTexturePro(player.sprite,
                    player.frame,
                    player.view,
                    (Vector2){0, 0},
-                   0.0f,
+                   rotation,
                    WHITE);
-    if (player.dead)
-        DrawText("DEAD", player.position.x , player.position.y, 20, RED);
+
     if (player.win)
         DrawText("YOU WIN", player.position.x , player.position.y, 20, GREEN);
 };

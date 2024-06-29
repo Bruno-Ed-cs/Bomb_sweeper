@@ -13,6 +13,12 @@ int main()
     InitAudioDevice();
 
     footstep_sfx = LoadSound("./assets/audio/sfx/Retro FootStep 03.wav");
+
+    custom_font = LoadFontEx("./assets/fonts/Hardpixel.OTF",  128, NULL, 0);
+
+    tileset = LoadTexture("./assets/sprites/tileset.png");
+
+
     SetSoundVolume(footstep_sfx, 0.5f);
     //Nao sei como colocar nos globals e ficar funcional
 
@@ -62,6 +68,8 @@ int main()
 
 
             case GAME:
+
+                if (!level_loaded) ResetGame();
 
                 Game();
 

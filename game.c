@@ -1,5 +1,151 @@
 #include "globals.h"
 
+void DeathScreen()
+{
+    Color background_color = {229, 57, 53, 120};
+    Color button_color = {129, 129, 129 ,200};
+
+    char death_message[50] = "You Died";
+    char exit_message[50] = "Exit";
+    char respawn_message[50] = "Respawn";
+
+    Vector2 death_message_pos = {screen.width/2 - (MeasureText(death_message, 128) + MeasureText("", 128))/2.0f , screen.height/2.5f};
+
+    Rectangle respawn_button = {(screen.width/2) -150, screen.height /2 + 100, 300, 60};
+    Rectangle exit_button = {respawn_button.x, respawn_button.y + respawn_button.height +10, 300, 60};
+
+
+    Vector2 exit_text_pos = {exit_button.x + 10, exit_button.y - 5};
+    Vector2 respawn_text_pos = {respawn_button.x + 10, respawn_button.y - 5};
+
+    pause = true;
+    DrawRectangleRec(screen, background_color);
+
+    DrawRectangleRec(respawn_button, button_color);
+    DrawRectangleRec(exit_button, button_color);
+
+    DrawTextEx(custom_font, "You Died", death_message_pos, 128, 0, WHITE);
+
+    DrawTextEx(custom_font, exit_message, exit_text_pos, 64, 0, WHITE);
+    DrawTextEx(custom_font, respawn_message, respawn_text_pos, 64, 0, WHITE);
+
+    if( CheckCollisionPointRec( mouse_pos, respawn_button) ){
+
+
+
+        DrawRectangleLinesEx(respawn_button, 5.0f, WHITE);
+
+
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+            pause = false;
+            ResetLevel();
+        }
+
+
+    }
+    
+    if (IsKeyPressed(KEY_R))
+    {
+        pause = false;
+        ResetLevel();
+    }
+
+    if( CheckCollisionPointRec( mouse_pos, exit_button) ){
+
+
+
+        DrawRectangleLinesEx(exit_button, 5.0f, WHITE);
+
+
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+            UnloadLevel();
+            state = START_MENU;
+
+
+        }
+
+
+    }
+
+}
+
+void PauseMenu()
+{
+    Color c_exit_pause = BLACK;
+    Color c_continue_pause = BLACK;
+    Color c_continue_pause2 = BLACK;
+    Color c_sair = BLACK;
+    Color background_color = {130, 130, 130, 100};
+
+    //Tela de Pausa
+    
+    Rectangle continue_pause = {screen.width /2 - 100, 245, 215, 50};
+    Rectangle continue_pause2 = {(screen.width /2 - 100) - 5, 240, 225, 60};
+
+    Rectangle exit_pause = {(screen.width /2 - 70) + 20, continue_pause.y + continue_pause.height *2, 118, 50};
+    Rectangle exit_pause2 = {((screen.width/2 - 70) + 20) - 5, continue_pause.y + continue_pause.height *2, 118 + 10, 50 + 10};
+    DrawRectangleRec(screen, background_color);
+
+    if( CheckCollisionPointRec( mouse_pos, exit_pause ) ){
+
+        c_exit_pause = BLACK;
+
+        c_sair = RED;
+
+
+        DrawRectangleRec(exit_pause, c_exit_pause);
+        DrawRectangleLinesEx(exit_pause, 5.0f, RED);
+
+
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+            UnloadLevel();
+            state = START_MENU;
+
+        }
+
+
+    }else{
+
+        c_sair = WHITE;
+
+    }
+
+
+    if( CheckCollisionPointRec( mouse_pos, continue_pause ) ){
+
+        c_continue_pause = WHITE;
+
+        c_continue_pause2 = GREEN;
+
+        DrawRectangleRec(continue_pause2, c_continue_pause2);
+
+        DrawRectangleRec(continue_pause, c_continue_pause);
+
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+            pause = !pause;
+
+        }
+
+    }else{
+
+        c_continue_pause2 = WHITE;
+
+
+    }
+
+
+    DrawText("Pause", screen.width /2 - 64, 100, 50, BLACK );
+
+    DrawText("Continuar", screen.width /2 - 90, 250, 40, c_continue_pause2);
+
+    DrawText("Sair", exit_pause.x + 10, exit_pause.y + 5, 40, c_sair);
+
+}
+
 void Game()
 {
 
@@ -16,6 +162,14 @@ void Game()
 
     timer += dt;
 
+    seconds += dt;
+    if (seconds >= 59) {
+
+        seconds = 0;
+        minutes++;
+    
+    }
+
     GridPos mat_begin = GetMatrixBegin(player.grid_pos, 20);
     GridPos mat_end = GetMatrixEnd(player.grid_pos, 20);
 
@@ -25,12 +179,13 @@ void Game()
     {
 
         PlayerUpdate();
-        CameraUpdate();
         MinesUpdate();
         ExplosionsUpdate();
         BombUpdate();
         
     }
+
+    CameraUpdate();
 
     BeginDrawing();
 
@@ -42,7 +197,6 @@ void Game()
 
     RenderMines();
 
-    DrawPlayer(); 
 
     //DrawRectangle(0, 0, 320, 180, BLUE);
 
@@ -62,6 +216,8 @@ void Game()
         DrawRectangleRec(bombs[i].hitbox, DARKBLUE);
 
     }
+
+    DrawPlayer(); 
 
     if (debug)
     {
@@ -120,10 +276,16 @@ void Game()
         DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
     }
 
-    if (pause)
+    if (pause && !player.dead)
     {
 
         PauseMenu();
+    }
+
+    if (player.dead)
+    {
+        DeathScreen();
+
     }
 
 
@@ -131,10 +293,11 @@ void Game()
     DrawFPS(0, 0);
 
     char clock[100];
-    sprintf(clock,"Time = %.2lf", timer);
+    sprintf(clock,"%02.0lf:%02.0lf", minutes, seconds);
     int str_size = strlen(clock) -1;
 
-    DrawText(clock, (screen.width/2) - (str_size / 2.0f) *10, 10, 20, GREEN);
+    //DrawText(clock, (screen.width/2) - (str_size / 2.0f) *15, 10, 30, BLACK);
+    DrawTextEx(custom_font, clock, (Vector2){(screen.width/2) - (str_size / 2.0f) *16, 10}, 32, 5, BLACK);
 
     EndDrawing();
 

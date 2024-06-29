@@ -1,5 +1,4 @@
 #include "globals.h"
-#include <math.h>
 
 
 void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar pra reiniciar toda vez que entra no menu
@@ -11,10 +10,7 @@ void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar
     camera_bounds.y = player.position.y - (camera_bounds.height / 2);
     camera.rotation = 0.0f;
 
-    MineListInit();
-    GenerateMinefild();
-    MapMines();
-    GetSorroundingMines();
+    ResetLevel();
 
     timer = 0;
     pause = false;

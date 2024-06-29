@@ -121,6 +121,9 @@ extern bool pause;
 extern double timer;
 extern GameState state;
 extern Vector2 mouse_pos;
+extern Font custom_font;
+extern double minutes;
+extern double seconds;
 
 //Menu
 extern Rectangle exit_menu;
@@ -230,9 +233,10 @@ bool ValidateGridPos(GridPos posisition);
 //funções dos menus
 //localização : menus.c
 
-void PauseMenu();
 void StartMenu();
 
 //funcao principal do jogo
 // localização game.c
 void Game();
+void DeathScreen();
+void PauseMenu();

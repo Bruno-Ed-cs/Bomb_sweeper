@@ -1,6 +1,4 @@
 #include "globals.h"
-#include "include/raylib.h"
-#include <stdbool.h>
 
 void AllocMap() {
 
@@ -115,7 +113,6 @@ void LoadLevel(char *level)
 
     }
 
-    tileset = LoadTexture("./assets/sprites/tileset.png");
 
     cJSON_Delete(json);
     free(buffer);
@@ -146,7 +143,7 @@ void GenerateMinefild()
 {
     SetRandomSeed(time(NULL));
     int prob;
-    int treshold = 500;
+    int treshold = 200;
 
     for (int i = 0; i < map_height; i++)
     {
@@ -461,6 +458,8 @@ void RevealTiles(GridPos tile_pos)
 void ResetLevel() 
 {
     mine_index = 0;
+    bombs_qtd =0;
+    explosion_qtd =0;
 
     for (int y = 0; y < map_height; y++) {
         for (int x = 0; x < map_width; x++) {

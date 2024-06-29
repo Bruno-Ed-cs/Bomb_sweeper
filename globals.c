@@ -7,7 +7,10 @@ Camera2D camera = { 0 };
 bool debug = false;
 bool pause = false;
 double timer = 0;
+double minutes = 0;
+double seconds = 0;
 Vector2 mouse_pos = {0, 0};
+Font custom_font;
 
 //Tela de jogo
 GameState state = START_MENU;
