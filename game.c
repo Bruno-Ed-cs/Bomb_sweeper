@@ -162,7 +162,7 @@ void PauseMenu()
     Rectangle continue_pause = {screen.width /2 - 100, 245, 215, 50};
     Rectangle continue_pause2 = {(screen.width /2 - 100) - 5, 240, 225, 60};
 
-    Rectangle exit_pause = {(screen.width /2 - 70) + 20, continue_pause.y + continue_pause.height *2, 106, 50};
+    Rectangle exit_pause = {(screen.width /2 - 70) + 20, continue_pause.y + continue_pause.height *2, 101, 50};
 
     DrawRectangleRec(screen, background_color);
 

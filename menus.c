@@ -8,7 +8,7 @@ void StartMenu()
 
     Rectangle Jogar_menu = {screen.width - 255, 200, 185, 65};
     Rectangle Jogar_menu2 = {screen.width - 260, 195, 195, 75};
-    
+
     Color c_Jogar_menu = WHITE;
     Color c_Jogar_menu2 = WHITE;
 
@@ -18,7 +18,14 @@ void StartMenu()
     Texture2D MenuTela = LoadTexture("./assets/sprites/menumap.png");
 
 
-     DrawTexture(MenuTela, 0, 0, WHITE);
+    DrawTexturePro(
+            MenuTela,
+            (Rectangle){ 0, 0, MenuTela.width, MenuTela.height },
+            (Rectangle){ 0, 0, screen.width, screen.height },
+            (Vector2){ 0, 0 },
+            0.0f,
+            WHITE
+        );
 
     
     if (!IsMusicStreamPlaying(menu_theme)) PlayMusicStream(menu_theme);
