@@ -9,7 +9,6 @@ int main()
 
     SetWindowMinSize(screen.width, screen.height);
 
-    
     InitAudioDevice();
 
     footstep_sfx = LoadSound("./assets/audio/sfx/Retro FootStep 03.wav");
@@ -17,14 +16,15 @@ int main()
     custom_font = LoadFontEx("./assets/fonts/Hardpixel.OTF",  128, NULL, 0);
 
     tileset = LoadTexture("./assets/sprites/tileset.png");
-
-
-    SetSoundVolume(footstep_sfx, 0.5f);
-    //Nao sei como colocar nos globals e ficar funcional
+    bomb_sheet = LoadTexture("./assets/sprites/bomb.png");
+    
+    menu_theme = LoadMusicStream("./assets/audio/music/menu_theme.mp3");
+    tutorial_theme = LoadMusicStream("./assets/audio/music/tutorial_theme.mp3");
 
     SetTargetFPS(-1);
 
     while (!WindowShouldClose()) {
+
 
         //todo : colocar os menus em uma funcao e dixar as variaveis deles locais
 

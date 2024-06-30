@@ -54,7 +54,7 @@ int GetRevealedTiles()
 
 int GetTimeBonus()
 {
-    int bonus = ((qtd_floor) + (mine_index * 50)) / ((GetFlagedMines() +1) / (timer +1));
+    int bonus = ((qtd_floor) + (mine_index * 50)) / ((GetFlagedMines() +1) / (player.final_time +1));
 
     return bonus;
 

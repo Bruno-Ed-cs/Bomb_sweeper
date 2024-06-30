@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 void StartMenu()
 {
@@ -11,6 +12,10 @@ void StartMenu()
 
     Color c_jogar = BLACK;
 
+    
+    if (!IsMusicStreamPlaying(menu_theme)) PlayMusicStream(menu_theme);
+    UpdateMusicStream(menu_theme);
+
     if( CheckCollisionPointRec( mouse_pos, exit_menu ) ){
 
         c_exit_menu2 = GREEN;
@@ -20,6 +25,8 @@ void StartMenu()
 
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+            if (IsMusicStreamPlaying(menu_theme)) StopMusicStream(menu_theme);
 
             ResetGame();
 

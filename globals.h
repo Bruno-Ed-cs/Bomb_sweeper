@@ -85,8 +85,11 @@ typedef struct Bomb
 	GridPos grid_pos;
 	Rectangle hitbox;
 	double timer;
+	double frametime;
 	int power;
+	int frame_count;
 	Rectangle frame;
+	Rectangle view;
 
 } Bomb;
 
@@ -106,6 +109,7 @@ typedef struct Player {
 	bool win;
 	int direction;
 	double speed;
+	double final_time;
 	int score;
 
 
@@ -126,6 +130,11 @@ extern Font custom_font;
 extern double minutes;
 extern double seconds;
 extern int final_score;
+
+//audio globals
+
+extern Music menu_theme;
+extern Music tutorial_theme;
 
 //Menu
 extern Rectangle exit_menu;
@@ -164,8 +173,7 @@ extern int explosion_qtd ;
 
 extern Bomb bombs[MAX_BOMBS];
 extern int bombs_qtd;
-
-
+extern Texture2D bomb_sheet;
 
 //funçoes do jogador 
 //Localização: player.c
@@ -220,6 +228,9 @@ int GetEplosionPower(Rectangle target);
 void CreateBomb(GridPos grid_pos);
 void BombUpdate();
 void DeleteBomb(int bomb_index);
+void AnimateBomb(Bomb *bomb);
+void RenderBomb(Bomb *bomb);
+void DrawBombs();
 
 //funções de sistema
 //Localização: system.c

@@ -19,6 +19,7 @@ void PlayerInit()
     player.position = (Vector2){tilemap[player.spawn.y][player.spawn.x].tile.x + (TILE_SIZE /2.0f), tilemap[player.spawn.y][player.spawn.x].tile.y + (TILE_SIZE /2.0f) };
     if (!IsTextureReady(player.sprite)) player.sprite = LoadTexture("./assets/sprites/Connor_fodder-sheet.png");
     player.score = 0;
+    player.final_time = 0;
 
 };
 
@@ -135,10 +136,7 @@ void PlayerMovement() {
 
     if (IsKeyPressed(KEY_SPACE))
     {
-        if (bombs_qtd < 1)
-        {
             PlaceBomb();
-        }
     }
 
 
@@ -158,7 +156,10 @@ void AnimationHandler()
             frametime = 0.0f;
             cur_frame++;
 
-            if(cur_frame >=2)PlaySound(footstep_sfx);
+            if(cur_frame >=1)
+            {
+                if (!IsSoundPlaying(footstep_sfx)) PlaySound(footstep_sfx);
+            }
 
             if (cur_frame >= 3)
             {
@@ -262,6 +263,7 @@ void PlayerCollision()
                 if (tilemap[i][j].type == PORTAL)
                 {
                     if(!player.dead) player.win = true;
+                    player.final_time = timer;
 
                 }
 
@@ -307,9 +309,7 @@ void ApplyCollision(Rectangle rect)
     int direction = 0;
     Vector2 center = {rect.x + (rect.width/2.0f), rect.y + (rect.height/2.0f)};
 
-    double step = 0.00001f;
-
-    if (overlap.width > 0)
+    if (overlap.width > 0 && CheckCollisionRecs(player.hitbox, rect))
     {
 
         if (player.position.x >= center.x)
@@ -322,11 +322,15 @@ void ApplyCollision(Rectangle rect)
 
         player.position.x += overlap.width * direction;
         player.hitbox.x = player.position.x- (player.hitbox.width /2);
+        player.hitbox.y = player.position.y- (player.hitbox.height /2);
 
     }
 
+
+    overlap = GetCollisionRec(player.hitbox, rect);
     direction = 0;
-    if (overlap.height > 0)
+ 
+    if (overlap.height > 0 && CheckCollisionRecs(player.hitbox, rect))
     {
 
         if (player.position.y >= center.y)
@@ -338,41 +342,11 @@ void ApplyCollision(Rectangle rect)
         }
 
         player.position.y += overlap.height * direction;
+        player.hitbox.x = player.position.x- (player.hitbox.height /2);
         player.hitbox.y = player.position.y- (player.hitbox.height /2);
 
-    }
+    }   
 
-    /**
-
-    if (overlap.width < overlap.height)
-    {
-        // Horizontal collision
-        if (player.hitbox.x <= rect.x)
-        {
-            player.position.x -= (overlap.width + step) *dt;
-            player.hitbox.x = player.position.x- (player.hitbox.width /2);
-        }
-        else
-    {
-            player.position.x += (overlap.width + step ) *dt;
-            player.hitbox.x = player.position.x- (player.hitbox.width /2);
-        }
-    }
-    else
-{
-        // Vertical collision
-        if (player.hitbox.y <= rect.y)
-        {
-            player.position.y -= (overlap.width + step) *dt;
-            player.hitbox.y = player.position.y- (player.hitbox.height /2);
-        }
-        else
-    {
-            player.position.y += (overlap.width + step) *dt;
-            player.hitbox.y = player.position.y- (player.hitbox.height/2);
-        }
-    }
-    **/
 
 
 }
@@ -429,7 +403,7 @@ void PlaceBomb()
     GridPos target = GetTargetTile();
     Tile tile = tilemap[target.y][target.x];
 
-    if (tile.type == FLOOR)
+    if (tile.type == FLOOR && bombs_qtd < 1)
     {
         CreateBomb(target);
         tilemap[target.y][target.x].visible = true;

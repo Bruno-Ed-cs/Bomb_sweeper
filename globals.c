@@ -1,5 +1,9 @@
 #include "globals.h"
 
+//audio
+Music menu_theme;
+Music tutorial_theme;
+
 //main globals
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};
 double dt = 0;
@@ -29,7 +33,7 @@ Explosion explosion_buffer[MAX_EXPLOSIONS];
 int explosion_qtd = 0;
 
 //bombas
-
+Texture2D bomb_sheet;
 Bomb bombs[MAX_BOMBS];
 int bombs_qtd = 0;
 

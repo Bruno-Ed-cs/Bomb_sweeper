@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 void VictoryScreen()
 {
@@ -15,7 +16,7 @@ void VictoryScreen()
     char time_message[100];
     
     sprintf(tile_message, "Revealed Tiles : %d", GetRevealedTiles());
-    sprintf(time_message, "Time Bonus : +%d $", GetTimeBonus());
+    sprintf(time_message, "Time Bonus : %02d:%02d +%d $", (int)(player.final_time) / 60, (int)(player.final_time) % 60, GetTimeBonus());
     sprintf(mine_message, "Mines : %d/%d +%d $", GetFlagedMines(), mine_index, GetFlagedMines() * 150);
     sprintf(score_message, "Salary : %d $", final_score);
 
@@ -27,7 +28,6 @@ void VictoryScreen()
     Vector2 exit_text_pos = {exit_button.x + 10, exit_button.y - 5};
     Vector2 respawn_text_pos = {respawn_button.x + 10, respawn_button.y - 5};
 
-    pause = true;
     DrawRectangleRec(screen, background_color);
 
     DrawRectangleRec(respawn_button, button_color);
@@ -52,7 +52,6 @@ void VictoryScreen()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
-            pause = false;
             ResetLevel();
         }
 
@@ -90,7 +89,7 @@ void DeathScreen()
     char exit_message[50] = "Exit";
     char respawn_message[50] = "Respawn";
 
-    Vector2 death_message_pos = {screen.width/2 - (MeasureText(death_message, 128) + MeasureText("", 128))/2.0f , screen.height/2.5f};
+    Vector2 death_message_pos = {screen.width/2 - (MeasureText(death_message, 128) + MeasureText("", 128))/2.0f , screen.height/4.0f};
 
     Rectangle respawn_button = {(screen.width/2) -150, screen.height /2 + 100, 300, 60};
     Rectangle exit_button = {respawn_button.x, respawn_button.y + respawn_button.height +10, 300, 60};
@@ -99,7 +98,6 @@ void DeathScreen()
     Vector2 exit_text_pos = {exit_button.x + 10, exit_button.y - 5};
     Vector2 respawn_text_pos = {respawn_button.x + 10, respawn_button.y - 5};
 
-    pause = true;
     DrawRectangleRec(screen, background_color);
 
     DrawRectangleRec(respawn_button, button_color);
@@ -119,7 +117,6 @@ void DeathScreen()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
-            pause = false;
             ResetLevel();
         }
 
@@ -226,8 +223,29 @@ void PauseMenu()
 
 }
 
+void DrawUi()
+{
+
+    char score[100];
+    sprintf(score, "%d $", player.score);
+    DrawTextEx(custom_font, score, (Vector2){(screen.width) - MeasureTextEx(custom_font, score, 32, 1).x - 5, 6}, 32, 1, BLACK);
+
+    DrawFPS(0, 0);
+
+    char clock[100];
+    sprintf(clock,"%02.0lf:%02.0lf", minutes, seconds);
+    int str_size = strlen(clock) -1;
+
+    //DrawText(clock, (screen.width/2) - (str_size / 2.0f) *15, 10, 30, BLACK);
+    DrawTextEx(custom_font, clock, (Vector2){(screen.width/2) - (str_size / 2.0f) *16, 10}, 32, 5, BLACK);
+
+
+}
+
 void Game()
 {
+    if (!IsMusicStreamPlaying(tutorial_theme)) PlayMusicStream(tutorial_theme);
+    UpdateMusicStream(tutorial_theme);
 
     if (pause)
     {
@@ -258,7 +276,10 @@ void Game()
     if (!pause)
     {
 
-        PlayerUpdate();
+        if (!player.dead && !player.win)
+        {
+            PlayerUpdate();
+        }
         MinesUpdate();
         ExplosionsUpdate();
         BombUpdate();
@@ -291,11 +312,7 @@ void Game()
 
     }
 
-    for (int i = 0; i < bombs_qtd; i++)
-    {
-        DrawRectangleRec(bombs[i].hitbox, DARKBLUE);
-
-    }
+    DrawBombs();
 
     DrawPlayer(); 
 
@@ -356,18 +373,11 @@ void Game()
         DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
     }
 
-    char score[100];
-    sprintf(score, "%d $", player.score);
-    DrawTextEx(custom_font, score, (Vector2){(screen.width) - MeasureTextEx(custom_font, score, 32, 1).x - 5, 6}, 32, 1, BLACK);
 
-    DrawFPS(0, 0);
-
-    char clock[100];
-    sprintf(clock,"%02.0lf:%02.0lf", minutes, seconds);
-    int str_size = strlen(clock) -1;
-
-    //DrawText(clock, (screen.width/2) - (str_size / 2.0f) *15, 10, 30, BLACK);
-    DrawTextEx(custom_font, clock, (Vector2){(screen.width/2) - (str_size / 2.0f) *16, 10}, 32, 5, BLACK);
+    if (!player.dead && !player.win)
+    {
+        DrawUi();
+    }
 
     if (pause && !player.dead && !player.win)
     {
