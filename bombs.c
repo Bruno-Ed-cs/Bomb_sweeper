@@ -30,11 +30,11 @@ void AnimateBomb(Bomb *bomb)
     bomb->frametime += dt;
 
 
-        bomb->frame_count = (int)((bomb->frametime / 3.0f) * 14.0f);
+        bomb->frame_count = (int)((bomb->frametime / 3.0f) * 16.0f);
         
-        if (bomb->frame_count >= 14)
+        if (bomb->frame_count >= 16)
         {
-            bomb->frame_count = 13;
+            bomb->frame_count = 15;
         }
         
         bomb->frame.x = TILE_SIZE * bomb->frame_count;

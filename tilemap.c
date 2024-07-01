@@ -143,7 +143,7 @@ void GenerateMinefild()
 {
     SetRandomSeed(time(NULL));
     int prob;
-    int treshold = 300;
+    int treshold = 150;
 
     for (int i = 0; i < map_height; i++)
     {
@@ -164,7 +164,10 @@ void GenerateMinefild()
                                 tilemap[i][j].tile.x, 
                                 tilemap[i][j].tile.y,
                                 TILE_SIZE, TILE_SIZE},
-                                false};
+                                false,
+                                false,
+                                1,
+                                0.25f};
 
 
                         mine_index++;
@@ -195,7 +198,7 @@ void GenerateMinefild()
             (Rectangle){
                 tilemap[grid_x][grid_y].tile.x, 
                 tilemap[grid_x][grid_y].tile.y,
-                TILE_SIZE, TILE_SIZE}};
+                TILE_SIZE, TILE_SIZE}, false, false, 1, 0.25f};
         mine_index++;
 
 
@@ -291,7 +294,7 @@ void RenderMines()
         for (int i = 0; i < mine_index; i++) {
             if (CheckCollisionRecs(minefild[i].hitbox, camera_bounds))
             {
-                if (minefild[i].detonated)
+                if (minefild[i].detonated && minefild[i].fuse <= 0)
                 {
 
                     tile_frame.x = TILE_SIZE * 5; 
@@ -330,11 +333,7 @@ void RenderMines()
 void MinesUpdate()
 {
     for (int i = 0; i < mine_index; i++) {
-        if(!minefild[i].detonated && CheckCollisionPointRec(player.position, minefild[i].hitbox))
-        {
 
-            DetonateMine(i, 1);
-        }
 
         bool explosion_collision = false;
         int previous_power = 0;
@@ -355,18 +354,41 @@ void MinesUpdate()
             if (CheckCollisionRecs(bombs[j].hitbox, minefild[i].hitbox))
             {
                 explosion_collision = true;
-                previous_power++;
+                minefild[i].power++;
 
             }
         }
 
+        if(!minefild[i].detonated && CheckCollisionPointRec(player.position, minefild[i].hitbox) && !minefild[i].exploding)
+        {
 
-        if(!minefild[i].detonated && explosion_collision)
+            minefild[i].exploding = true;
+        }
+        
+
+        if(!minefild[i].detonated && explosion_collision && !minefild[i].exploding)
         {
             previous_power++;
-            if (previous_power >= 5) previous_power = 5;
+            minefild[i].power += previous_power;
+            if (minefild[i].power >= 5) minefild[i].power = 5;
+            minefild[i].exploding = true;
 
-            DetonateMine(i, previous_power);
+
+        }
+
+        if (minefild[i].exploding)
+        {
+            if (minefild[i].fuse > 0)
+            {
+                minefild[i].fuse -= dt;
+
+            }
+        }
+
+        if (minefild[i].exploding && minefild[i].fuse <= 0)
+        {
+
+            DetonateMine(i, minefild[i].power);
 
         }
     }
@@ -378,7 +400,7 @@ void DetonateMine(int minefild_index, int power)
     GridPos pos = minefild[minefild_index].grid_pos;
     minefild[minefild_index].detonated = true;
 
-    if(ValidateGridPos(pos)) 
+    if(ValidateGridPos(pos) && minefild[minefild_index].fuse <= 0) 
     {
         CreateExplosion(pos, power);
         tilemap[pos.y][pos.x].visible = true;
@@ -388,6 +410,8 @@ void DetonateMine(int minefild_index, int power)
     {
         printf("invalid detonation position\n");
     }
+
+    minefild[minefild_index].exploding = false;
 
 
 }

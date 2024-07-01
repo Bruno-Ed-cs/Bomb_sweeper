@@ -1,5 +1,4 @@
 #include "globals.h"
-#include "include/raylib.h"
 
 void VictoryScreen()
 {
@@ -301,16 +300,7 @@ void Game()
 
     //DrawRectangle(0, 0, 320, 180, BLUE);
 
-    for (int i = 0; i < explosion_qtd; i++)
-    {
-
-        DrawRectangleRec(explosion_buffer[i].center, RED);
-        DrawRectangleRec(explosion_buffer[i].right, GREEN);
-        DrawRectangleRec(explosion_buffer[i].left, YELLOW);
-        DrawRectangleRec(explosion_buffer[i].top, PURPLE);
-        DrawRectangleRec(explosion_buffer[i].bottom, BLUE);
-
-    }
+    DrawExplosions();
 
     DrawBombs();
 

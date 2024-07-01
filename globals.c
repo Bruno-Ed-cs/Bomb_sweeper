@@ -31,6 +31,7 @@ Sound footstep_sfx;
 //controle de explosoes
 Explosion explosion_buffer[MAX_EXPLOSIONS];
 int explosion_qtd = 0;
+Texture2D explosion_sheet;
 
 //bombas
 Texture2D bomb_sheet;

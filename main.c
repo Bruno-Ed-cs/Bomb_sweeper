@@ -21,6 +21,8 @@ int main()
     menu_theme = LoadMusicStream("./assets/audio/music/menu_theme.mp3");
     tutorial_theme = LoadMusicStream("./assets/audio/music/tutorial_theme.mp3");
 
+    explosion_sheet = LoadTexture("./assets/sprites/explosion.png");
+
     SetTargetFPS(-1);
 
     while (!WindowShouldClose()) {

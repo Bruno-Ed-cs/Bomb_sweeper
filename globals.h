@@ -64,6 +64,9 @@ typedef struct Mine
 	GridPos grid_pos;
 	Rectangle hitbox;
 	bool detonated;
+	bool exploding;
+	int power;
+	double fuse;
 
 } Mine;
 
@@ -77,6 +80,10 @@ typedef struct Explosion
 	Rectangle left;
 	Rectangle right;
 	double timer;
+	double frametime;
+	Rectangle frame;
+	Rectangle view;
+	int frame_counter;
 
 } Explosion;
 
@@ -168,6 +175,7 @@ extern GridPos portal_tile;
 //explosion globals
 extern Explosion explosion_buffer[MAX_EXPLOSIONS];
 extern int explosion_qtd ;
+extern Texture2D explosion_sheet;
 
 //bombs globals
 
@@ -220,6 +228,13 @@ void DeleteExplosion(int delete_index);
 bool IsRectExploded(Rectangle target);
 bool CheckExplosionCollision(Explosion explosion, Rectangle target);
 int GetEplosionPower(Rectangle target);
+void DrawExCenter(Explosion *expo);
+void DrawExRight(Explosion *expo);
+void DrawExLeft(Explosion *expo);
+void DrawExTop(Explosion *expo);
+void DrawExBottom(Explosion *expo);
+void DrawExplosions();
+void AnimateExplosion(Explosion *expo);
 
 
 //Funcoes de bombas
