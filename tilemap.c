@@ -515,7 +515,7 @@ void DrawTiles(GridPos start, GridPos end)
                 break;
 
                 case PORTAL:
-                    tile_frame.x = 0;
+                    tile_frame.x = TILE_SIZE *7;
                     tile_frame.y = 0;
                 break;
 
@@ -530,7 +530,7 @@ void DrawTiles(GridPos start, GridPos end)
             if (tilemap[i][j].visible)
             {
                 Color color = PURPLE;
-                if (tilemap[i][j].type == PORTAL) color = GREEN;
+                if (tilemap[i][j].type == PORTAL) color = WHITE;
 
                 DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, color);
 

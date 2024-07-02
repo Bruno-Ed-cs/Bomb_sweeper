@@ -3,7 +3,7 @@
 
 void ResetGame()//Fiz uma funcao para a inicializaçao, para que eu pudesse usar pra reiniciar toda vez que entra no menu
 {
-    LoadLevel("./assets/levels/mapa1.json");
+    LoadLevel("./assets/levels/dejavu.json");
 
     camera_bounds.x = player.position.x - (camera_bounds.width / 2);
     camera_bounds.y = player.position.y - (camera_bounds.height / 2);

@@ -6,7 +6,7 @@ int main()
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
     //SetConfigFlags(FLAG_VSYNC_HINT);
-    InitWindow(screen.width, screen.height, "Bombsweeper 1.0 Alpha");
+    InitWindow(screen.width, screen.height, "Bombsweeper beta 1.1");
 
     SetWindowMinSize(screen.width, screen.height);
 
