@@ -4,22 +4,43 @@ void StartMenu()
 {
 
     //Tela de Menu
-    Rectangle exit_menu = {screen.width / 2 - 55, screen.height/ 2 - 10, 127, 60};
-    Rectangle exit_menu2 = {(screen.width / 2 - 55) - 5, (screen.height  / 2 - 10) - 5, 137, 75};
-    Color c_exit_menu = WHITE;
-    Color c_exit_menu2 = WHITE;
+
+    Rectangle Jogar_menu = {screen.width - 255, 200, 185, 65};
+    Rectangle Jogar_menu2 = {screen.width - 260, 195, 195, 75};
+
+    Color c_Jogar_menu = WHITE;
+    Color c_Jogar_menu2 = WHITE;
 
     Color c_jogar = BLACK;
+    
+
+    Texture2D MenuTela = LoadTexture("./assets/sprites/menumap.png");
+
+
+    DrawTexturePro(
+            MenuTela,
+            (Rectangle){ 0, 0, MenuTela.width, MenuTela.height },
+            (Rectangle){ 0, 0, screen.width, screen.height },
+            (Vector2){ 0, 0 },
+            0.0f,
+            WHITE
+        );
 
     
     if (!IsMusicStreamPlaying(menu_theme)) PlayMusicStream(menu_theme);
     UpdateMusicStream(menu_theme);
 
-    if( CheckCollisionPointRec( mouse_pos, exit_menu ) ){
+    if( CheckCollisionPointRec( mouse_pos, Jogar_menu ) ){
 
-        c_exit_menu2 = GREEN;
+        c_Jogar_menu2 = GREEN;
 
         c_jogar = GREEN;
+
+        
+       DrawRectangleRec(Jogar_menu2, c_Jogar_menu2);
+
+       DrawRectangleRec(Jogar_menu, c_Jogar_menu);
+
 
 
 
@@ -35,7 +56,7 @@ void StartMenu()
 
     }else{
 
-        c_exit_menu2 = WHITE;
+        c_Jogar_menu2 = WHITE;
 
         c_jogar = BLACK;
 
@@ -45,15 +66,7 @@ void StartMenu()
 
     ClearBackground(WHITE);
 
-    DrawText("BETA",screen.width - 100 , screen.height - 50, 20, BLACK);
-
-    DrawText("MENU", screen.width / 2 - 70, 20, 50, BLACK);
-
-    DrawRectangleRec(exit_menu2, c_exit_menu2);
-
-    DrawRectangleRec(exit_menu, c_exit_menu);
-
-    DrawText("Jogar", screen.width / 2 - 50, screen.height  / 2, 40, c_jogar);
+    DrawText("Jogar", screen.width - 250, 200, 60, c_jogar);
 
     EndDrawing();
 }
