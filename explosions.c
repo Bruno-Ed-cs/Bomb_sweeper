@@ -122,7 +122,8 @@ Rectangle GetExplosionRight(int power, Rectangle center, GridPos grid_pos)
             break;
         }else
         {
-            if (ValidateGridPos((GridPos){grid_pos.x + (i + 1), grid_pos.y}) && tilemap[grid_pos.y][grid_pos.x + (i + 1)].type == WALL)
+            if (ValidateGridPos((GridPos){grid_pos.x + (i + 1), grid_pos.y}) 
+                && (tilemap[grid_pos.y][grid_pos.x + (i + 1)].type == WALL || tilemap[grid_pos.y][grid_pos.x + (i + 1)].type == OBSTACLE))
             {
                 break;
             }
@@ -153,7 +154,8 @@ Rectangle GetExplosionLeft(int power, Rectangle center, GridPos grid_pos)
             break;
         }else
         {
-            if (ValidateGridPos((GridPos){grid_pos.x - (i + 1), grid_pos.y}) && tilemap[grid_pos.y][grid_pos.x - (i + 1)].type == WALL)
+            if (ValidateGridPos((GridPos){grid_pos.x - (i + 1), grid_pos.y}) 
+                && (tilemap[grid_pos.y][grid_pos.x - (i + 1)].type == WALL ||tilemap[grid_pos.y][grid_pos.x - (i + 1)].type == OBSTACLE))
             {
                 break;
             }
@@ -185,7 +187,8 @@ Rectangle GetExplosionTop(int power, Rectangle center, GridPos grid_pos)
             break;
         }else
         {
-            if (ValidateGridPos((GridPos){grid_pos.x, grid_pos.y - (i + 1)}) && tilemap[grid_pos.y - (i + 1)][grid_pos.x].type == WALL)
+            if (ValidateGridPos((GridPos){grid_pos.x, grid_pos.y - (i + 1)})
+                && (tilemap[grid_pos.y - (i + 1)][grid_pos.x].type == WALL || tilemap[grid_pos.y - (i + 1)][grid_pos.x].type == OBSTACLE))
             {
                 break;
             }
@@ -217,7 +220,8 @@ Rectangle GetExplosionBottom(int power, Rectangle center, GridPos grid_pos)
             break;
         }else
         {
-            if (ValidateGridPos((GridPos){grid_pos.x, grid_pos.y + (i + 1)}) && tilemap[grid_pos.y + (i + 1)][grid_pos.x].type == WALL)
+            if (ValidateGridPos((GridPos){grid_pos.x, grid_pos.y + (i + 1)}) 
+                && (tilemap[grid_pos.y + (i + 1)][grid_pos.x].type == WALL || tilemap[grid_pos.y + (i + 1)][grid_pos.x].type == OBSTACLE))
             {
                 break;
             }

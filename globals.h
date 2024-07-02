@@ -28,6 +28,7 @@
 #define FLOOR 2
 #define WALL 1
 #define PORTAL 3
+#define OBSTACLE 4
 
 #define MAX_EXPLOSIONS 256
 #define MAX_BOMBS 5

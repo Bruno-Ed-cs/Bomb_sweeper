@@ -251,9 +251,10 @@ void DrawPreviewFlag(GridPos preview)
         tile_view.x = tilemap[preview.y][preview.x].tile.x;
         tile_view.y = tilemap[preview.y][preview.x].tile.y;
         
-        tile_frame.x = TILE_SIZE * 3;
+        tile_frame.x = TILE_SIZE;
+        tile_frame.y = TILE_SIZE * 4;
 
-        if (tilemap[preview.y][preview.x].type == WALL)
+        if (tilemap[preview.y][preview.x].type == WALL || tilemap[preview.y][preview.x].type == OBSTACLE)
         {
             taint = RED;
         }
@@ -261,7 +262,7 @@ void DrawPreviewFlag(GridPos preview)
         if (tilemap[preview.y][preview.x].flaged)
         {
 
-            tile_frame.x = TILE_SIZE * 6;
+            tile_frame.x = TILE_SIZE * 4;
         }
 
         DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, ColorTint(taint, TRANSPARENCY));
@@ -279,8 +280,9 @@ void DrawPreviewBomb(GridPos preview)
         tile_view.y = tilemap[preview.y][preview.x].tile.y;
         
         tile_frame.x = 0;
+        tile_frame.y = 0;
 
-        if (tilemap[preview.y][preview.x].type == WALL)
+        if (tilemap[preview.y][preview.x].type == WALL || tilemap[preview.y][preview.x].type == OBSTACLE)
         {
             taint = RED;
         }
@@ -335,7 +337,7 @@ void PlayerCollision()
 
                 }
 
-                if (tilemap[i][j].type == WALL)
+                if (tilemap[i][j].type == WALL || tilemap[i][j].type == OBSTACLE)
                 {
                     ApplyCollision(tilemap[i][j].tile);
                     // Resolve collision by moving the player out of the tile

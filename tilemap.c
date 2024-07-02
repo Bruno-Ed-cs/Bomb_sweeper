@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 void AllocMap() {
 
@@ -117,6 +118,11 @@ void LoadLevel(char *level)
 
                 case AIR: tilemap[i][j].type = AIR;
                     break;
+
+                case OBSTACLE: 
+                    tilemap[i][j].type = OBSTACLE;
+
+                break;
             }
 
 
@@ -285,10 +291,12 @@ void RenderMines()
                 if (minefild[i].detonated)
                 {
 
-                    tile_frame.x = TILE_SIZE * 5; 
+                    tile_frame.x = TILE_SIZE * 3; 
+                    tile_frame.y = TILE_SIZE * 4;
                 } else {
 
-                    tile_frame.x = TILE_SIZE * 2; 
+                    tile_frame.x = 0; 
+                    tile_frame.y = TILE_SIZE * 4;
                 }
             if (CheckCollisionRecs(minefild[i].hitbox, camera_bounds) )
             {
@@ -308,10 +316,12 @@ void RenderMines()
                 if (minefild[i].detonated && minefild[i].fuse <= 0)
                 {
 
-                    tile_frame.x = TILE_SIZE * 5; 
+                    tile_frame.x = TILE_SIZE * 3; 
+                    tile_frame.y = TILE_SIZE * 4;
                 } else {
 
-                    tile_frame.x = TILE_SIZE * 2; 
+                    tile_frame.x = 0; 
+                    tile_frame.y = TILE_SIZE * 4;
                 }
                 int x = minefild[i].grid_pos.x;
 
@@ -504,8 +514,8 @@ void DrawTiles(GridPos start, GridPos end)
             switch (tilemap[i][j].type) {
 
                 case WALL:
-                    tile_frame.x = TILE_SIZE;
-                    tile_frame.y = TILE_SIZE * tile_index;
+                    tile_frame.x = TILE_SIZE * 2;
+                    tile_frame.y = TILE_SIZE *4;
                 break;
 
                 case FLOOR:
@@ -515,28 +525,33 @@ void DrawTiles(GridPos start, GridPos end)
                 break;
 
                 case PORTAL:
-                    tile_frame.x = TILE_SIZE *7;
-                    tile_frame.y = TILE_SIZE * tile_index;
+                    tile_frame.x = TILE_SIZE * 5;
+                    tile_frame.y = TILE_SIZE * 4;
                 break;
 
 
                 case AIR:
-                    tile_frame.x = TILE_SIZE * 4;
+                    tile_frame.x = TILE_SIZE * 2;
+                    tile_frame.y = TILE_SIZE * 4;
+                break;
+
+                case OBSTACLE:
+
+                    tile_frame.x = TILE_SIZE;
                     tile_frame.y = TILE_SIZE * tile_index;
+
                 break;
             
             }
 
             if (tilemap[i][j].visible)
             {
-                Color color = PURPLE;
-                if (tilemap[i][j].type == PORTAL) color = WHITE;
 
-                DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, color);
+                DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, WHITE);
 
             } else {
 
-                DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, ColorTint(PURPLE, GRAY));
+                DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, ColorTint(WHITE, GRAY));
 
             }
 
@@ -550,8 +565,8 @@ void DrawTiles(GridPos start, GridPos end)
 
             if (tilemap[i][j].bombed)
             {
-                tile_frame.y = 0;
-                tile_frame.x = TILE_SIZE * 5;
+                tile_frame.y = TILE_SIZE *4;
+                tile_frame.x = TILE_SIZE * 3;
 
 
                 DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, WHITE);
@@ -561,8 +576,8 @@ void DrawTiles(GridPos start, GridPos end)
             if (tilemap[i][j].flaged == true)
             {
 
-                tile_frame.y = 0;
-                tile_frame.x = TILE_SIZE * 3;
+                tile_frame.y = TILE_SIZE * 4;
+                tile_frame.x = TILE_SIZE;
                 DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, WHITE);
             }
 
