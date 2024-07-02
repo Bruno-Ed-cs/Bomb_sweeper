@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 int main()
 {
@@ -8,6 +9,11 @@ int main()
     InitWindow(screen.width, screen.height, "Bombsweeper 1.0 Alpha");
 
     SetWindowMinSize(screen.width, screen.height);
+
+    Image icon = LoadImage("./assets/sprites/icon.png");
+    SetWindowIcon(icon);
+
+
 
     InitAudioDevice();
 
@@ -19,9 +25,13 @@ int main()
     bomb_sheet = LoadTexture("./assets/sprites/bomb.png");
     
     menu_theme = LoadMusicStream("./assets/audio/music/menu_theme.mp3");
-    tutorial_theme = LoadMusicStream("./assets/audio/music/tutorial_theme.mp3");
+    level_music = LoadMusicStream("./assets/audio/music/tutorial_theme.mp3");
 
     explosion_sheet = LoadTexture("./assets/sprites/explosion.png");
+
+    background = LoadTexture("./assets/sprites/background_dejavu.png");
+    clock_sprite = LoadTexture("./assets/sprites/clock.png");
+    wallet_sprite = LoadTexture("./assets/sprites/wallet.png");
 
     SetTargetFPS(-1);
 

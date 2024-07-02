@@ -1,4 +1,6 @@
 #include "globals.h"
+#include "include/raylib.h"
+#include <stdio.h>
 
 void PlayerInit()
 {
@@ -42,6 +44,8 @@ void CameraUpdate()
 
     camera_bounds.y = player.position.y - (camera_bounds.height / 2);
     camera_bounds.x = player.position.x - (camera_bounds.width / 2);
+
+    //printf("%lf x %lf\n",camera_bounds.width,camera_bounds.height);
 
 /** todo: isso tudo
     float cameraFocusOffsetX = TILE_SIZE * 9;
@@ -95,7 +99,8 @@ void CameraUpdate()
 };
 
 
-void PlayerMovement() {
+void PlayerInputHandler()
+{
 
     if (debug)
     {
@@ -128,14 +133,14 @@ void PlayerMovement() {
         player.direction = LEFT;
     }
 
-    if (IsKeyPressed(KEY_F))
+    if (IsKeyReleased(KEY_F))
     {
         PutFlag();
     }
 
-    if (IsKeyPressed(KEY_SPACE))
+    if (IsKeyReleased(KEY_SPACE))
     {
-            PlaceBomb();
+        PlaceBomb();
     }
 
 
@@ -223,9 +228,75 @@ void DrawPlayer()
                    (Vector2){0, 0},
                    rotation,
                    WHITE);
+
+    GridPos preview = GetTargetTile();
+
+    if (IsKeyDown(KEY_F))
+    {
+
+        DrawPreviewFlag(preview);
+    }
+
+    if (IsKeyDown(KEY_SPACE))
+    {
+        DrawPreviewBomb(preview);
+    }
+
 };
 
+void DrawPreviewFlag(GridPos preview)
+{
 
+    Color taint = WHITE;
+
+
+        tile_view.x = tilemap[preview.y][preview.x].tile.x;
+        tile_view.y = tilemap[preview.y][preview.x].tile.y;
+        
+        tile_frame.x = TILE_SIZE * 3;
+
+        if (tilemap[preview.y][preview.x].type == WALL || bombs_qtd > 0)
+        {
+            taint = RED;
+        }
+
+        if (tilemap[preview.y][preview.x].flaged)
+        {
+
+            tile_frame.x = TILE_SIZE * 6;
+        }
+
+        DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, ColorTint(taint, TRANSPARENCY));
+
+
+}
+
+void DrawPreviewBomb(GridPos preview)
+{
+
+    Color taint = WHITE;
+
+
+        tile_view.x = tilemap[preview.y][preview.x].tile.x;
+        tile_view.y = tilemap[preview.y][preview.x].tile.y;
+        
+        tile_frame.x = 0;
+
+        if (tilemap[preview.y][preview.x].type == WALL)
+        {
+            taint = RED;
+        }
+
+        if (bombs_qtd > 0)
+        {
+            taint = RED;
+
+        }
+
+        DrawTexturePro(bomb_sheet, tile_frame, tile_view, (Vector2){0,0}, 0.0f, ColorTint(taint, TRANSPARENCY));
+
+
+}
 
 
 void PlayerCollision()
@@ -415,7 +486,7 @@ void PlayerUpdate()
 {
 
     player.previous_pos = player.position;
-    PlayerMovement();
+    PlayerInputHandler();
     PlayerCollision();
     RevealTiles(player.grid_pos);
     IsPlayerMoving();

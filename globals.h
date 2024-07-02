@@ -32,6 +32,8 @@
 #define MAX_EXPLOSIONS 256
 #define MAX_BOMBS 5
 
+#define TRANSPARENCY CLITERAL(Color){255, 255, 255, 150} 
+
 typedef enum GameState 
 {	
 	START_MENU,
@@ -141,7 +143,7 @@ extern int final_score;
 //audio globals
 
 extern Music menu_theme;
-extern Music tutorial_theme;
+extern Music level_music;
 
 //Menu
 extern Rectangle exit_menu;
@@ -154,6 +156,10 @@ extern int cur_frame;
 extern int animation_index;
 extern Rectangle camera_bounds;
 extern Sound footstep_sfx;
+
+//Ui globals
+extern Texture2D clock_sprite;
+extern Texture2D wallet_sprite;
 
 //tilemap globals
 
@@ -171,6 +177,8 @@ extern Mine *minefild;
 extern Rectangle level_bounds;
 extern bool level_loaded;
 extern GridPos portal_tile;
+extern Texture2D background;
+extern int bomb_density;
 
 //explosion globals
 extern Explosion explosion_buffer[MAX_EXPLOSIONS];
@@ -186,7 +194,7 @@ extern Texture2D bomb_sheet;
 //funçoes do jogador 
 //Localização: player.c
 void PlayerInit();
-void PlayerMovement();
+void PlayerInputHandler();
 void DrawPlayer();
 void PlayerUpdate();
 void IsPlayerMoving();
@@ -197,6 +205,8 @@ GridPos GetTargetTile();
 void CameraUpdate();
 void PlaceBomb();
 void ApplyCollision(Rectangle rect);
+void DrawPreviewFlag(GridPos preview);
+void DrawPreviewBomb(GridPos preview);
 
 // funçoes do mapa e minas
 // Localização: tilemap.c
@@ -257,6 +267,7 @@ GridPos GetMatrixBegin(GridPos origin, int radius);
 void InputHandler(int input);
 int TileDistance(GridPos a, GridPos b);
 bool ValidateGridPos(GridPos posisition);
+void DrawBackground();
 
 //funções dos menus
 //localização : menus.c

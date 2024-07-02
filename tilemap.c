@@ -1,4 +1,7 @@
 #include "globals.h"
+#include "include/raylib.h"
+#include <stdio.h>
+#include <string.h>
 
 void AllocMap() {
 
@@ -61,9 +64,18 @@ void LoadLevel(char *level)
     cJSON *map = cJSON_GetObjectItem(json, "map");// carregamos a matriz do mapa
     cJSON *spawn_x = cJSON_GetObjectItem(json, "spawn_x");
     cJSON *spawn_y = cJSON_GetObjectItem(json, "spawn_y");
+    cJSON *density = cJSON_GetObjectItem(json, "bomb_density");
+    cJSON *music = cJSON_GetObjectItem(json, "music");
+    cJSON *level_background= cJSON_GetObjectItem(json, "background");
 
     map_height = cJSON_GetArraySize(map); // pegamos o tamanho da matriz
     map_width = cJSON_GetArraySize(cJSON_GetArrayItem(map, 0)); // pegamos o tamanho da linha
+    bomb_density = density->valueint;
+
+    UnloadTexture(background);
+    UnloadMusicStream(level_music);
+    level_music = LoadMusicStream(music->valuestring);
+    background = LoadTexture(level_background->valuestring);
 
     spawn_tile = (GridPos){spawn_x->valueint, spawn_y->valueint}; //pegamos o tile de nascimento
     AllocMap();
@@ -143,7 +155,7 @@ void GenerateMinefild()
 {
     SetRandomSeed(time(NULL));
     int prob;
-    int treshold = 150;
+    int treshold = bomb_density;
 
     for (int i = 0; i < map_height; i++)
     {

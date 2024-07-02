@@ -44,6 +44,17 @@ void ResetLevel()
 
 };
 
+void DrawBackground()
+{
+    double x ,y;
+
+    x = world_origin.x - ((background.width/2.0f) - (level_bounds.width/2.0f)); 
+    y = world_origin.y - ((background.height/2.0f) - (level_bounds.height/2.0f)); 
+
+    DrawTextureV(background,(Vector2){x, y} , WHITE);
+
+}
+
 
  
 void InputHandler(int input)

@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 void VictoryScreen()
 {
@@ -225,26 +226,39 @@ void PauseMenu()
 void DrawUi()
 {
 
+    Vector2 clock_pos, score_pos, clock_ui_pos, score_ui_pos;
     char score[100];
     sprintf(score, "%d $", player.score);
-    DrawTextEx(custom_font, score, (Vector2){(screen.width) - MeasureTextEx(custom_font, score, 32, 1).x - 5, 6}, 32, 1, BLACK);
 
-    DrawFPS(0, 0);
 
     char clock[100];
     sprintf(clock,"%02.0lf:%02.0lf", minutes, seconds);
-    int str_size = strlen(clock) -1;
 
+    clock_pos = (Vector2){camera_bounds.x + ((camera_bounds.width/2.0f) - (MeasureTextEx(custom_font, clock, 12, 1).x/2.0f) ),camera_bounds.y +1};
+    score_pos = (Vector2){camera_bounds.x + ((camera_bounds.width) - MeasureTextEx(custom_font, score, 12, 1).x -1), camera_bounds.y + 5} ;
+    clock_ui_pos =(Vector2){camera_bounds.x + (camera_bounds.width/2.0f) - (23),camera_bounds.y} ;
+    score_ui_pos =(Vector2){camera_bounds.x + ((camera_bounds.width) - 60), camera_bounds.y} ;
+
+
+    //DrawRectanglePro((Rectangle){clock_ui_pos.x, clock_ui_pos.y, 46, 16}, (Vector2){0,0}, 0, BLACK);
+    //DrawRectanglePro((Rectangle){score_ui_pos.x, score_ui_pos.y, 60, 30}, (Vector2){0,0}, 0, BLACK);
+    DrawTexturePro(clock_sprite, (Rectangle){0,0, clock_sprite.width, clock_sprite.height}, 
+                   (Rectangle){clock_ui_pos.x, clock_ui_pos.y, clock_sprite.width, clock_sprite.height}, (Vector2){0,0}, 0, WHITE);
+
+    DrawTexturePro(wallet_sprite, (Rectangle){0,0, wallet_sprite.width, wallet_sprite.height}, 
+                   (Rectangle){score_ui_pos.x, score_ui_pos.y, wallet_sprite.width, wallet_sprite.height}, 
+                   (Vector2){0,0}, 0, WHITE);
     //DrawText(clock, (screen.width/2) - (str_size / 2.0f) *15, 10, 30, BLACK);
-    DrawTextEx(custom_font, clock, (Vector2){(screen.width/2) - (str_size / 2.0f) *16, 10}, 32, 5, BLACK);
+    DrawTextEx(custom_font, score, score_pos, 12, 1, WHITE);
+    DrawTextEx(custom_font, clock, clock_pos,12, 1, WHITE);
 
 
 }
 
 void Game()
 {
-    if (!IsMusicStreamPlaying(tutorial_theme)) PlayMusicStream(tutorial_theme);
-    UpdateMusicStream(tutorial_theme);
+    if (!IsMusicStreamPlaying(level_music)) PlayMusicStream(level_music);
+    UpdateMusicStream(level_music);
 
     if (pause)
     {
@@ -292,6 +306,8 @@ void Game()
     ClearBackground(WHITE);
 
     BeginMode2D(camera);
+
+    DrawBackground();
 
     DrawTiles(mat_begin, mat_end);
 
@@ -346,9 +362,17 @@ void Game()
 
     }
 
+    if (!player.dead && !player.win)
+    {
+        DrawUi();
+    }
+
+
+
     EndMode2D();
 
 
+    DrawFPS(0, 0);
     if (debug)
     {
         char debug_pos[200];
@@ -361,12 +385,6 @@ void Game()
         DrawText(debug_grid, screen.width -200, screen.height - 100, 20, GREEN);
         DrawText(debug_pos, screen.width -200, screen.height -40, 20, GREEN);
         DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
-    }
-
-
-    if (!player.dead && !player.win)
-    {
-        DrawUi();
     }
 
     if (pause && !player.dead && !player.win)

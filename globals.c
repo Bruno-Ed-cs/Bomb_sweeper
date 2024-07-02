@@ -2,7 +2,7 @@
 
 //audio
 Music menu_theme;
-Music tutorial_theme;
+Music level_music;
 
 //main globals
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};
@@ -27,6 +27,11 @@ int cur_frame = 0;
 int animation_index = 0;
 Rectangle camera_bounds = {0, 0, 320, 180};
 Sound footstep_sfx;
+
+//ui globals
+
+Texture2D wallet_sprite;
+Texture2D clock_sprite;
 
 //controle de explosoes
 Explosion explosion_buffer[MAX_EXPLOSIONS];
@@ -53,6 +58,8 @@ Tile **tilemap;
 Mine *minefild;
 Rectangle level_bounds = {0};
 bool level_loaded = false;
+Texture2D background;
+int bomb_density = 0;
 
 
 
