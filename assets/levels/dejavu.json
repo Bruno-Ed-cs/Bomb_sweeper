@@ -3,7 +3,7 @@
 	"spawn_x" : 1,
 	"spawn_y" : 1,
 	"music" : "./assets/audio/music/level1_ost.mp3",
-	"background" : "./assets/sprites/background_dejavu.png",
+	"background" : "./assets/sprites/dejavu_background.png",
 	"bomb_density" : 175,
 	"tile_index" : 0,
 

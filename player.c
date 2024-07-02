@@ -1,11 +1,9 @@
 #include "globals.h"
-#include "include/raylib.h"
-#include <stdio.h>
 
 void PlayerInit()
 {
 
-    player.hitbox = (Rectangle){INIT_X, INIT_Y, TILE_SIZE -8, TILE_SIZE -8};
+    player.hitbox = (Rectangle){INIT_X, INIT_Y, TILE_SIZE -10, TILE_SIZE -10};
     player.frame = (Rectangle){0, 0, TILE_SIZE, TILE_SIZE * 2};
     player.view = (Rectangle){INIT_X, INIT_Y, TILE_SIZE, TILE_SIZE * 2};
     player.speed = 50.0f;
@@ -255,7 +253,7 @@ void DrawPreviewFlag(GridPos preview)
         
         tile_frame.x = TILE_SIZE * 3;
 
-        if (tilemap[preview.y][preview.x].type == WALL || bombs_qtd > 0)
+        if (tilemap[preview.y][preview.x].type == WALL)
         {
             taint = RED;
         }

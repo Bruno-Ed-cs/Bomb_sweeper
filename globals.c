@@ -1,8 +1,20 @@
 #include "globals.h"
 
+//assets
 //audio
 Music menu_theme;
 Music level_music;
+
+//sfx
+Sound footstep_sfx;
+
+//sprites
+Texture2D explosion_sheet;
+Texture2D bomb_sheet;
+Texture2D wallet_sprite;
+Texture2D clock_sprite;
+Texture2D background;
+Texture2D tileset; 
 
 //main globals
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};
@@ -26,27 +38,19 @@ double frametime = 0;
 int cur_frame = 0;
 int animation_index = 0;
 Rectangle camera_bounds = {0, 0, 320, 180};
-Sound footstep_sfx;
 
 //ui globals
-
-Texture2D wallet_sprite;
-Texture2D clock_sprite;
-
 //controle de explosoes
 Explosion explosion_buffer[MAX_EXPLOSIONS];
 int explosion_qtd = 0;
-Texture2D explosion_sheet;
 
 //bombas
-Texture2D bomb_sheet;
 Bomb bombs[MAX_BOMBS];
 int bombs_qtd = 0;
 
-//tilemap globals
+//Level globals
 Rectangle tile_frame = {0, 0, TILE_SIZE, TILE_SIZE};
 Rectangle tile_view = {0, 0, TILE_SIZE, TILE_SIZE};
-Texture2D tileset = {0}; 
 int qtd_floor = 0;
 int mine_index = 0;
 GridPos spawn_tile = {5, 2};
@@ -58,8 +62,8 @@ Tile **tilemap;
 Mine *minefild;
 Rectangle level_bounds = {0};
 bool level_loaded = false;
-Texture2D background;
 int bomb_density = 0;
+int tile_index;
 
 
 

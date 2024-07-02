@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/cJSON.h"
 #include "include/raylib.h"
 #include <stdio.h>
 #include <string.h>
@@ -67,10 +68,12 @@ void LoadLevel(char *level)
     cJSON *density = cJSON_GetObjectItem(json, "bomb_density");
     cJSON *music = cJSON_GetObjectItem(json, "music");
     cJSON *level_background= cJSON_GetObjectItem(json, "background");
+    cJSON *sheet = cJSON_GetObjectItem(json, "tile_index");
 
     map_height = cJSON_GetArraySize(map); // pegamos o tamanho da matriz
     map_width = cJSON_GetArraySize(cJSON_GetArrayItem(map, 0)); // pegamos o tamanho da linha
     bomb_density = density->valueint;
+    tile_index = sheet->valueint;
 
     UnloadTexture(background);
     UnloadMusicStream(level_music);
@@ -506,23 +509,24 @@ void DrawTiles(GridPos start, GridPos end)
 
                 case WALL:
                     tile_frame.x = TILE_SIZE;
-                    tile_frame.y = 0;
+                    tile_frame.y = TILE_SIZE * tile_index;
                 break;
 
                 case FLOOR:
                     tile_frame.x = 0;
-                    tile_frame.y = 0;
+                    tile_frame.y = TILE_SIZE * tile_index;
+
                 break;
 
                 case PORTAL:
                     tile_frame.x = TILE_SIZE *7;
-                    tile_frame.y = 0;
+                    tile_frame.y = TILE_SIZE * tile_index;
                 break;
 
 
                 case AIR:
                     tile_frame.x = TILE_SIZE * 4;
-                    tile_frame.y = 0;
+                    tile_frame.y = TILE_SIZE * tile_index;
                 break;
             
             }

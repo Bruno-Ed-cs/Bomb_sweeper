@@ -37,6 +37,7 @@
 typedef enum GameState 
 {	
 	START_MENU,
+	SELECT_MENU,
 	GAME
 } GameState; 
 
@@ -145,9 +146,20 @@ extern int final_score;
 extern Music menu_theme;
 extern Music level_music;
 
+//sfx
+extern Sound footstep_sfx;
+
 //Menu
 extern Rectangle exit_menu;
 extern Rectangle play;
+
+//texturas
+extern Texture2D clock_sprite;
+extern Texture2D wallet_sprite;
+extern Texture2D tileset; 
+extern Texture2D background;
+extern Texture2D explosion_sheet;
+extern Texture2D bomb_sheet;
 
 //player globals
 extern Player player;
@@ -155,17 +167,12 @@ extern double frametime;
 extern int cur_frame;
 extern int animation_index;
 extern Rectangle camera_bounds;
-extern Sound footstep_sfx;
 
 //Ui globals
-extern Texture2D clock_sprite;
-extern Texture2D wallet_sprite;
-
 //tilemap globals
 
 extern Rectangle tile_frame;
 extern Rectangle tile_view;
-extern Texture2D tileset; 
 extern int qtd_floor;
 extern int mine_index;
 extern GridPos spawn_tile;
@@ -177,19 +184,17 @@ extern Mine *minefild;
 extern Rectangle level_bounds;
 extern bool level_loaded;
 extern GridPos portal_tile;
-extern Texture2D background;
 extern int bomb_density;
+extern int tile_index;
 
 //explosion globals
 extern Explosion explosion_buffer[MAX_EXPLOSIONS];
 extern int explosion_qtd ;
-extern Texture2D explosion_sheet;
 
 //bombs globals
 
 extern Bomb bombs[MAX_BOMBS];
 extern int bombs_qtd;
-extern Texture2D bomb_sheet;
 
 //funçoes do jogador 
 //Localização: player.c
