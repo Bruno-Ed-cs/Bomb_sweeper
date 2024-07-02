@@ -160,6 +160,7 @@ extern Texture2D tileset;
 extern Texture2D background;
 extern Texture2D explosion_sheet;
 extern Texture2D bomb_sheet;
+extern Texture2D MenuTela;
 
 //player globals
 extern Player player;
@@ -265,7 +266,7 @@ void DrawBombs();
 //funções de sistema
 //Localização: system.c
 
-void ResetGame();
+void InitGame(char * level_path);
 int GetTileType(GridPos tile, int type);
 GridPos GetMatrixEnd(GridPos origin, int radius);
 GridPos GetMatrixBegin(GridPos origin, int radius);

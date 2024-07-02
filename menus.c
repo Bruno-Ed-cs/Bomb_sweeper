@@ -14,7 +14,6 @@ void StartMenu()
     Color c_jogar = BLACK;
     
 
-    Texture2D MenuTela = LoadTexture("./assets/sprites/menumap.png");
 
 
     DrawTexturePro(
@@ -48,7 +47,7 @@ void StartMenu()
 
             if (IsMusicStreamPlaying(menu_theme)) StopMusicStream(menu_theme);
 
-            ResetGame();
+            InitGame("./assets/levels/dejavu.json");
 
             state = GAME;
 

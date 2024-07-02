@@ -1,10 +1,9 @@
 #include "globals.h"
-#include "include/raylib.h"
+#include <stdio.h>
 
 int main()
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-
     //SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(screen.width, screen.height, "Bombsweeper beta 1.1");
 
@@ -13,25 +12,19 @@ int main()
     Image icon = LoadImage("./assets/sprites/icon.png");
     SetWindowIcon(icon);
 
-
-
     InitAudioDevice();
 
     footstep_sfx = LoadSound("./assets/audio/sfx/Retro FootStep 03.wav");
-
     custom_font = LoadFontEx("./assets/fonts/Hardpixel.OTF",  128, NULL, 0);
-
     tileset = LoadTexture("./assets/sprites/tileset.png");
     bomb_sheet = LoadTexture("./assets/sprites/bomb.png");
-    
     menu_theme = LoadMusicStream("./assets/audio/music/menu_theme.mp3");
     level_music = LoadMusicStream("./assets/audio/music/tutorial_theme.mp3");
-
     explosion_sheet = LoadTexture("./assets/sprites/explosion.png");
-
     background = LoadTexture("./assets/sprites/background_dejavu.png");
     clock_sprite = LoadTexture("./assets/sprites/clock.png");
     wallet_sprite = LoadTexture("./assets/sprites/wallet.png");
+    MenuTela = LoadTexture("./assets/sprites/menumap.png");
 
     SetTargetFPS(-1);
 
@@ -81,7 +74,11 @@ int main()
 
             case GAME:
 
-                if (!level_loaded) ResetGame();
+                if (!level_loaded) 
+                {
+                    printf("Error - level not loaded\n");
+
+                }
 
                 Game();
 

@@ -15,6 +15,7 @@ Texture2D wallet_sprite;
 Texture2D clock_sprite;
 Texture2D background;
 Texture2D tileset; 
+Texture2D MenuTela;
 
 //main globals
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};
