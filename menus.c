@@ -47,7 +47,7 @@ void StartMenu()
 
             if (IsMusicStreamPlaying(menu_theme)) StopMusicStream(menu_theme);
 
-            InitGame("./assets/levels/dejavu.json");
+            InitGame("./assets/levels/crystal_cove.json");
 
             state = GAME;
 

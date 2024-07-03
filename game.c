@@ -258,7 +258,6 @@ void DrawUi()
 
 void Game()
 {
-    SetMusicVolume(level_music, 0.70f);
     if (!IsMusicStreamPlaying(level_music)) PlayMusicStream(level_music);
     UpdateMusicStream(level_music);
 

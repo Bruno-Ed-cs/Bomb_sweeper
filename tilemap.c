@@ -1,5 +1,6 @@
 #include "globals.h"
 #include "include/raylib.h"
+#include <stdio.h>
 
 void AllocMap() {
 
@@ -74,7 +75,10 @@ void LoadLevel(char *level)
 
     UnloadTexture(background);
     UnloadMusicStream(level_music);
+
     level_music = LoadMusicStream(music->valuestring);
+    SetMusicVolume(level_music, 0.70f);
+
     background = LoadTexture(level_background->valuestring);
 
     spawn_tile = (GridPos){spawn_x->valueint, spawn_y->valueint}; //pegamos o tile de nascimento
@@ -85,6 +89,7 @@ void LoadLevel(char *level)
     level_bounds.width = map_width * TILE_SIZE; 
     level_bounds.height = map_height * TILE_SIZE;
 
+    printf("Level bounds = %lf x, %lf y\n", level_bounds.width, level_bounds.height);
     for (int i = 0; i < map_height; i++)
     {
         cJSON *linha = cJSON_GetArrayItem(map, i);
