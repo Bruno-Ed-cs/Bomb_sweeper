@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 void PlayerInit()
 {
@@ -310,6 +311,7 @@ void PlayerCollision()
 
         if (CheckExplosionCollision(explosion_buffer[i], player.hitbox))
         {
+            PlaySound(lose_theme);
             player.dead = true;
         }
 
@@ -332,6 +334,8 @@ void PlayerCollision()
                 if (tilemap[i][j].type == PORTAL)
                 {
                     if(!player.dead) player.win = true;
+                    
+                    PlaySound(win_theme);
                     player.final_time = timer;
 
                 }
@@ -343,8 +347,6 @@ void PlayerCollision()
                    
                 }
 
-                for (int k = 0; k < 20; k++)
-                {
                     for (int i = 0; i < bombs_qtd; i++)
                     {
                         if (CheckCollisionRecs(player.hitbox, bombs[i].hitbox))
@@ -353,7 +355,6 @@ void PlayerCollision()
                         }
 
                     }
-                }
 
 
             }
@@ -427,6 +428,8 @@ void PutFlag()
     {
         
         tilemap[target.y][target.x].flaged = !tilemap[target.y][target.x].flaged;
+
+        PlaySound(flag_sfx);
     }
     
 };

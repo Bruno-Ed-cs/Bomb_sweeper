@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 void StartMenu()
 {
@@ -46,6 +47,7 @@ void StartMenu()
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
             if (IsMusicStreamPlaying(menu_theme)) StopMusicStream(menu_theme);
+            PlaySound(button_click);
 
             InitGame("./assets/levels/beach_day.json");
 

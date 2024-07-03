@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 int CreateExplosion(GridPos origin, int power)
 {
@@ -23,6 +24,7 @@ int CreateExplosion(GridPos origin, int power)
     expo->view = (Rectangle) {0, 0, TILE_SIZE, TILE_SIZE};
     expo->frame = (Rectangle){0, 0, TILE_SIZE, TILE_SIZE};
 
+    PlaySound(explosion_sfx);
     return 0;
 
 };

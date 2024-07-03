@@ -87,6 +87,13 @@ void LoadAssets()
     wallet_sprite = LoadTexture("./assets/sprites/wallet.png");
     MenuTela = LoadTexture("./assets/sprites/menumap.png");
 
+    explosion_sfx = LoadSound("./assets/audio/sfx/Explosão de Bomba.mp3");
+    flag_sfx = LoadSound("./assets/audio/sfx/Implantação de Bandeira.mp3");
+    place_bomb_sfx = LoadSound("./assets/audio/sfx/Implantação de Bomba.mp3");
+    button_click = LoadSound("./assets/audio/sfx/Som de clique de mouse menu.WAV");
+    fuse_sfx = LoadSound("./assets/audio/sfx/fuse.mp3");
+    win_theme = LoadSound("./assets/audio/sfx/Tema da Vitória.mp3");
+    lose_theme = LoadSound("./assets/audio/sfx/Tema da Derrota.mp3");
 }
 
 void UnloadAssets()
@@ -102,6 +109,14 @@ void UnloadAssets()
     UnloadTexture(clock_sprite);
     UnloadTexture(wallet_sprite);
     UnloadTexture(MenuTela);
+
+    UnloadSound(explosion_sfx);
+    UnloadSound(flag_sfx);
+    UnloadSound(place_bomb_sfx);
+    UnloadSound(button_click);
+    UnloadSound(fuse_sfx);
+    UnloadSound(win_theme);
+    UnloadSound(lose_theme);
 
 }
 

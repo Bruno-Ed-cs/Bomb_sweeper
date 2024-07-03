@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 //assets
 //audio
@@ -7,6 +8,16 @@ Music level_music;
 
 //sfx
 Sound footstep_sfx;
+Sound explosion_sfx;
+Sound flag_sfx;
+Sound place_bomb_sfx;
+Sound button_click;
+Sound fuse_sfx;
+Sound win_theme;
+Sound lose_theme;
+
+
+
 
 //sprites
 Texture2D explosion_sheet;

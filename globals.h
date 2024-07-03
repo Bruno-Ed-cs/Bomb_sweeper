@@ -159,9 +159,16 @@ extern int final_score;
 
 extern Music menu_theme;
 extern Music level_music;
-
 //sfx
 extern Sound footstep_sfx;
+extern Sound explosion_sfx;
+extern Sound flag_sfx;
+extern Sound place_bomb_sfx;
+extern Sound button_click;
+extern Sound fuse_sfx;
+extern Sound win_theme;
+extern Sound lose_theme;
+
 
 //Menu
 extern Rectangle exit_menu;

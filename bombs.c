@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 
 void CreateBomb(GridPos grid_pos)
@@ -22,6 +23,8 @@ void CreateBomb(GridPos grid_pos)
     bomb->frametime = 0;
     bomb->frame_count = 0;
 
+    PlaySound(fuse_sfx);
+
 };
 
 void AnimateBomb(Bomb *bomb)
@@ -40,6 +43,7 @@ void AnimateBomb(Bomb *bomb)
         bomb->frame.x = TILE_SIZE * bomb->frame_count;
 
 
+
 }
 
 void DrawBombs()
@@ -51,6 +55,7 @@ void DrawBombs()
             DrawRectangleRec(bombs[i].hitbox, DARKBLUE);
         }
         RenderBomb(&bombs[i]);
+
 
     }
 }
@@ -91,12 +96,14 @@ void BombUpdate()
 
         };
 
+
         if (bombs[i].timer <= 0)
         {
             CreateExplosion(bombs[i].grid_pos, bombs[i].power);
             DeleteBomb(i);
 
         }
+
     }
 
 };

@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 void VictoryScreen()
 {
@@ -51,6 +52,8 @@ void VictoryScreen()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
+            if (IsSoundPlaying(win_theme)) StopSound(win_theme);
+            PlaySound(button_click);
             ResetLevel();
         }
 
@@ -66,6 +69,8 @@ void VictoryScreen()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
+            if (IsSoundPlaying(win_theme)) StopSound(win_theme);
+            PlaySound(button_click);
             UnloadLevel();
             state = START_MENU;
 
@@ -116,6 +121,8 @@ void DeathScreen()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
+            if (IsSoundPlaying(lose_theme)) StopSound(lose_theme);
+            PlaySound(button_click);
             ResetLevel();
         }
 
@@ -137,6 +144,8 @@ void DeathScreen()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
+            if (IsSoundPlaying(lose_theme)) StopSound(lose_theme);
+            PlaySound(button_click);
             UnloadLevel();
             state = START_MENU;
 
@@ -178,6 +187,7 @@ void PauseMenu()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
+            PlaySound(button_click);
             UnloadLevel();
             state = START_MENU;
 
@@ -203,6 +213,7 @@ void PauseMenu()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
+            PlaySound(button_click);
             pause = !pause;
 
         }
@@ -258,7 +269,12 @@ void DrawUi()
 void Game()
 {
     if (!IsMusicStreamPlaying(level_music)) PlayMusicStream(level_music);
-    UpdateMusicStream(level_music);
+    SetMusicVolume(level_music, 0.70f);
+
+    if (!player.win && !player.dead)
+    {
+        UpdateMusicStream(level_music);
+    }
 
     if (pause)
     {
