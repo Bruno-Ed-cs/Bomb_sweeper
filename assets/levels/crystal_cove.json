@@ -2,7 +2,7 @@
 
 	"spawn_x" : 2,
 	"spawn_y" : 10,
-	"music" : "./assets/audio/music/level1_ost.mp3",
+	"music" : "./assets/audio/music/tutorial_theme.mp3",
 	"background" : "./assets/sprites/crystal_background.png",
 	"bomb_density" : 200,
 	"tile_index" : 3,

@@ -23,6 +23,15 @@
 #define DOWN -1
 #define LEFT -2
 #define RIGHT 2
+#define PLAYER_BOMBS 1
+#define RENDER_DISTANCE 13
+
+#define BOMB_POWER 1
+#define BOMB_TIME 3.0f
+#define BOMB_FRAMES 16
+
+#define EXPLOSION_TIME 0.70f
+#define EXPLOSION_FRAMES 9
 
 #define AIR 0
 #define FLOOR 2
@@ -33,6 +42,9 @@
 #define MAX_EXPLOSIONS 256
 #define MAX_BOMBS 5
 
+#define MINE_FUSE 0.25f
+#define MINE_POWER 1
+
 #define TRANSPARENCY CLITERAL(Color){255, 255, 255, 150} 
 
 typedef enum GameState 
@@ -40,6 +52,7 @@ typedef enum GameState
 	START_MENU,
 	SELECT_MENU,
 	GAME
+
 } GameState; 
 
 typedef struct GridPos
@@ -87,7 +100,7 @@ typedef struct Explosion
 	double frametime;
 	Rectangle frame;
 	Rectangle view;
-	int frame_counter;
+	int frame_count;
 
 } Explosion;
 
@@ -275,6 +288,8 @@ void InputHandler(int input);
 int TileDistance(GridPos a, GridPos b);
 bool ValidateGridPos(GridPos posisition);
 void DrawBackground();
+void LoadAssets();
+void UnloadAssets();
 
 //funções dos menus
 //localização : menus.c

@@ -9,17 +9,17 @@ int CreateExplosion(GridPos origin, int power)
     Explosion *expo = &explosion_buffer[explosion_qtd -1];
 
     expo->grid_pos = origin;
-    expo->timer = 0.75f;
+    expo->timer = EXPLOSION_TIME;
     expo->power = power;
     expo->center = (Rectangle){tilemap[origin.y][origin.x].tile.x,
                                                             tilemap[origin.y][origin.x].tile.y,
                                                             TILE_SIZE, TILE_SIZE};
-    expo->right = GetExplosionRight(power, explosion_buffer[explosion_qtd -1].center, origin);
-    expo->left = GetExplosionLeft(power, explosion_buffer[explosion_qtd -1].center, origin);
-    expo->bottom = GetExplosionBottom(power, explosion_buffer[explosion_qtd -1].center, origin);
-    expo->top = GetExplosionTop(power, explosion_buffer[explosion_qtd -1].center, origin);
+    expo->right = GetExplosionRight(power, expo->center, origin);
+    expo->left = GetExplosionLeft(power, expo->center, origin);
+    expo->bottom = GetExplosionBottom(power, expo->center, origin);
+    expo->top = GetExplosionTop(power, expo->center, origin);
     expo->frametime = 0;
-    expo->frame_counter = 0;
+    expo->frame_count = 0;
     expo->view = (Rectangle) {0, 0, TILE_SIZE, TILE_SIZE};
     expo->frame = (Rectangle){0, 0, TILE_SIZE, TILE_SIZE};
 
@@ -350,14 +350,14 @@ void AnimateExplosion(Explosion *expo)
     expo->frametime += dt;
 
 
-        expo->frame_counter = (int)((expo->frametime / 0.75f) * 9.0f);
+        expo->frame_count = (int)((expo->frametime / EXPLOSION_TIME) * EXPLOSION_FRAMES);
         
-        if (expo->frame_counter >= 9)
+        if (expo->frame_count >= EXPLOSION_FRAMES)
         {
-            expo->frame_counter = 8;
+            expo->frame_count = EXPLOSION_FRAMES -1;
         }
         
-        expo->frame.y = TILE_SIZE * expo->frame_counter;
+        expo->frame.y = TILE_SIZE * expo->frame_count;
 
 }
 

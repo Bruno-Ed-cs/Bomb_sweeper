@@ -1,6 +1,5 @@
 #include "globals.h"
 #include "include/raylib.h"
-#include <stdio.h>
 
 void AllocMap() {
 
@@ -136,8 +135,8 @@ void LoadLevel(char *level)
     }
 
 
-    cJSON_Delete(json);
-    free(buffer);
+    cJSON_Delete(json);//libera o ponteiro do json
+    free(buffer);//libera o buffer
 
     level_loaded = true;
 
@@ -158,7 +157,6 @@ void UnloadLevel()
 void MineListInit()
 {
     minefild = malloc(sizeof(Mine) * qtd_floor);
-
 };
 
 void GenerateMinefild()
@@ -188,8 +186,8 @@ void GenerateMinefild()
                                 TILE_SIZE, TILE_SIZE},
                                 false,
                                 false,
-                                1,
-                                0.25f};
+                                MINE_POWER,
+                                MINE_FUSE};
 
 
                         mine_index++;
@@ -220,7 +218,7 @@ void GenerateMinefild()
             (Rectangle){
                 tilemap[grid_x][grid_y].tile.x, 
                 tilemap[grid_x][grid_y].tile.y,
-                TILE_SIZE, TILE_SIZE}, false, false, 1, 0.25f};
+                TILE_SIZE, TILE_SIZE}, false, false, MINE_POWER, MINE_FUSE};
         mine_index++;
 
 
@@ -323,6 +321,7 @@ void RenderMines()
 
                     tile_frame.x = TILE_SIZE * 3; 
                     tile_frame.y = TILE_SIZE * 4;
+
                 } else {
 
                     tile_frame.x = 0; 
@@ -344,9 +343,9 @@ void RenderMines()
 
                 tile_view.y = minefild[i].hitbox.y;
 
-                if(tilemap[y][x].visible == true && !minefild[i].detonated)
+                if(tilemap[y][x].visible == true)
                 {
-                    DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, PURPLE);
+                    DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, WHITE);
                 }
             }
 
@@ -398,8 +397,6 @@ void MinesUpdate()
             minefild[i].power += previous_power;
             if (minefild[i].power >= 5) minefild[i].power = 5;
             minefild[i].exploding = true;
-
-
         }
 
         if (minefild[i].exploding)

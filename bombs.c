@@ -15,11 +15,11 @@ void CreateBomb(GridPos grid_pos)
 
     bomb->grid_pos = grid_pos;
     bomb->hitbox = (Rectangle){tilemap[grid_pos.y][grid_pos.x].tile.x +3 ,tilemap[grid_pos.y][grid_pos.x].tile.y +3, TILE_SIZE -6, TILE_SIZE -6};
-    bomb->timer = 3.0f;
-    bomb->power = 1;
+    bomb->timer = BOMB_TIME;
+    bomb->power = BOMB_POWER;
     bomb->frame = (Rectangle){0, 0, TILE_SIZE, TILE_SIZE};
     bomb->view = (Rectangle){tilemap[grid_pos.y][grid_pos.x].tile.x  ,tilemap[grid_pos.y][grid_pos.x].tile.y , TILE_SIZE , TILE_SIZE };
-    bomb->frametime = 0.1;
+    bomb->frametime = 0;
     bomb->frame_count = 0;
 
 };
@@ -30,7 +30,7 @@ void AnimateBomb(Bomb *bomb)
     bomb->frametime += dt;
 
 
-        bomb->frame_count = (int)((bomb->frametime / 3.0f) * 16.0f);
+        bomb->frame_count = (int)((bomb->frametime / BOMB_TIME) * BOMB_FRAMES);
         
         if (bomb->frame_count >= 16)
         {

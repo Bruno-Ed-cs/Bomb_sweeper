@@ -1,5 +1,4 @@
 #include "globals.h"
-#include "include/raylib.h"
 
 void VictoryScreen()
 {
@@ -282,8 +281,8 @@ void Game()
     
     }
 
-    GridPos mat_begin = GetMatrixBegin(player.grid_pos, 20);
-    GridPos mat_end = GetMatrixEnd(player.grid_pos, 20);
+    GridPos mat_begin = GetMatrixBegin(player.grid_pos, RENDER_DISTANCE);
+    GridPos mat_end = GetMatrixEnd(player.grid_pos, RENDER_DISTANCE);
 
     InputHandler(GetKeyPressed()); //pega os inputs para o controle do sistema
 
@@ -308,65 +307,65 @@ void Game()
 
     BeginMode2D(camera);
 
-    DrawBackground();
+        DrawBackground();
 
-    DrawTiles(mat_begin, mat_end);
+        DrawTiles(mat_begin, mat_end);
 
-    RenderMines();
+        RenderMines();
 
 
-    //DrawRectangle(0, 0, 320, 180, BLUE);
+        //DrawRectangle(0, 0, 320, 180, BLUE);
 
-    DrawExplosions();
+        DrawExplosions();
 
-    DrawBombs();
+        DrawBombs();
 
-    DrawPlayer(); 
+        DrawPlayer(); 
 
-    if (debug)
-    {
-        DrawRectangleLinesEx(player.hitbox, 1.0f, RED);
-        DrawCircleV(player.position, 2.0f, RED);
-
-        DrawRectangleLinesEx(camera_bounds, 5.0f, BLACK);
-
-        DrawRectangleLinesEx(level_bounds, 2.0f, YELLOW);
-
-        for (int i = mat_begin.y; i < mat_end.y; i++) 
+        if (debug)
         {
-            Color taint = RED;
-            for (int j = mat_begin.x; j < mat_end.x; j++) 
+            DrawRectangleLinesEx(player.hitbox, 1.0f, RED);
+            DrawCircleV(player.position, 2.0f, RED);
+
+            DrawRectangleLinesEx(camera_bounds, 5.0f, BLACK);
+
+            DrawRectangleLinesEx(level_bounds, 2.0f, YELLOW);
+
+            for (int i = mat_begin.y; i < mat_end.y; i++) 
             {
-
-                if (tilemap[i][j].type == WALL)
+                Color taint = RED;
+                for (int j = mat_begin.x; j < mat_end.x; j++) 
                 {
-                    taint = BLUE;
 
-                }else {
+                    if (tilemap[i][j].type == WALL)
+                    {
+                        taint = BLUE;
 
-                    taint = RED;
+                    }else {
+
+                        taint = RED;
+                    }
+
+                    DrawRectangleLinesEx(tilemap[i][j].tile, 1.0f, taint);
+
                 }
-
-                DrawRectangleLinesEx(tilemap[i][j].tile, 1.0f, taint);
 
             }
 
+            for (int i = 0; i < mine_index; i++) {
+
+                DrawRectangleLinesEx(minefild[i].hitbox, 1.0f, GREEN);
+
+
+            }
+
+
         }
 
-        for (int i = 0; i < mine_index; i++) {
-
-            DrawRectangleLinesEx(minefild[i].hitbox, 1.0f, GREEN);
-
-
+        if (!player.dead && !player.win)
+        {
+            DrawUi();
         }
-
-
-    }
-
-    if (!player.dead && !player.win)
-    {
-        DrawUi();
-    }
 
 
 
@@ -403,8 +402,6 @@ void Game()
         DeathScreen();
 
     }
-
-
 
     EndDrawing();
 

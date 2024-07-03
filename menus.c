@@ -47,7 +47,7 @@ void StartMenu()
 
             if (IsMusicStreamPlaying(menu_theme)) StopMusicStream(menu_theme);
 
-            InitGame("./assets/levels/crystal_cove.json");
+            InitGame("./assets/levels/beach_day.json");
 
             state = GAME;
 

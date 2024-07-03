@@ -14,17 +14,7 @@ int main()
 
     InitAudioDevice();
 
-    footstep_sfx = LoadSound("./assets/audio/sfx/Retro FootStep 03.wav");
-    custom_font = LoadFontEx("./assets/fonts/Hardpixel.OTF",  128, NULL, 0);
-    tileset = LoadTexture("./assets/sprites/tileset.png");
-    bomb_sheet = LoadTexture("./assets/sprites/bomb.png");
-    menu_theme = LoadMusicStream("./assets/audio/music/menu_theme.mp3");
-    level_music = LoadMusicStream("./assets/audio/music/tutorial_theme.mp3");
-    explosion_sheet = LoadTexture("./assets/sprites/explosion.png");
-    background = LoadTexture("./assets/sprites/background_dejavu.png");
-    clock_sprite = LoadTexture("./assets/sprites/clock.png");
-    wallet_sprite = LoadTexture("./assets/sprites/wallet.png");
-    MenuTela = LoadTexture("./assets/sprites/menumap.png");
+    LoadAssets();
 
     SetTargetFPS(-1);
 
@@ -93,7 +83,7 @@ int main()
     free(minefild);
     if (level_loaded) UnloadLevel();
     free(tilemap);
-    UnloadSound(footstep_sfx);
+    UnloadAssets();
 
     CloseWindow();
     return 0;

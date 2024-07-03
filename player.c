@@ -3,7 +3,7 @@
 void PlayerInit()
 {
 
-    player.hitbox = (Rectangle){INIT_X, INIT_Y, TILE_SIZE -10, TILE_SIZE -10};
+    player.hitbox = (Rectangle){INIT_X, INIT_Y, TILE_SIZE - 10, TILE_SIZE - 10};
     player.frame = (Rectangle){0, 0, TILE_SIZE, TILE_SIZE * 2};
     player.view = (Rectangle){INIT_X, INIT_Y, TILE_SIZE, TILE_SIZE * 2};
     player.speed = 50.0f;
@@ -112,12 +112,12 @@ void PlayerInputHandler()
     if (IsKeyDown(KEY_W)) {
         player.position.y -= player.speed * dt;
 
-        player.hitbox.y = player.position.y- (player.hitbox.height /2);
+        player.hitbox.y = player.position.y - (player.hitbox.height /2);
         player.direction = UP;
     }
     else if (IsKeyDown(KEY_S) && !(player.colliding)) {
         player.position.y += player.speed * dt;
-        player.hitbox.y = player.position.y- (player.hitbox.height /2);
+        player.hitbox.y = player.position.y - (player.hitbox.height /2);
         player.direction = DOWN;
     }
     else if (IsKeyDown(KEY_D) && !(player.colliding)) {
@@ -153,7 +153,6 @@ void AnimationHandler()
 
         if (frametime >= (1.0f / 6.0f))
         {
-
 
             frametime = 0.0f;
             cur_frame++;
@@ -303,8 +302,8 @@ void PlayerCollision()
 {
 
 
-    GridPos mat_ini = GetMatrixBegin(player.grid_pos, 13);
-    GridPos mat_end = GetMatrixEnd(player.grid_pos, 13);
+    GridPos mat_ini = GetMatrixBegin(player.grid_pos, RENDER_DISTANCE);
+    GridPos mat_end = GetMatrixEnd(player.grid_pos, RENDER_DISTANCE);
 
     for (int i = 0; i < explosion_qtd; i++)
     {
@@ -369,8 +368,6 @@ void ApplyCollision(Rectangle rect)
 {
     player.colliding = true;
 
-    player.position = player.previous_pos;
-
     player.hitbox.y = player.position.y- (player.hitbox.height /2);
 
     player.hitbox.x = player.position.x- (player.hitbox.width /2);
@@ -379,7 +376,7 @@ void ApplyCollision(Rectangle rect)
     int direction = 0;
     Vector2 center = {rect.x + (rect.width/2.0f), rect.y + (rect.height/2.0f)};
 
-    if (overlap.width > 0 && CheckCollisionRecs(player.hitbox, rect))
+    if (overlap.width > 0 && player.position.x != player.previous_pos.x)
     {
 
         if (player.position.x >= center.x)
@@ -400,7 +397,7 @@ void ApplyCollision(Rectangle rect)
     overlap = GetCollisionRec(player.hitbox, rect);
     direction = 0;
  
-    if (overlap.height > 0 && CheckCollisionRecs(player.hitbox, rect))
+    if (overlap.height > 0 && player.previous_pos.y != player.position.y)
     {
 
         if (player.position.y >= center.y)
@@ -473,7 +470,7 @@ void PlaceBomb()
     GridPos target = GetTargetTile();
     Tile tile = tilemap[target.y][target.x];
 
-    if (tile.type == FLOOR && bombs_qtd < 1)
+    if (tile.type == FLOOR && bombs_qtd < PLAYER_BOMBS)
     {
         CreateBomb(target);
         tilemap[target.y][target.x].visible = true;
@@ -491,6 +488,7 @@ void PlayerUpdate()
     RevealTiles(player.grid_pos);
     IsPlayerMoving();
     AnimationHandler();
+
     player.view.x = player.position.x - (player.view.width /2) ;
     player.view.y = player.position.y - (player.view.height /1.4);
     player.hitbox.x = player.position.x - (player.hitbox.width /2);

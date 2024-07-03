@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 
 void InitGame(char * level_path)//Fiz uma funcao para a inicializaçao, para que eu pudesse usar pra reiniciar toda vez que entra no menu
@@ -48,8 +49,6 @@ void DrawBackground()
     DrawTextureV(background,(Vector2){x, y} , WHITE);
 
 }
-
-
  
 void InputHandler(int input)
 {
@@ -73,6 +72,38 @@ void InputHandler(int input)
     }
 
 };
+
+void LoadAssets()
+{
+    footstep_sfx = LoadSound("./assets/audio/sfx/Retro FootStep 03.wav");
+    custom_font = LoadFontEx("./assets/fonts/Hardpixel.OTF",  128, NULL, 0);
+    tileset = LoadTexture("./assets/sprites/tileset.png");
+    bomb_sheet = LoadTexture("./assets/sprites/bomb.png");
+    menu_theme = LoadMusicStream("./assets/audio/music/menu_theme.mp3");
+    level_music = LoadMusicStream("./assets/audio/music/tutorial_theme.mp3");
+    explosion_sheet = LoadTexture("./assets/sprites/explosion.png");
+    background = LoadTexture("./assets/sprites/background_dejavu.png");
+    clock_sprite = LoadTexture("./assets/sprites/clock.png");
+    wallet_sprite = LoadTexture("./assets/sprites/wallet.png");
+    MenuTela = LoadTexture("./assets/sprites/menumap.png");
+
+}
+
+void UnloadAssets()
+{
+    UnloadSound(footstep_sfx);
+    UnloadTexture(tileset);
+    UnloadFont(custom_font);
+    UnloadTexture(bomb_sheet);
+    UnloadMusicStream(menu_theme);
+    UnloadMusicStream(level_music);
+    UnloadTexture(explosion_sheet);
+    UnloadTexture(background);
+    UnloadTexture(clock_sprite);
+    UnloadTexture(wallet_sprite);
+    UnloadTexture(MenuTela);
+
+}
 
 GridPos GetMatrixBegin(GridPos origin, int radius)
 {
