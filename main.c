@@ -60,7 +60,13 @@ int main()
 
             break;
 
-            //case MENU
+            case SELECT_MENU:
+
+              menu_levels();
+
+            break;
+
+          
 
 
             case GAME:
