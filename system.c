@@ -1,6 +1,29 @@
 #include "globals.h"
 #include "include/raylib.h"
 
+void UpdateVolume()
+{
+    int size_arr;
+
+    SetMasterVolume(general_volume);
+
+    size_arr = sizeof(music_list)/ sizeof(music_list[0]);
+
+    for (int i = 0; i < size_arr; i++)
+    {
+        SetMusicVolume(*music_list[i], music_volume);
+    }
+
+    size_arr = sizeof(sfx_list) / sizeof(sfx_list[0]);
+
+    for (int i = 0; i < size_arr; i++)
+    {
+        SetSoundVolume(*sfx_list[i], sfx_volume);
+
+    }
+
+
+}
 
 void InitGame(char * level_path)//Fiz uma funcao para a inicializaçao, para que eu pudesse usar pra reiniciar toda vez que entra no menu
 {

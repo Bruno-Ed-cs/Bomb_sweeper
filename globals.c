@@ -3,8 +3,15 @@
 
 //assets
 //audio
+
+double general_volume = 1.0f;
+
+//music
 Music menu_theme;
 Music level_music;
+
+Music *music_list[2] = {&menu_theme, &level_music};
+double music_volume = 0.45f;
 
 //sfx
 Sound footstep_sfx;
@@ -16,8 +23,8 @@ Sound fuse_sfx;
 Sound win_theme;
 Sound lose_theme;
 
-
-
+double sfx_volume = 0.50f;
+Sound *sfx_list[8] = {&footstep_sfx, &explosion_sfx, &flag_sfx, &place_bomb_sfx, &button_click, &fuse_sfx, &win_theme, &lose_theme};
 
 //sprites
 Texture2D explosion_sheet;

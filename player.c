@@ -94,7 +94,7 @@ void CameraUpdate()
 **/
     camera.target = (Vector2){ player.position.x, player.position.y};
     camera.offset = (Vector2){screen.width/2, screen.height/2};
-    camera.zoom = (screen.width / INIT_WIDTH) * 3.5;
+    camera.zoom = (screen.width / INIT_WIDTH) * 3.2;
 };
 
 
@@ -132,12 +132,12 @@ void PlayerInputHandler()
         player.direction = LEFT;
     }
 
-    if (IsKeyReleased(KEY_F))
+    if (IsKeyReleased(KEY_J))
     {
         PutFlag();
     }
 
-    if (IsKeyReleased(KEY_SPACE))
+    if (IsKeyReleased(KEY_K))
     {
         PlaceBomb();
     }
@@ -229,13 +229,13 @@ void DrawPlayer()
 
     GridPos preview = GetTargetTile();
 
-    if (IsKeyDown(KEY_F))
+    if (IsKeyDown(KEY_J))
     {
 
         DrawPreviewFlag(preview);
     }
 
-    if (IsKeyDown(KEY_SPACE))
+    if (IsKeyDown(KEY_K))
     {
         DrawPreviewBomb(preview);
     }

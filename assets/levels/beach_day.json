@@ -4,7 +4,7 @@
 	"spawn_y" : 9,
 	"music" : "./assets/audio/music/level2_ost.mp3",
 	"background" : "./assets/sprites/beach_background.png",
-	"bomb_density" : 200,
+	"bomb_density" : 0,
 	"tile_index" : 2,
 
 	"map" : [

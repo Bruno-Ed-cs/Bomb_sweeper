@@ -48,6 +48,7 @@ int main()
         }
 
         mouse_pos = GetMousePosition();
+        UpdateVolume();
 
         switch(state){
 

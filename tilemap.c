@@ -172,7 +172,7 @@ void GenerateMinefild()
             if (TileDistance(spawn_tile, (GridPos){j, i}) > 1 && TileDistance(portal_tile, (GridPos){j, i}) > 1)
             {
 
-                prob = GetRandomValue(0, 1000);
+                prob = GetRandomValue(1, 1000);
                 if (tilemap[i][j].type == FLOOR)
                 {
                     if (prob <= treshold)
@@ -197,33 +197,6 @@ void GenerateMinefild()
 
         }
     }
-
-    if (mine_index <= 0)
-    {
-        int grid_x;
-        int grid_y;
-
-        grid_x = GetRandomValue(0, 10);
-        grid_y = GetRandomValue(0, 10);
-
-        while (tilemap[grid_x][grid_y].type != FLOOR) {
-
-            grid_x = GetRandomValue(0, 10);
-            grid_y = GetRandomValue(0, 10);
-
-        }
-
-        minefild[mine_index] = (Mine){ 
-            (GridPos){ grid_x, grid_y}, 
-            (Rectangle){
-                tilemap[grid_x][grid_y].tile.x, 
-                tilemap[grid_x][grid_y].tile.y,
-                TILE_SIZE, TILE_SIZE}, false, false, MINE_POWER, MINE_FUSE};
-        mine_index++;
-
-
-    }
-
 
 };
 
@@ -316,17 +289,9 @@ void RenderMines()
         for (int i = 0; i < mine_index; i++) {
             if (CheckCollisionRecs(minefild[i].hitbox, camera_bounds))
             {
-                if (minefild[i].detonated && minefild[i].fuse <= 0)
-                {
 
-                    tile_frame.x = TILE_SIZE * 3; 
-                    tile_frame.y = TILE_SIZE * 4;
-
-                } else {
-
-                    tile_frame.x = 0; 
-                    tile_frame.y = TILE_SIZE * 4;
-                }
+                tile_frame.x = 0; 
+                tile_frame.y = TILE_SIZE * 4;
                 int x = minefild[i].grid_pos.x;
 
                 int y = minefild[i].grid_pos.y;
@@ -343,7 +308,7 @@ void RenderMines()
 
                 tile_view.y = minefild[i].hitbox.y;
 
-                if(tilemap[y][x].visible == true)
+                if(tilemap[y][x].visible == true && !minefild[i].detonated)
                 {
                     DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, WHITE);
                 }
@@ -567,9 +532,8 @@ void DrawTiles(GridPos start, GridPos end)
 
             if (tilemap[i][j].bombed)
             {
-                tile_frame.y = TILE_SIZE *4;
+                tile_frame.y = TILE_SIZE *4 ;
                 tile_frame.x = TILE_SIZE * 3;
-
 
                 DrawTexturePro(tileset, tile_frame, tile_view, (Vector2){0,0}, 0.0f, WHITE);
 

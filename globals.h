@@ -24,7 +24,7 @@
 #define LEFT -2
 #define RIGHT 2
 #define PLAYER_BOMBS 1
-#define RENDER_DISTANCE 13
+#define RENDER_DISTANCE 14
 
 #define BOMB_POWER 1
 #define BOMB_TIME 3.0f
@@ -157,8 +157,14 @@ extern int final_score;
 
 //audio globals
 
+extern double music_volume;
+extern double sfx_volume;
+extern double general_volume;
+
 extern Music menu_theme;
 extern Music level_music;
+extern Music *music_list[2];
+
 //sfx
 extern Sound footstep_sfx;
 extern Sound explosion_sfx;
@@ -168,6 +174,7 @@ extern Sound button_click;
 extern Sound fuse_sfx;
 extern Sound win_theme;
 extern Sound lose_theme;
+extern Sound *sfx_list[8];
 
 
 //Menu
@@ -297,6 +304,7 @@ bool ValidateGridPos(GridPos posisition);
 void DrawBackground();
 void LoadAssets();
 void UnloadAssets();
+void UpdateVolume();
 
 //funções dos menus
 //localização : menus.c
