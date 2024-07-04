@@ -279,6 +279,7 @@ void DrawBackground();
 //localização : menus.c
 
 void StartMenu();
+void menu_levels();
 
 //funcao principal do jogo
 // localização game.c
@@ -286,6 +287,7 @@ void Game();
 void DeathScreen();
 void VictoryScreen();
 void PauseMenu();
+
 
 //funcoes da pontuação
 //localização : score.c
