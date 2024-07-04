@@ -1,5 +1,6 @@
 #include "globals.h"
 #include "include/raylib.h"
+#include <stdbool.h>
 
 //assets
 //audio
@@ -11,7 +12,7 @@ Music menu_theme;
 Music level_music;
 
 Music *music_list[2] = {&menu_theme, &level_music};
-double music_volume = 0.45f;
+double music_volume = 0.2f;
 
 //sfx
 Sound footstep_sfx;
@@ -37,6 +38,7 @@ Texture2D MenuTela;
 
 //main globals
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};
+bool running = true;
 double dt = 0;
 Camera2D camera = { 0 };
 bool debug = false;

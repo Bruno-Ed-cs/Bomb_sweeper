@@ -1,5 +1,6 @@
 #include "globals.h"
 #include "include/raylib.h"
+#include <stdbool.h>
 
 void StartMenu()
 {
@@ -57,8 +58,6 @@ void StartMenu()
             if (IsMusicStreamPlaying(menu_theme)) StopMusicStream(menu_theme);
             PlaySound(button_click);
 
-            InitGame("./assets/levels/beach_day.json");
-
             state = SELECT_MENU;
 
         }
@@ -83,7 +82,8 @@ void StartMenu()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
-            CloseWindow();
+            PlaySound(button_click);
+            running = false;
 
         }
 
@@ -110,13 +110,13 @@ void menu_levels()
 {
 
 
-    Rectangle Level_1 = {screen.width / 2 - 600, 80, 280, 280};
+    Rectangle Level_1 = {screen.width / 2 - 600, 88, 288, 288};
 
-    Rectangle Level_2 = {screen.width / 2 - 135, 80, 280, 280};
+    Rectangle Level_2 = {screen.width / 2 - 135, 88, 288, 288};
 
-    Rectangle Level_3 = {screen.width / 2 + 300, 80, 280, 280};
+    Rectangle Level_3 = {screen.width / 2 + 300, 88, 288, 288};
 
-    Rectangle Tutorial = {screen.width / 2 - 115, screen.height - 300, 220, 220};
+    Rectangle Tutorial = {screen.width / 2 - 115, screen.height - 300, 224, 224};
 
     Rectangle sair_levels = {screen.width - 75, screen.height - 53, 60, 28};
 
@@ -148,6 +148,7 @@ void menu_levels()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
+            PlaySound(button_click);
             state = START_MENU;
 
         }
@@ -162,6 +163,8 @@ void menu_levels()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
+            PlaySound(button_click);
+            InitGame("./assets/levels/dejavu.json");
             state = GAME;
 
         }
@@ -177,6 +180,9 @@ void menu_levels()
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
             //Level 2...
+            PlaySound(button_click);
+            InitGame("./assets/levels/beach_day.json");
+            state = GAME;
 
         }
 
@@ -191,6 +197,9 @@ void menu_levels()
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
             //Level 3...
+            PlaySound(button_click);
+            InitGame("./assets/levels/crystal_cove.json");
+            state = GAME;
 
         }
 
@@ -205,6 +214,9 @@ void menu_levels()
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
             //Tutorial...
+            PlaySound(button_click);
+            InitGame("./assets/levels/mapa1.json");
+            state = GAME;
 
         }
 
@@ -232,22 +244,17 @@ void menu_levels()
     DrawText("LEVEL 3", screen.width / 2 + 370, 50, 30, c_level_3);
 
 
-    DrawText("Dejavu", screen.width / 2 - 540, 365, 40, c_level_1);
+    DrawText("Dejavu", screen.width / 2 - 540, 375, 40, c_level_1);
 
-    DrawText("Beach Day", screen.width / 2 - 100, 365, 40, c_level_2);
+    DrawText("Beach Day", screen.width / 2 - 100, 375, 40, c_level_2);
 
-    DrawText("Crystal Cove", screen.width / 2 + 310, 365, 40, c_level_3);
+    DrawText("Crystal Cove", screen.width / 2 + 310, 375, 40, c_level_3);
 
     
 
-    DrawText("Tutorial", screen.width / 2 - 70, screen.height - 80, 30, c_tutorial);
+    DrawText("Tutorial", screen.width / 2 - 70, screen.height - 60, 30, c_tutorial);
 
     DrawText("Sair", screen.width - 68, screen.height - 50, 25, c_sair_level2);
-
-    
-
-    DrawRectangle(screen.width / 2 ,  0 , 1 , 1000 , RED );
-
 
     EndDrawing();
 

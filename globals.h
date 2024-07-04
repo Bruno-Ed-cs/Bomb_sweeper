@@ -143,6 +143,7 @@ typedef struct Player {
 //Localização: globals.c
 //main globals
 extern Rectangle screen;
+extern bool running;
 extern double dt;
 extern Camera2D camera;
 extern bool debug;

@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "include/raylib.h"
 #include <stdio.h>
 
 int main()
@@ -18,8 +19,9 @@ int main()
 
     SetTargetFPS(-1);
 
-    while (!WindowShouldClose()) {
+    while (running) {
 
+        if (WindowShouldClose()) running = false;
 
         //todo : colocar os menus em uma funcao e dixar as variaveis deles locais
 
