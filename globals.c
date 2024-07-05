@@ -35,6 +35,7 @@ Texture2D clock_sprite;
 Texture2D background;
 Texture2D tileset; 
 Texture2D MenuTela;
+Texture2D thumb_beach;
 
 //main globals
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};

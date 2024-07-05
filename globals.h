@@ -190,6 +190,7 @@ extern Texture2D background;
 extern Texture2D explosion_sheet;
 extern Texture2D bomb_sheet;
 extern Texture2D MenuTela;
+extern Texture2D thumb_beach;
 
 //player globals
 extern Player player;

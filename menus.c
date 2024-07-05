@@ -109,6 +109,7 @@ void StartMenu()
 void menu_levels()
 {
 
+    Rectangle frame = {0, 0, 32, 32};
 
     Rectangle Level_1 = {screen.width / 2 - 600, 88, 288, 288};
 
@@ -164,7 +165,7 @@ void menu_levels()
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
             PlaySound(button_click);
-            InitGame("./assets/levels/dejavu.json");
+            InitGame("./assets/levels/beach_day.json");
             state = GAME;
 
         }
@@ -181,7 +182,7 @@ void menu_levels()
 
             //Level 2...
             PlaySound(button_click);
-            InitGame("./assets/levels/beach_day.json");
+            InitGame("./assets/levels/dejavu.json");
             state = GAME;
 
         }
@@ -229,6 +230,7 @@ void menu_levels()
     ClearBackground(WHITE);
 
     DrawRectangleRec(Level_1, BLACK);
+    DrawTexturePro(thumb_beach, frame, Level_1, (Vector2){0,0}, 0.0f, WHITE);
 
     DrawRectangleRec(Level_2, BLACK);
 
@@ -244,9 +246,9 @@ void menu_levels()
     DrawText("LEVEL 3", screen.width / 2 + 370, 50, 30, c_level_3);
 
 
-    DrawText("Dejavu", screen.width / 2 - 540, 375, 40, c_level_1);
+    DrawText("Beach Day", screen.width / 2 - 570, 375, 40, c_level_1);
 
-    DrawText("Beach Day", screen.width / 2 - 100, 375, 40, c_level_2);
+    DrawText("Dejavu", screen.width / 2 - 60, 375, 40, c_level_2);
 
     DrawText("Crystal Cove", screen.width / 2 + 310, 375, 40, c_level_3);
 

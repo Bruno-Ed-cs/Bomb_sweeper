@@ -109,6 +109,7 @@ void LoadAssets()
     clock_sprite = LoadTexture("./assets/sprites/clock.png");
     wallet_sprite = LoadTexture("./assets/sprites/wallet.png");
     MenuTela = LoadTexture("./assets/sprites/menumap.png");
+    thumb_beach = LoadTexture("./assets/sprites/beach_thumb.png");
 
     explosion_sfx = LoadSound("./assets/audio/sfx/Explosão de Bomba.mp3");
     flag_sfx = LoadSound("./assets/audio/sfx/Implantação de Bandeira.mp3");
@@ -132,6 +133,7 @@ void UnloadAssets()
     UnloadTexture(clock_sprite);
     UnloadTexture(wallet_sprite);
     UnloadTexture(MenuTela);
+    UnloadTexture(thumb_beach);
 
     UnloadSound(explosion_sfx);
     UnloadSound(flag_sfx);
