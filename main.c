@@ -1,11 +1,10 @@
 #include "globals.h"
-#include "include/raylib.h"
-#include <stdio.h>
 
 int main()
 {
+    setlocale(LC_ALL, "Portuguese");
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    //SetConfigFlags(FLAG_VSYNC_HINT);
+    SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(screen.width, screen.height, "Bombsweeper beta 1.1");
 
     SetWindowMinSize(screen.width, screen.height);
@@ -17,8 +16,6 @@ int main()
 
     LoadAssets();
 
-    SetTargetFPS(-1);
-
     while (running) {
 
         if (WindowShouldClose()) running = false;
@@ -26,7 +23,7 @@ int main()
         //todo : colocar os menus em uma funcao e dixar as variaveis deles locais
 
         //Trouxe a configuraçao de fullScreen aqui para funcionar no menu
-         if (IsWindowFullscreen())
+        if (IsWindowFullscreen())
         {
 
             screen.height = GetMonitorHeight(GetCurrentMonitor());
@@ -34,7 +31,7 @@ int main()
 
         } else 
         {
-             screen.height = GetScreenHeight();
+            screen.height = GetScreenHeight();
             screen.width = GetScreenWidth();
 
         }
@@ -60,16 +57,13 @@ int main()
 
                 StartMenu();
 
-            break;
+                break;
 
             case SELECT_MENU:
 
-              menu_levels();
+                menu_levels();
 
-            break;
-
-          
-
+                break;
 
             case GAME:
 
@@ -81,12 +75,12 @@ int main()
 
                 Game();
 
-            break;
+                break;
 
 
 
         }
-    
+
     }
 
     free(minefild);

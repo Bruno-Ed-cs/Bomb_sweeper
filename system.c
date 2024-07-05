@@ -111,13 +111,13 @@ void LoadAssets()
     MenuTela = LoadTexture("./assets/sprites/menumap.png");
     thumb_beach = LoadTexture("./assets/sprites/beach_thumb.png");
 
-    explosion_sfx = LoadSound("./assets/audio/sfx/Explosão de Bomba.mp3");
-    flag_sfx = LoadSound("./assets/audio/sfx/Implantação de Bandeira.mp3");
-    place_bomb_sfx = LoadSound("./assets/audio/sfx/Implantação de Bomba.mp3");
+    explosion_sfx = LoadSound("./assets/audio/sfx/explosion.mp3");
+    flag_sfx = LoadSound("./assets/audio/sfx/flag.mp3");
+    place_bomb_sfx = LoadSound("./assets/audio/sfx/place_bomb.mp3");
     button_click = LoadSound("./assets/audio/sfx/Som de clique de mouse menu.WAV");
     fuse_sfx = LoadSound("./assets/audio/sfx/fuse.mp3");
-    win_theme = LoadSound("./assets/audio/sfx/Tema da Vitória.mp3");
-    lose_theme = LoadSound("./assets/audio/sfx/Tema da Derrota.mp3");
+    win_theme = LoadSound("./assets/audio/sfx/tema_vitoria.mp3");
+    lose_theme = LoadSound("./assets/audio/sfx/tema_derrota.mp3");
 }
 
 void UnloadAssets()

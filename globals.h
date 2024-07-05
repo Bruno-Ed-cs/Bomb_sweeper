@@ -7,6 +7,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <math.h>
+#include <locale.h>
 #include "include/cJSON.h"
 
 
