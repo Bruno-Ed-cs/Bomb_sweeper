@@ -181,10 +181,12 @@ void DeathScreen()
 
 void PauseMenu()
 {
+    // origem para a ui para ser renderizada usando a camera
     Vector2 origin = {camera_bounds.x + camera_bounds.width/2, camera_bounds.y + camera_bounds.height/2};
 
-    DrawCircleV(origin, 10.0f, RED);
+    //DrawCircleV(origin, 10.0f, RED);
 
+    // variaveis de dimensoes da ui
     double win_width = 150;
     double win_height = 200;
     double gap = 20;
@@ -193,30 +195,39 @@ void PauseMenu()
     double font_size = 20;
 
 
+    // retangulos para a janela e os fundos da interface
     Rectangle window = {origin.x - win_width/2, origin.y - win_height/2 - 6, win_width, win_height};
     Rectangle backdrop = {window.x, window.y + button_height + 10, win_width -5, win_height - button_height - 10};
     Rectangle backdrop_top = {window.x +4, window.y + 5, 61, 30};
+    // origem para a textura da interface
     Rectangle frame = {0, 0, win_width, win_height};
 
+    // retangulos dos botoes 
     Rectangle button1 = {window.x + win_width/2 - button_width/2, window.y + 50, button_width, button_height};
     Rectangle button2 = {button1.x, button1.y + button_height + gap, button_width, button_height};
     Rectangle button3 = {button2.x, button2.y + button_height + gap, button_width, button_height};
 
+    // vetor de ponteiros para facilitar o acesso dos botoes
     Rectangle *button_list[3] = {&button1, &button2, &button3};
 
+    // vetor com as strings dos rotulos dos botoes
     char text[3][50] = {"Continue", "Audio", "Exit"};
 
 
+    //desenhar os planos de fundo da interface
     DrawRectangleRec(backdrop, BLACK);
     DrawRectangleRec(backdrop_top, BLACK);
+
     /**
     DrawRectangleRec(button1, GRAY);
     DrawRectangleRec(button2, GRAY);
     DrawRectangleRec(button3, GRAY);
     **/
 
+    // titulo da interface
     DrawTextEx(custom_font, "Pause", (Vector2){window.x + 8, window.y + 8}, 20, 1, RED);
 
+    // loop pra desenhar os rotulos dos botoes e cso o mouse estiver em cima dos botao ele ficara verde
     for (int i = 0; i < 3; i++)
     {
         if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), *button_list[i]))
@@ -235,8 +246,11 @@ void PauseMenu()
         }
     }
 
+
+    // desenhar a arte da interface
     DrawTexturePro(pause_ui, frame, window, (Vector2){0, 0}, 0, WHITE);
 
+    // ifs para aplicar as funcionalidades dos botoes
     if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), button1) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
         PlaySound(button_click);
@@ -262,9 +276,12 @@ void PauseMenu()
 
 void AudioMenu()
 {
+    // origem da interface
     Vector2 origin = {camera_bounds.x + camera_bounds.width/2, camera_bounds.y + camera_bounds.height/2};
+    // vetor com ponteiros para os valores dos volumes
     double *volumes[3] = {&music_volume, &sfx_volume, &general_volume};
 
+    // variaveis da interface
     double win_width = 150;
     double win_height = 200;
     double gap = 20;
@@ -272,12 +289,13 @@ void AudioMenu()
     double button_height = 16;
     double font_size = 16;
 
-
+    // retangulos da janela
     Rectangle window = {origin.x - win_width/2, origin.y - win_height/2 - 6, win_width, win_height};
     Rectangle backdrop = {window.x, window.y + button_height + 10, win_width -5, win_height - button_height - 10};
     Rectangle backdrop_top = {window.x +4, window.y + 5, 61, 30};
     Rectangle frame = {0, 0, win_width, win_height};
 
+    // retangulos dos indicadores de volume e dos botes de controle de volume
     Rectangle vol_music = {window.x + win_width/2 - button_width/2, window.y + 60, (button_width -32) * music_volume, button_height};
     Rectangle music_plus = {vol_music.x + (button_width - 32), vol_music.y, TILE_SIZE, TILE_SIZE};
     Rectangle music_minus = {vol_music.x + (button_width - 32) + 16, vol_music.y, TILE_SIZE, TILE_SIZE};
@@ -290,32 +308,37 @@ void AudioMenu()
     Rectangle master_plus = {vol_master.x + (button_width - 32), vol_master.y, TILE_SIZE, TILE_SIZE};
     Rectangle master_minus = {vol_master.x + (button_width - 32) + 16, vol_master.y, TILE_SIZE, TILE_SIZE};
 
+    // botao de retorno
     Rectangle button = {vol_master.x, vol_master.y + button_height + gap, button_width, 25};
 
-    Rectangle* plus_button_list[3] = {&music_plus, &sfx_plus, &master_plus};
-    Rectangle* minus_button_list[3] = {&music_minus, &sfx_minus, &master_minus};   
+    // vetores com os retangulos organizados
+    Rectangle *plus_button_list[3] = {&music_plus, &sfx_plus, &master_plus};
+    Rectangle *minus_button_list[3] = {&music_minus, &sfx_minus, &master_minus};   
     Rectangle *button_list[4] = {&vol_music, &vol_sfx, &vol_master, &button};
 
+    // vetor com os rotulos dos indicadores de volume
     char labels[3][50];
 
-
+    // aplica as strings e variaveis aos rotulos
     sprintf(labels[0], "Music: %.0lf", music_volume * 100);
     sprintf(labels[1], "Sfx: %.0lf", sfx_volume * 100);
     sprintf(labels[2], "Master: %.0lf", general_volume * 100);
 
+    // desenha os fundos da interface
     DrawRectangleRec(backdrop, BLACK);
     DrawRectangleRec(backdrop_top, BLACK);
 
+    // titulo da janela
     DrawTextEx(custom_font, "Audio", (Vector2){window.x + 8, window.y + 8}, 20, 1, RED);
 
-
-
-
+    //loop pra lidar com os controles de volume
     for (int i = 0; i < 3; i++)
     {
 
+        // desenha o indicador de volume 
         DrawTexturePro(volume_slide, (Rectangle){0,0, (button_width -32) * *volumes[i], button_height}, *button_list[i], (Vector2){0, 0}, 0, WHITE);
 
+        // desenha o rotulo do indicador
         DrawTextPro(custom_font, labels[i], (Vector2){button_list[i]->x, button_list[i]->y - font_size},
                     (Vector2){0, 0},
                     0, font_size, 1, WHITE);
@@ -323,6 +346,7 @@ void AudioMenu()
         //DrawRectangleRec(*plus_button_list[i], PINK);
         //DrawRectangleRec(*minus_button_list[i], RED);
 
+        // pega o sprite do botao de volume e desenha ele com cor de hover se for o caso
         tile_frame.y = TILE_SIZE * 5;
         tile_frame.x = 0;
 
@@ -333,6 +357,7 @@ void AudioMenu()
             DrawTexturePro(tileset, tile_frame, *plus_button_list[i], (Vector2){0, 0}, 0, WHITE);
         }
 
+        // pega o sprite do menos
         tile_frame.x = TILE_SIZE;
 
         if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), *minus_button_list[i]))
@@ -342,6 +367,7 @@ void AudioMenu()
             DrawTexturePro(tileset, tile_frame, *minus_button_list[i], (Vector2){0, 0}, 0, WHITE);
         }
 
+        // aplicacao das funcionalidades dos botoes de mais volume e menos volume
         if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), *minus_button_list[i]) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             PlaySound(button_click);
@@ -364,6 +390,7 @@ void AudioMenu()
     }
     **/
 
+    // desenha o botao de voltar e com a funcionalidade de colocar o mouse em cima
     if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), button))
     {
         DrawTextPro(custom_font, "Back", (Vector2){button.x + button.width/2, button.y + button.height/2},
@@ -376,8 +403,11 @@ void AudioMenu()
                     0, font_size, 1, WHITE);
 
     }
+
+    // desenha a arte do menu
     DrawTexturePro(pause_ui, frame, window, (Vector2){0, 0}, 0, WHITE);
 
+    // aplica a funcionalidade de voltar
     if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), button) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
 
@@ -388,32 +418,36 @@ void AudioMenu()
 
 
 
+// funcao para desenhar a ui da gameplay
 void DrawUi()
 {
 
+    // posisoes dos elementos da interface
     Vector2 clock_pos, score_pos, clock_ui_pos, score_ui_pos;
+
+    // criamos a string para a pontuacao do jogador
     char score[100];
     sprintf(score, "%d $", player.score);
 
-
+    // criamos a string para o relogio 
     char clock[100];
     sprintf(clock,"%02.0lf:%02.0lf", minutes, seconds);
 
+    // atribuiçoes das posicoes dos elementos da interface baseados na cemera do jogador
     clock_pos = (Vector2){camera_bounds.x + ((camera_bounds.width/2.0f) - (MeasureTextEx(custom_font, clock, 12, 1).x/2.0f) ),camera_bounds.y +1};
     score_pos = (Vector2){camera_bounds.x + ((camera_bounds.width) - MeasureTextEx(custom_font, score, 12, 1).x -1), camera_bounds.y + 5} ;
     clock_ui_pos =(Vector2){camera_bounds.x + (camera_bounds.width/2.0f) - (23),camera_bounds.y} ;
     score_ui_pos =(Vector2){camera_bounds.x + ((camera_bounds.width) - 60), camera_bounds.y} ;
 
-
-    //DrawRectanglePro((Rectangle){clock_ui_pos.x, clock_ui_pos.y, 46, 16}, (Vector2){0,0}, 0, BLACK);
-    //DrawRectanglePro((Rectangle){score_ui_pos.x, score_ui_pos.y, 60, 30}, (Vector2){0,0}, 0, BLACK);
+    // desenso dos sprites das interfaces 
     DrawTexturePro(clock_sprite, (Rectangle){0,0, clock_sprite.width, clock_sprite.height}, 
                    (Rectangle){clock_ui_pos.x, clock_ui_pos.y, clock_sprite.width, clock_sprite.height}, (Vector2){0,0}, 0, WHITE);
 
     DrawTexturePro(wallet_sprite, (Rectangle){0,0, wallet_sprite.width, wallet_sprite.height}, 
                    (Rectangle){score_ui_pos.x, score_ui_pos.y, wallet_sprite.width, wallet_sprite.height}, 
                    (Vector2){0,0}, 0, WHITE);
-    //DrawText(clock, (screen.width/2) - (str_size / 2.0f) *15, 10, 30, BLACK);
+
+    // desenho dos valores das interfaces
     DrawTextEx(custom_font, score, score_pos, 12, 1, WHITE);
     DrawTextEx(custom_font, clock, clock_pos,12, 1, WHITE);
 
@@ -423,6 +457,7 @@ void DrawUi()
 void Game()
 {
 
+    // controle de musica do nivel
     if (!IsMusicStreamPlaying(level_music)) PlayMusicStream(level_music);
 
     if (!player.win && !player.dead)
@@ -430,6 +465,8 @@ void Game()
         UpdateMusicStream(level_music);
     }
 
+    // atualização do tempo do jogo 
+    // dt = delta time
     if (pause)
     {
 
@@ -441,8 +478,8 @@ void Game()
         dt = GetFrameTime();
     }
 
+    // atualização das variaveis de tempo
     timer += dt;
-
     seconds += dt;
     if (seconds >= 59) {
 
@@ -451,47 +488,57 @@ void Game()
     
     }
 
+    // definição dos limites da matriz para a renderização
     GridPos mat_begin = GetMatrixBegin(player.grid_pos, RENDER_DISTANCE);
     GridPos mat_end = GetMatrixEnd(player.grid_pos, RENDER_DISTANCE);
 
     InputHandler(GetKeyPressed()); //pega os inputs para o controle do sistema
 
+    // atualização da logica dos elementos do jogo
     if (!pause)
     {
 
+        // o jogador nao -e atualizado se o nivel estiver concluido
         if (!player.dead && !player.win)
         {
             PlayerUpdate();
         }
+
         MinesUpdate();
         ExplosionsUpdate();
         BombUpdate();
         
     }
 
+    // update da camera do jogo
     CameraUpdate();
 
+    // inicio do desenho dos graficos
     BeginDrawing();
 
     ClearBackground(WHITE);
 
     BeginMode2D(camera);
 
+        // desnho do fundo
         DrawBackground();
 
+        // desnho do cenario do jogo
         DrawTiles(mat_begin, mat_end);
 
+        // desenho das minas
         RenderMines();
 
-
-        //DrawRectangle(0, 0, 320, 180, BLUE);
-
+        // renderização das explosoes
         DrawExplosions();
 
+        // renderização das bombas
         DrawBombs();
 
+        // desenho do jogador
         DrawPlayer(); 
 
+        // renderizacao das informações de debug
         if (debug)
         {
             DrawRectangleLinesEx(player.hitbox, 1.0f, RED);
@@ -532,11 +579,13 @@ void Game()
 
         }
 
+        // desenho da interface
         if (!player.dead && !player.win && !pause)
         {
             DrawUi();
         }
 
+    // desenho do menu de pause
     if (pause && !player.dead && !player.win)
     {
         switch (game_ui) {
@@ -554,8 +603,6 @@ void Game()
 
     }
 
-
-
     EndMode2D();
 
 
@@ -564,6 +611,7 @@ void Game()
     DrawFPS(0, 0);
     #endif /* ifdef DEV */
 
+    // desenho do hud de debug
     if (debug)
     {
         char debug_pos[200];
@@ -578,11 +626,13 @@ void Game()
         DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
     }
 
+    // chamada do processo de vitoria
     if (player.win)
     {
         VictoryScreen();
     }
 
+    // chamada do processo de derrota
     if (player.dead)
     {
         DeathScreen();
