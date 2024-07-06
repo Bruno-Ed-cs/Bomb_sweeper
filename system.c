@@ -1,8 +1,10 @@
 #include "globals.h"
-#include "include/raylib.h"
 
+// função para atualizar o volume dos sons
+// Usa as variaveis globais music_list e sfx_list
 void UpdateVolume()
 {
+
     if (general_volume > 1) general_volume = 1;
     if (sfx_volume > 1) sfx_volume = 1;
     if (music_volume > 1) music_volume = 1;
@@ -34,12 +36,14 @@ void UpdateVolume()
 
 }
 
-void InitGame(char * level_path)//Fiz uma funcao para a inicializaçao, para que eu pudesse usar pra reiniciar toda vez que entra no menu
+//funcao para inicializar o jogo
+void InitGame(char * level_path)
 {
     LoadLevel(level_path);
     ResetLevel();
 }
 
+// funcao para reiniciar / inicia as variaveis do nivel 
 void ResetLevel() 
 {
     mine_index = 0;
@@ -51,6 +55,7 @@ void ResetLevel()
     pause = false;
     final_score = 0;
 
+    // for pra resetar todas as tiles do jogo
     for (int y = 0; y < map_height; y++) {
         for (int x = 0; x < map_width; x++) {
             if (tilemap[y][x].type == FLOOR)
@@ -62,15 +67,19 @@ void ResetLevel()
         }
     }
 
+    // funcoes para inicializar as minas
     MineListInit(); 
     GenerateMinefild();
     MapMines();
     GetSorroundingMines();
+    
+    // funcao de inicializacao do jogador
     PlayerInit();
 
 
 };
 
+// funcao para desenhar o cenario baseado no tamnho do nivel
 void DrawBackground()
 {
     double x ,y;
@@ -81,30 +90,35 @@ void DrawBackground()
     DrawTextureV(background,(Vector2){x, y} , WHITE);
 
 }
- 
+
+// funcao para lidar com inputs extras nao relacionados diretamente com a gamelay 
 void InputHandler(int input)
 {
     switch (input) {
 
         case KEY_P:
             pause = !pause;
-        break;
+            break;
 
 
         case KEY_R:
 
             if(pause) ResetLevel();
 
-        break;
+            break;
 
+#ifdef DEV
         case KEY_F3:
             debug = !debug;
-        break;
+            break;
 
+
+#endif /* ifdef DEV */
     }
 
 };
 
+// funcao para carregar as imagens e sons
 void LoadAssets()
 {
     footstep_sfx = LoadSound("./assets/audio/sfx/Retro FootStep 03.wav");
@@ -131,6 +145,7 @@ void LoadAssets()
     lose_theme = LoadSound("./assets/audio/sfx/tema_derrota.mp3");
 }
 
+// funcao para liberar as imagens e sons da memoria
 void UnloadAssets()
 {
     UnloadSound(footstep_sfx);
@@ -157,6 +172,7 @@ void UnloadAssets()
 
 }
 
+// funcao para pegar o inicio da submatriz de renderização
 GridPos GetMatrixBegin(GridPos origin, int radius)
 {
     GridPos begining;
@@ -171,6 +187,7 @@ GridPos GetMatrixBegin(GridPos origin, int radius)
 
 };
 
+// funcao para pegar o final da submatriz de renderização
 GridPos GetMatrixEnd(GridPos origin, int radius)
 {
     GridPos end;
@@ -185,17 +202,18 @@ GridPos GetMatrixEnd(GridPos origin, int radius)
 
 };
 
-
+// funcao para comparar o tipo de um tile
 int GetTileType(GridPos tile, int type)
 {
 
-    if (tile.y < 0 || tile.y >= map_height) return 0;
-    if (tile.x < 0 || tile.x >= map_width) return 0;
+    // if para validar se a posicao na matriz é valida
+    if (!ValidateGridPos(tile)) return 0;
 
     return tilemap[tile.y][tile.x].type;
 
 };
 
+//funcao para verificar se uma posicao na matriz é valida para evitar segfaults
 bool ValidateGridPos(GridPos posisition)
 {
     if (posisition.y >= map_height || posisition.y < 0)
@@ -207,6 +225,7 @@ bool ValidateGridPos(GridPos posisition)
     return true;
 };
 
+// funcao para determinar a distancia entre duas posicoes na matriz
 int TileDistance(GridPos a, GridPos b)
 {
     return sqrt((pow(b.x - a.x, 2)) + (pow(b.y - a.y, 2)));

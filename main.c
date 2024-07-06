@@ -4,26 +4,30 @@ int main()
 {
     setlocale(LC_ALL, "Portuguese");
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    //SetConfigFlags(FLAG_VSYNC_HINT);
+
+    #ifdef RELEASE
+    
+        SetConfigFlags(FLAG_VSYNC_HINT);
+    #endif /* ifdef RELEASE */
 
     InitWindow(screen.width, screen.height, "Bombsweeper beta 1.1");
 
     SetWindowMinSize(screen.width, screen.height);
 
-    Image icon = LoadImage("./assets/sprites/icon.png");
+    Image icon = LoadImage("./assets/sprites/icon.png"); //carregamos o icone da janaela e depois carregamos ele
     SetWindowIcon(icon);
 
     InitAudioDevice();
 
-    LoadAssets();
+    LoadAssets();// funcao que carrega todas a imagens e sons usados no jogo para a memoria
 
     while (running) {
 
-        if (WindowShouldClose()) running = false;
+        if (WindowShouldClose()) running = false; // if para detectar se a janela foi fechada ou se o esc foi apertado
 
         //todo : colocar os menus em uma funcao e dixar as variaveis deles locais
 
-        //Trouxe a configuraçao de fullScreen aqui para funcionar no menu
+        //atualizacao da variavel do tamanho da tela para corresponder no codigo, detecta o tamanho do monitor em tela cheia
         if (IsWindowFullscreen())
         {
 
@@ -36,7 +40,8 @@ int main()
             screen.width = GetScreenWidth();
 
         }
-        //controle de tela cheia
+
+        //controle de tela cheia para alt + enter
         if (IsKeyPressed(KEY_ENTER) && IsKeyDown(KEY_LEFT_ALT))
         {
 
@@ -47,22 +52,21 @@ int main()
 
         }
 
-        mouse_pos = GetMousePosition();
-        UpdateVolume();
+        mouse_pos = GetMousePosition(); //variavel da posicao do mouse
+        UpdateVolume(); // funcao para atualizar o volume de todos os sons do jogo
 
+        // controle do estado do jogo
         switch(state){
-
-
 
             case START_MENU:
 
-                StartMenu();
+                StartMenu(); // Menu inicial do jogo
 
                 break;
 
             case SELECT_MENU:
 
-                menu_levels();
+                menu_levels(); // menu de seleção de fases
 
                 break;
 
@@ -74,7 +78,7 @@ int main()
 
                 }
 
-                Game();
+                Game(); // funcao principal do jogo
 
                 break;
 
@@ -84,6 +88,7 @@ int main()
 
     }
 
+    // delocaçao de memoria quando a janela é fechada
     free(minefild);
     if (level_loaded) UnloadLevel();
     free(tilemap);

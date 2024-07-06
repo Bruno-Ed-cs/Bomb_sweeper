@@ -5,9 +5,10 @@ WINE := false
 CC:= gcc
 WINECC := x86_64-w64-mingw32-gcc
 TARGET := bombsweeper.exe
-INCLUDE ?= WINDOWS 
+INCLUDE ?= 
 X11 ?= true
 OLEVEL := -Og
+RELEASE ?= false
 
 ifeq ($(WINE), true)
 	CC := $(WINECC)
@@ -21,16 +22,24 @@ else ifeq ($(X11), true)
 	
 	libs :=-Wl,-R ./lib -L ./lib/Linux/x11/lib -lraylib -lm 
 	TARGET := bombsweeper.bin
-	INCLUDE := X11
 
 else 
 	libs :=-L ./lib/Linux/wayland -lraylib -lm
 	TARGET := bombsweeper.bin
-	INCLUDE := WAYLAND
 
 endif
 
-CFLAGS := -Wall $(OLEVEL) -g
+ifeq ($(RELEASE), true)
+
+	OLEVEL := -O3
+	CFLAGS := -Wall $(OLEVEL)
+	INCLUDE := RELEASE
+else
+
+	OLEVEL := -Og
+	CFLAGS := -Wall $(OLEVEL) -g
+	INCLUDE := DEV
+endif
 
 ./build/$(TARGET) : ./build/ score.o bombs.o explosions.o player.o main.o globals.o tilemap.o cJSON.o system.o game.o menus.o
 	echo "$(OS)"

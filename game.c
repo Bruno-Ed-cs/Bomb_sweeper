@@ -1,15 +1,15 @@
 #include "globals.h"
-#include "include/raylib.h"
-#include <stdbool.h>
-#include <stdio.h>
 
+// função para criar a tela de vitoria quando terminar o nível
 void VictoryScreen()
 {
-    GetFinalScore();
+    GetFinalScore(); //funcao para pegar a pontuacao
 
+    //cores personalizadas para os butoes e background
     Color background_color = {51, 255, 51, 120};
     Color button_color = {129, 129, 129 ,200};
 
+    // stings para serem usadas na ui
     char exit_message[50] = "Exit";
     char respawn_message[50] = "Respawn";
     char score_message[100];
@@ -17,6 +17,7 @@ void VictoryScreen()
     char tile_message[100];
     char time_message[100];
     
+    // agregamos aos buffers as strings com as variaveis
     sprintf(tile_message, "Revealed Tiles : %d", GetRevealedTiles());
     sprintf(time_message, "Time Bonus : %02d:%02d +%d $", (int)(player.final_time) / 60, (int)(player.final_time) % 60, GetTimeBonus());
     sprintf(mine_message, "Mines : %d/%d +%d $", GetFlagedMines(), mine_index, GetFlagedMines() * 150);
@@ -24,26 +25,35 @@ void VictoryScreen()
 
     Vector2 win_pos = {screen.width/2 - (MeasureText("You Win!", 128) + MeasureText("", 128))/2.0f , screen.height/5.0f};
 
+    // retangulos dos botoes
     Rectangle respawn_button = {(screen.width/2) -150, screen.height /2 + 100, 300, 60};
     Rectangle exit_button = {respawn_button.x, respawn_button.y + respawn_button.height +10, 300, 60};
 
+    // posisoes dos textos dos botoes
     Vector2 exit_text_pos = {exit_button.x + 10, exit_button.y - 5};
     Vector2 respawn_text_pos = {respawn_button.x + 10, respawn_button.y - 5};
 
+    // desenha o verde transparente no fundo
     DrawRectangleRec(screen, background_color);
 
+    //desenha os botoes
     DrawRectangleRec(respawn_button, button_color);
     DrawRectangleRec(exit_button, button_color);
 
     DrawTextEx(custom_font, "You Win!", win_pos, 128, 0, WHITE);
 
+    // desenha as estatisticas da pontuação
     DrawTextEx(custom_font, tile_message, (Vector2){win_pos.x, win_pos.y + 150 + 32}, 32, 0, WHITE);
     DrawTextEx(custom_font, time_message, (Vector2){win_pos.x, win_pos.y + 150}, 32, 0, WHITE);
     DrawTextEx(custom_font, mine_message, (Vector2){win_pos.x, win_pos.y + 150 + (32 *2)}, 32, 0, WHITE);
     DrawTextEx(custom_font, score_message, (Vector2){win_pos.x, win_pos.y + 150 + (32 *3)}, 32, 0, WHITE);
 
+    // desenha as palavras nos botoes
     DrawTextEx(custom_font, exit_message, exit_text_pos, 64, 0, WHITE);
     DrawTextEx(custom_font, respawn_message, respawn_text_pos, 64, 0, WHITE);
+
+
+    // ifs para checar se o mause esta nos botoes e se foi clicado
 
     if( CheckCollisionPointRec( mouse_pos, respawn_button) ){
 
@@ -54,9 +64,10 @@ void VictoryScreen()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
+            // para o tema de vitoria se ainda tiver tocando
             if (IsSoundPlaying(win_theme)) StopSound(win_theme);
             PlaySound(button_click);
-            ResetLevel();
+            ResetLevel();// reinicia o nivel
         }
 
 
@@ -73,8 +84,8 @@ void VictoryScreen()
 
             if (IsSoundPlaying(win_theme)) StopSound(win_theme);
             PlaySound(button_click);
-            UnloadLevel();
-            state = START_MENU;
+            UnloadLevel();// decarrega o nivel
+            state = START_MENU;// volta para o menu inicial
 
 
         }
@@ -88,32 +99,40 @@ void VictoryScreen()
 
 void DeathScreen()
 {
+    // cores
     Color background_color = {229, 57, 53, 120};
     Color button_color = {129, 129, 129 ,200};
 
+    // mensagens para mostrar ao jogador
     char death_message[50] = "You Died";
     char exit_message[50] = "Exit";
     char respawn_message[50] = "Respawn";
 
     Vector2 death_message_pos = {screen.width/2 - (MeasureText(death_message, 128) + MeasureText("", 128))/2.0f , screen.height/4.0f};
 
+    // botoes
     Rectangle respawn_button = {(screen.width/2) -150, screen.height /2 + 100, 300, 60};
     Rectangle exit_button = {respawn_button.x, respawn_button.y + respawn_button.height +10, 300, 60};
 
 
+    // posicoes de texto para os botoes
     Vector2 exit_text_pos = {exit_button.x + 10, exit_button.y - 5};
     Vector2 respawn_text_pos = {respawn_button.x + 10, respawn_button.y - 5};
 
+    // desenha o fundo transparente 
     DrawRectangleRec(screen, background_color);
 
+    // desenha os botoes
     DrawRectangleRec(respawn_button, button_color);
     DrawRectangleRec(exit_button, button_color);
 
     DrawTextEx(custom_font, "You Died", death_message_pos, 128, 0, WHITE);
 
+    // desenha os rotulos dos botoes
     DrawTextEx(custom_font, exit_message, exit_text_pos, 64, 0, WHITE);
     DrawTextEx(custom_font, respawn_message, respawn_text_pos, 64, 0, WHITE);
 
+    // ifs para verificar as colisoes dos botoes com o mouse e aplica seu efeito se clicado
     if( CheckCollisionPointRec( mouse_pos, respawn_button) ){
 
 
@@ -131,6 +150,7 @@ void DeathScreen()
 
     }
     
+    // atalho para renascer
     if (IsKeyPressed(KEY_R))
     {
         pause = false;
@@ -539,7 +559,11 @@ void Game()
     EndMode2D();
 
 
+    #ifdef DEV
+    
     DrawFPS(0, 0);
+    #endif /* ifdef DEV */
+
     if (debug)
     {
         char debug_pos[200];
