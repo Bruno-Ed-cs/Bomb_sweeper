@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <sys/types.h>
 #include <time.h>
 #include <stdio.h>
 #include <math.h>
@@ -55,6 +56,12 @@ typedef enum GameState
 	GAME
 
 } GameState; 
+
+typedef enum Ui 
+{
+	PAUSE,
+	AUDIO
+} Ui;
 
 typedef struct GridPos
 {
@@ -156,6 +163,7 @@ extern Font custom_font;
 extern double minutes;
 extern double seconds;
 extern int final_score;
+extern int game_ui;
 
 //audio globals
 
@@ -192,6 +200,8 @@ extern Texture2D explosion_sheet;
 extern Texture2D bomb_sheet;
 extern Texture2D MenuTela;
 extern Texture2D thumb_beach;
+extern Texture2D pause_ui;
+extern Texture2D volume_slide;
 
 //player globals
 extern Player player;
@@ -321,6 +331,7 @@ void Game();
 void DeathScreen();
 void VictoryScreen();
 void PauseMenu();
+void AudioMenu();
 
 
 //funcoes da pontuação

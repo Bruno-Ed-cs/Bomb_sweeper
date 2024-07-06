@@ -1,5 +1,7 @@
 #include "globals.h"
 #include "include/raylib.h"
+#include <stdbool.h>
+#include <stdio.h>
 
 void VictoryScreen()
 {
@@ -159,80 +161,212 @@ void DeathScreen()
 
 void PauseMenu()
 {
-    Color c_exit_pause = BLACK;
-    Color c_continue_pause = BLACK;
-    Color c_continue_pause2 = BLACK;
-    Color c_sair = BLACK;
-    Color background_color = {130, 130, 130, 100};
+    Vector2 origin = {camera_bounds.x + camera_bounds.width/2, camera_bounds.y + camera_bounds.height/2};
 
-    //Tela de Pausa
-    
-    Rectangle continue_pause = {screen.width /2 - 100, 245, 215, 50};
-    Rectangle continue_pause2 = {(screen.width /2 - 100) - 5, 240, 225, 60};
+    DrawCircleV(origin, 10.0f, RED);
 
-    Rectangle exit_pause = {(screen.width /2 - 70) + 20, continue_pause.y + continue_pause.height *2, 101, 50};
-
-    DrawRectangleRec(screen, background_color);
-
-    if( CheckCollisionPointRec( mouse_pos, exit_pause ) ){
-
-        c_exit_pause = BLACK;
-
-        c_sair = RED;
+    double win_width = 150;
+    double win_height = 200;
+    double gap = 20;
+    double button_width = 100;
+    double button_height = 25;
+    double font_size = 20;
 
 
-        DrawRectangleRec(exit_pause, c_exit_pause);
-        DrawRectangleLinesEx(exit_pause, 5.0f, RED);
+    Rectangle window = {origin.x - win_width/2, origin.y - win_height/2 - 6, win_width, win_height};
+    Rectangle backdrop = {window.x, window.y + button_height + 10, win_width -5, win_height - button_height - 10};
+    Rectangle backdrop_top = {window.x +4, window.y + 5, 61, 30};
+    Rectangle frame = {0, 0, win_width, win_height};
+
+    Rectangle button1 = {window.x + win_width/2 - button_width/2, window.y + 50, button_width, button_height};
+    Rectangle button2 = {button1.x, button1.y + button_height + gap, button_width, button_height};
+    Rectangle button3 = {button2.x, button2.y + button_height + gap, button_width, button_height};
+
+    Rectangle *button_list[3] = {&button1, &button2, &button3};
+
+    char text[3][50] = {"Continue", "Audio", "Exit"};
 
 
-        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+    DrawRectangleRec(backdrop, BLACK);
+    DrawRectangleRec(backdrop_top, BLACK);
+    /**
+    DrawRectangleRec(button1, GRAY);
+    DrawRectangleRec(button2, GRAY);
+    DrawRectangleRec(button3, GRAY);
+    **/
 
-            PlaySound(button_click);
-            UnloadLevel();
-            state = START_MENU;
+    DrawTextEx(custom_font, "Pause", (Vector2){window.x + 8, window.y + 8}, 20, 1, RED);
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), *button_list[i]))
+        {
+            DrawTextPro(custom_font, text[i], (Vector2){button_list[i]->x + button_width/2, button_list[i]->y + button_height/2},
+                        (Vector2){ MeasureTextEx(custom_font, text[i], 20, 1).x / 2.0f, MeasureTextEx(custom_font, text[i], font_size, 1).y / 2.0f},
+                        0, font_size, 1, GREEN);
+            //printf("aaa\n");
+
+        } else 
+    {
+            DrawTextPro(custom_font, text[i], (Vector2){button_list[i]->x + button_width/2, button_list[i]->y + button_height/2},
+                        (Vector2){ MeasureTextEx(custom_font, text[i], 20, 1).x / 2.0f, MeasureTextEx(custom_font, text[i], font_size, 1).y / 2.0f},
+                        0, font_size, 1, WHITE);
 
         }
+    }
 
+    DrawTexturePro(pause_ui, frame, window, (Vector2){0, 0}, 0, WHITE);
 
-    }else{
-
-        c_sair = WHITE;
+    if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), button1) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        PlaySound(button_click);
+        pause = false;
 
     }
 
-
-    if( CheckCollisionPointRec( mouse_pos, continue_pause ) ){
-
-        c_continue_pause = WHITE;
-
-        c_continue_pause2 = GREEN;
-
-        DrawRectangleRec(continue_pause2, c_continue_pause2);
-
-        DrawRectangleRec(continue_pause, c_continue_pause);
-
-        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-
-            PlaySound(button_click);
-            pause = !pause;
-
-        }
-
-    }else{
-
-        c_continue_pause2 = WHITE;
-
+    if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), button2) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        PlaySound(button_click);
+        game_ui = AUDIO;
 
     }
 
+    if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), button3) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        PlaySound(button_click);
+        UnloadLevel();
+        state = SELECT_MENU;
 
-    DrawText("Pause", screen.width /2 - 64, 100, 50, BLACK );
-
-    DrawText("Continuar", screen.width /2 - 90, 250, 40, c_continue_pause2);
-
-    DrawText("Sair", exit_pause.x + 10, exit_pause.y + 5, 40, c_sair);
-
+    }
 }
+
+void AudioMenu()
+{
+    Vector2 origin = {camera_bounds.x + camera_bounds.width/2, camera_bounds.y + camera_bounds.height/2};
+    double *volumes[3] = {&music_volume, &sfx_volume, &general_volume};
+
+    double win_width = 150;
+    double win_height = 200;
+    double gap = 20;
+    double button_width = 100;
+    double button_height = 16;
+    double font_size = 16;
+
+
+    Rectangle window = {origin.x - win_width/2, origin.y - win_height/2 - 6, win_width, win_height};
+    Rectangle backdrop = {window.x, window.y + button_height + 10, win_width -5, win_height - button_height - 10};
+    Rectangle backdrop_top = {window.x +4, window.y + 5, 61, 30};
+    Rectangle frame = {0, 0, win_width, win_height};
+
+    Rectangle vol_music = {window.x + win_width/2 - button_width/2, window.y + 60, (button_width -32) * music_volume, button_height};
+    Rectangle music_plus = {vol_music.x + (button_width - 32), vol_music.y, TILE_SIZE, TILE_SIZE};
+    Rectangle music_minus = {vol_music.x + (button_width - 32) + 16, vol_music.y, TILE_SIZE, TILE_SIZE};
+
+    Rectangle vol_sfx = {vol_music.x, vol_music.y + button_height + gap, (button_width -32) * sfx_volume, button_height};
+    Rectangle sfx_plus = {vol_sfx.x + (button_width - 32), vol_sfx.y, TILE_SIZE, TILE_SIZE};
+    Rectangle sfx_minus = {vol_sfx.x + (button_width - 32) + 16, vol_sfx.y, TILE_SIZE, TILE_SIZE};
+
+    Rectangle vol_master = {vol_sfx.x, vol_sfx.y + button_height + gap, (button_width -32) * general_volume, button_height};
+    Rectangle master_plus = {vol_master.x + (button_width - 32), vol_master.y, TILE_SIZE, TILE_SIZE};
+    Rectangle master_minus = {vol_master.x + (button_width - 32) + 16, vol_master.y, TILE_SIZE, TILE_SIZE};
+
+    Rectangle button = {vol_master.x, vol_master.y + button_height + gap, button_width, 25};
+
+    Rectangle* plus_button_list[3] = {&music_plus, &sfx_plus, &master_plus};
+    Rectangle* minus_button_list[3] = {&music_minus, &sfx_minus, &master_minus};   
+    Rectangle *button_list[4] = {&vol_music, &vol_sfx, &vol_master, &button};
+
+    char labels[3][50];
+
+
+    sprintf(labels[0], "Music: %.0lf", music_volume * 100);
+    sprintf(labels[1], "Sfx: %.0lf", sfx_volume * 100);
+    sprintf(labels[2], "Master: %.0lf", general_volume * 100);
+
+    DrawRectangleRec(backdrop, BLACK);
+    DrawRectangleRec(backdrop_top, BLACK);
+
+    DrawTextEx(custom_font, "Audio", (Vector2){window.x + 8, window.y + 8}, 20, 1, RED);
+
+
+
+
+    for (int i = 0; i < 3; i++)
+    {
+
+        DrawTexturePro(volume_slide, (Rectangle){0,0, (button_width -32) * *volumes[i], button_height}, *button_list[i], (Vector2){0, 0}, 0, WHITE);
+
+        DrawTextPro(custom_font, labels[i], (Vector2){button_list[i]->x, button_list[i]->y - font_size},
+                    (Vector2){0, 0},
+                    0, font_size, 1, WHITE);
+
+        //DrawRectangleRec(*plus_button_list[i], PINK);
+        //DrawRectangleRec(*minus_button_list[i], RED);
+
+        tile_frame.y = TILE_SIZE * 5;
+        tile_frame.x = 0;
+
+        if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), *plus_button_list[i]))
+        {
+            DrawTexturePro(tileset, tile_frame, *plus_button_list[i], (Vector2){0, 0}, 0, GREEN);
+        } else {
+            DrawTexturePro(tileset, tile_frame, *plus_button_list[i], (Vector2){0, 0}, 0, WHITE);
+        }
+
+        tile_frame.x = TILE_SIZE;
+
+        if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), *minus_button_list[i]))
+        {
+            DrawTexturePro(tileset, tile_frame, *minus_button_list[i], (Vector2){0, 0}, 0, GREEN);
+        } else {
+            DrawTexturePro(tileset, tile_frame, *minus_button_list[i], (Vector2){0, 0}, 0, WHITE);
+        }
+
+        if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), *minus_button_list[i]) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        {
+            PlaySound(button_click);
+            *volumes[i] -= 0.1f;
+        }
+
+        if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), *plus_button_list[i]) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        {
+            PlaySound(button_click);
+            *volumes[i] += 0.1f;
+        }
+
+    }
+
+    /**
+    for (int i = 0; i < 4; i++)
+    {
+        DrawRectangleRec(*button_list[i], GRAY);
+
+    }
+    **/
+
+    if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), button))
+    {
+        DrawTextPro(custom_font, "Back", (Vector2){button.x + button.width/2, button.y + button.height/2},
+                    (Vector2){ MeasureTextEx(custom_font, "Back", 20, 1).x / 2.0f, MeasureTextEx(custom_font, "Back", font_size, 1).y / 2.0f},
+                    0, font_size, 1, GREEN);
+
+    }else {
+        DrawTextPro(custom_font, "Back", (Vector2){button.x + button.width/2, button.y + button.height/2},
+                    (Vector2){ MeasureTextEx(custom_font, "Back", 20, 1).x / 2.0f, MeasureTextEx(custom_font, "Back", font_size, 1).y / 2.0f},
+                    0, font_size, 1, WHITE);
+
+    }
+    DrawTexturePro(pause_ui, frame, window, (Vector2){0, 0}, 0, WHITE);
+
+    if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), button) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+
+        PlaySound(button_click);
+        game_ui = PAUSE;
+    }
+}
+
+
 
 void DrawUi()
 {
@@ -268,6 +402,7 @@ void DrawUi()
 
 void Game()
 {
+
     if (!IsMusicStreamPlaying(level_music)) PlayMusicStream(level_music);
 
     if (!player.win && !player.dead)
@@ -377,10 +512,27 @@ void Game()
 
         }
 
-        if (!player.dead && !player.win)
+        if (!player.dead && !player.win && !pause)
         {
             DrawUi();
         }
+
+    if (pause && !player.dead && !player.win)
+    {
+        switch (game_ui) {
+            case PAUSE:
+
+            PauseMenu();
+            break;
+
+            case AUDIO:
+                //printf("pa\n");
+                AudioMenu();
+            break;
+        
+        }
+
+    }
 
 
 
@@ -400,11 +552,6 @@ void Game()
         DrawText(debug_grid, screen.width -200, screen.height - 100, 20, GREEN);
         DrawText(debug_pos, screen.width -200, screen.height -40, 20, GREEN);
         DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
-    }
-
-    if (pause && !player.dead && !player.win)
-    {
-        PauseMenu();
     }
 
     if (player.win)

@@ -12,7 +12,7 @@ Music menu_theme;
 Music level_music;
 
 Music *music_list[2] = {&menu_theme, &level_music};
-double music_volume = 0.2f;
+double music_volume = 0.45f;
 
 //sfx
 Sound footstep_sfx;
@@ -24,7 +24,7 @@ Sound fuse_sfx;
 Sound win_theme;
 Sound lose_theme;
 
-double sfx_volume = 0.50f;
+double sfx_volume = 0.35f;
 Sound *sfx_list[8] = {&footstep_sfx, &explosion_sfx, &flag_sfx, &place_bomb_sfx, &button_click, &fuse_sfx, &win_theme, &lose_theme};
 
 //sprites
@@ -36,6 +36,8 @@ Texture2D background;
 Texture2D tileset; 
 Texture2D MenuTela;
 Texture2D thumb_beach;
+Texture2D pause_ui;
+Texture2D volume_slide;
 
 //main globals
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};
@@ -50,6 +52,7 @@ double seconds = 0;
 Vector2 mouse_pos = {0, 0};
 Font custom_font;
 int final_score = 0;
+int game_ui = PAUSE;
 
 //Tela de jogo
 GameState state = START_MENU;

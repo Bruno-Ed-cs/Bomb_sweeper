@@ -3,6 +3,16 @@
 
 void UpdateVolume()
 {
+    if (general_volume > 1) general_volume = 1;
+    if (sfx_volume > 1) sfx_volume = 1;
+    if (music_volume > 1) music_volume = 1;
+
+
+    if (general_volume < 0) general_volume = 0;
+    if (sfx_volume < 0) sfx_volume = 0;
+    if (music_volume < 0) music_volume = 0;
+
+
     int size_arr;
 
     SetMasterVolume(general_volume);
@@ -21,7 +31,6 @@ void UpdateVolume()
         SetSoundVolume(*sfx_list[i], sfx_volume);
 
     }
-
 
 }
 
@@ -110,6 +119,8 @@ void LoadAssets()
     wallet_sprite = LoadTexture("./assets/sprites/wallet.png");
     MenuTela = LoadTexture("./assets/sprites/menumap.png");
     thumb_beach = LoadTexture("./assets/sprites/beach_thumb.png");
+    pause_ui = LoadTexture("./assets/sprites/pause_ui.png");
+    volume_slide = LoadTexture("./assets/sprites/volume.png");
 
     explosion_sfx = LoadSound("./assets/audio/sfx/explosion.mp3");
     flag_sfx = LoadSound("./assets/audio/sfx/flag.mp3");
@@ -134,6 +145,7 @@ void UnloadAssets()
     UnloadTexture(wallet_sprite);
     UnloadTexture(MenuTela);
     UnloadTexture(thumb_beach);
+    UnloadTexture(volume_slide);
 
     UnloadSound(explosion_sfx);
     UnloadSound(flag_sfx);

@@ -4,7 +4,8 @@ int main()
 {
     setlocale(LC_ALL, "Portuguese");
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    SetConfigFlags(FLAG_VSYNC_HINT);
+    //SetConfigFlags(FLAG_VSYNC_HINT);
+
     InitWindow(screen.width, screen.height, "Bombsweeper beta 1.1");
 
     SetWindowMinSize(screen.width, screen.height);
