@@ -38,6 +38,7 @@ Texture2D MenuTela;
 Texture2D thumb_beach;
 Texture2D pause_ui;
 Texture2D volume_slide;
+Texture2D guide_ui;
 
 //main globals
 Rectangle screen = {0, 0, INIT_WIDTH, INIT_HEIGHT};

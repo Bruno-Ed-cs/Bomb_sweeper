@@ -9,7 +9,7 @@
 build/
 
 #ignore save files
-./*.json
+save.json
 
 #ignore zips
-./*.zip
+*.zip

@@ -1,5 +1,6 @@
 #include "globals.h"
 #include "include/raylib.h"
+#include <stdbool.h>
 
 void PlayerInit()
 {
@@ -12,11 +13,13 @@ void PlayerInit()
     player.dead = false;
     player.win = false;
     player.colliding = false;
+    player.moved = false;
     player.direction = DOWN;
     player.previous_pos = (Vector2){0, 0};
     player.spawn = spawn_tile;
     player.grid_pos = player.spawn;
     player.position = (Vector2){tilemap[player.spawn.y][player.spawn.x].tile.x + (TILE_SIZE /2.0f), tilemap[player.spawn.y][player.spawn.x].tile.y + (TILE_SIZE /2.0f) };
+    player.initial_pos = player.position;
     if (!IsTextureReady(player.sprite)) player.sprite = LoadTexture("./assets/sprites/Connor_fodder-sheet.png");
     player.score = 0;
     player.final_time = 0;
@@ -491,6 +494,11 @@ void PlayerUpdate()
     RevealTiles(player.grid_pos);
     IsPlayerMoving();
     AnimationHandler();
+
+    if (player.position.x != player.initial_pos.x || player.position.y != player.initial_pos.y)
+    {
+        player.moved = true;
+    }
 
     player.view.x = player.position.x - (player.view.width /2) ;
     player.view.y = player.position.y - (player.view.height /1.4);

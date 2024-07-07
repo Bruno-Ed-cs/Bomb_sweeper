@@ -128,6 +128,7 @@ typedef struct Player {
 
 	Vector2 position;
 	Vector2 previous_pos;
+	Vector2 initial_pos;
 	GridPos grid_pos;
 	GridPos spawn;
 	Rectangle hitbox;
@@ -138,6 +139,7 @@ typedef struct Player {
 	bool colliding;
 	bool dead;
 	bool win;
+	bool moved;
 	int direction;
 	double speed;
 	double final_time;
@@ -201,6 +203,7 @@ extern Texture2D MenuTela;
 extern Texture2D thumb_beach;
 extern Texture2D pause_ui;
 extern Texture2D volume_slide;
+extern Texture2D guide_ui;
 
 //player globals
 extern Player player;
@@ -336,6 +339,7 @@ void DeathScreen();
 void VictoryScreen();
 void PauseMenu();
 void AudioMenu();
+void DrawUi();
 
 
 //funcoes da pontuação

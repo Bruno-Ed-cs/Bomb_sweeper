@@ -1,6 +1,213 @@
 #include "globals.h"
 #include "include/raylib.h"
 
+// funcao principal do jogo
+void Game()
+{
+
+    // controle de musica do nivel
+    if (!IsMusicStreamPlaying(level_music)) PlayMusicStream(level_music);
+
+    if (!player.win && !player.dead)
+    {
+        UpdateMusicStream(level_music);
+    }
+
+    // atualização do tempo do jogo 
+    // dt = delta time
+    if (pause)
+    {
+
+        dt = 0; 
+
+    } else 
+    {
+
+        dt = GetFrameTime();
+    }
+
+    // atualização das variaveis de tempo
+    timer += dt;
+    seconds += dt;
+    if (seconds >= 59) {
+
+        seconds = 0;
+        minutes++;
+    
+    }
+
+    // definição dos limites da matriz para a renderização
+    GridPos mat_begin = GetMatrixBegin(player.grid_pos, RENDER_DISTANCE);
+    GridPos mat_end = GetMatrixEnd(player.grid_pos, RENDER_DISTANCE);
+
+    InputHandler(GetKeyPressed()); //pega os inputs para o controle do sistema
+
+    // atualização da logica dos elementos do jogo
+    if (!pause)
+    {
+
+        // o jogador nao -e atualizado se o nivel estiver concluido
+        if (!player.dead && !player.win)
+        {
+            PlayerUpdate();
+        }
+
+        MinesUpdate();
+        ExplosionsUpdate();
+        BombUpdate();
+        
+    }
+
+    // update da camera do jogo
+    CameraUpdate();
+
+    // inicio do desenho dos graficos
+    BeginDrawing();
+
+    ClearBackground(WHITE);
+
+    BeginMode2D(camera);
+
+        // desnho do fundo
+        DrawBackground();
+
+        // desnho do cenario do jogo
+        DrawTiles(mat_begin, mat_end);
+
+        // desenho das minas
+        RenderMines();
+
+        // renderização das explosoes
+        DrawExplosions();
+
+        // renderização das bombas
+        DrawBombs();
+
+        // desenho do jogador
+        DrawPlayer(); 
+        
+        if (!player.moved) DrawTextureV(guide_ui, (Vector2){camera_bounds.x, camera_bounds.y}, WHITE);
+
+        // renderizacao das informações de debug
+        if (debug)
+        {
+            DrawRectangleLinesEx(player.hitbox, 1.0f, RED);
+            DrawCircleV(player.position, 2.0f, RED);
+
+            DrawRectangleLinesEx(camera_bounds, 5.0f, BLACK);
+
+            DrawRectangleLinesEx(level_bounds, 2.0f, YELLOW);
+
+            for (int i = mat_begin.y; i < mat_end.y; i++) 
+            {
+                Color taint = RED;
+                for (int j = mat_begin.x; j < mat_end.x; j++) 
+                {
+
+                    if (tilemap[i][j].type == WALL)
+                    {
+                        taint = BLUE;
+
+                    }else {
+
+                        taint = RED;
+                    }
+
+                    DrawRectangleLinesEx(tilemap[i][j].tile, 1.0f, taint);
+
+                }
+
+            }
+
+            for (int i = 0; i < mine_index; i++) {
+
+                DrawRectangleLinesEx(minefild[i].hitbox, 1.0f, GREEN);
+
+
+            }
+
+
+        }
+
+        // desenho da interface
+        if (!player.dead && !player.win && !pause)
+        {
+            DrawUi();
+        }
+
+    // desenho do menu de pause
+    if (pause && !player.dead && !player.win)
+    {
+        switch (game_ui) {
+            case PAUSE:
+
+            PauseMenu();
+            break;
+
+            case AUDIO:
+                //printf("pa\n");
+                AudioMenu();
+            break;
+        
+        }
+
+    }
+
+    EndMode2D();
+
+
+    #ifdef DEV
+    
+    DrawFPS(0, 0);
+    #endif /* ifdef DEV */
+
+    // desenho do hud de debug
+    if (debug)
+    {
+        char debug_pos[200];
+        char debug_move[200];
+        char debug_grid[200];
+        sprintf(debug_pos, "X = %.2lf\nY = %.2lf\n", player.position.x, player.position.y);
+        sprintf(debug_move, "Moving = %d", player.move);
+        sprintf(debug_grid, "Grid X = %d\nGrid Y = %d\n", player.grid_pos.x, player.grid_pos.y);
+
+        DrawText(debug_grid, screen.width -200, screen.height - 100, 20, GREEN);
+        DrawText(debug_pos, screen.width -200, screen.height -40, 20, GREEN);
+        DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
+    }
+
+    // chamada do processo de vitoria
+    if (player.win)
+    {
+
+        if (final_score == 0)
+        {
+            GetFinalScore(); //funcao para pegar a pontuacao
+            if (!FileExists("./save.json"))
+            {
+                CreateSavefile();
+
+            }
+
+            if (IsScoreHigher(level_name))
+            {
+                RegisterScore(level_name, final_score);
+            }
+        }
+        VictoryScreen();
+    }
+
+    // chamada do processo de derrota
+    if (player.dead)
+    {
+        DeathScreen();
+
+    }
+
+    EndDrawing();
+
+}
+
 // função para criar a tela de vitoria quando terminar o nível
 void VictoryScreen()
 {
@@ -189,6 +396,8 @@ void PauseMenu()
     // variaveis de dimensoes da ui
     double win_width = 150;
     double win_height = 200;
+    double guide_width = 100;
+    double guide_height = 200;
     double gap = 20;
     double button_width = 100;
     double button_height = 25;
@@ -199,6 +408,7 @@ void PauseMenu()
     Rectangle window = {origin.x - win_width/2, origin.y - win_height/2 - 6, win_width, win_height};
     Rectangle backdrop = {window.x, window.y + button_height + 10, win_width -5, win_height - button_height - 10};
     Rectangle backdrop_top = {window.x +4, window.y + 5, 61, 30};
+    Rectangle tutorial = {camera_bounds.x, camera_bounds.y , guide_width, guide_height};
     // origem para a textura da interface
     Rectangle frame = {0, 0, win_width, win_height};
 
@@ -217,6 +427,7 @@ void PauseMenu()
     //desenhar os planos de fundo da interface
     DrawRectangleRec(backdrop, BLACK);
     DrawRectangleRec(backdrop_top, BLACK);
+
 
     /**
     DrawRectangleRec(button1, GRAY);
@@ -249,6 +460,11 @@ void PauseMenu()
 
     // desenhar a arte da interface
     DrawTexturePro(pause_ui, frame, window, (Vector2){0, 0}, 0, WHITE);
+
+    frame.width = guide_width;
+    frame.height = guide_height;
+
+    DrawTexturePro(guide_ui, frame, tutorial, (Vector2){0, 0}, 0, WHITE);
 
     // ifs para aplicar as funcionalidades dos botoes
     if (CheckCollisionPointRec(GetScreenToWorld2D(mouse_pos, camera), button1) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
@@ -454,206 +670,3 @@ void DrawUi()
 
 }
 
-void Game()
-{
-
-    // controle de musica do nivel
-    if (!IsMusicStreamPlaying(level_music)) PlayMusicStream(level_music);
-
-    if (!player.win && !player.dead)
-    {
-        UpdateMusicStream(level_music);
-    }
-
-    // atualização do tempo do jogo 
-    // dt = delta time
-    if (pause)
-    {
-
-        dt = 0; 
-
-    } else 
-    {
-
-        dt = GetFrameTime();
-    }
-
-    // atualização das variaveis de tempo
-    timer += dt;
-    seconds += dt;
-    if (seconds >= 59) {
-
-        seconds = 0;
-        minutes++;
-    
-    }
-
-    // definição dos limites da matriz para a renderização
-    GridPos mat_begin = GetMatrixBegin(player.grid_pos, RENDER_DISTANCE);
-    GridPos mat_end = GetMatrixEnd(player.grid_pos, RENDER_DISTANCE);
-
-    InputHandler(GetKeyPressed()); //pega os inputs para o controle do sistema
-
-    // atualização da logica dos elementos do jogo
-    if (!pause)
-    {
-
-        // o jogador nao -e atualizado se o nivel estiver concluido
-        if (!player.dead && !player.win)
-        {
-            PlayerUpdate();
-        }
-
-        MinesUpdate();
-        ExplosionsUpdate();
-        BombUpdate();
-        
-    }
-
-    // update da camera do jogo
-    CameraUpdate();
-
-    // inicio do desenho dos graficos
-    BeginDrawing();
-
-    ClearBackground(WHITE);
-
-    BeginMode2D(camera);
-
-        // desnho do fundo
-        DrawBackground();
-
-        // desnho do cenario do jogo
-        DrawTiles(mat_begin, mat_end);
-
-        // desenho das minas
-        RenderMines();
-
-        // renderização das explosoes
-        DrawExplosions();
-
-        // renderização das bombas
-        DrawBombs();
-
-        // desenho do jogador
-        DrawPlayer(); 
-
-        // renderizacao das informações de debug
-        if (debug)
-        {
-            DrawRectangleLinesEx(player.hitbox, 1.0f, RED);
-            DrawCircleV(player.position, 2.0f, RED);
-
-            DrawRectangleLinesEx(camera_bounds, 5.0f, BLACK);
-
-            DrawRectangleLinesEx(level_bounds, 2.0f, YELLOW);
-
-            for (int i = mat_begin.y; i < mat_end.y; i++) 
-            {
-                Color taint = RED;
-                for (int j = mat_begin.x; j < mat_end.x; j++) 
-                {
-
-                    if (tilemap[i][j].type == WALL)
-                    {
-                        taint = BLUE;
-
-                    }else {
-
-                        taint = RED;
-                    }
-
-                    DrawRectangleLinesEx(tilemap[i][j].tile, 1.0f, taint);
-
-                }
-
-            }
-
-            for (int i = 0; i < mine_index; i++) {
-
-                DrawRectangleLinesEx(minefild[i].hitbox, 1.0f, GREEN);
-
-
-            }
-
-
-        }
-
-        // desenho da interface
-        if (!player.dead && !player.win && !pause)
-        {
-            DrawUi();
-        }
-
-    // desenho do menu de pause
-    if (pause && !player.dead && !player.win)
-    {
-        switch (game_ui) {
-            case PAUSE:
-
-            PauseMenu();
-            break;
-
-            case AUDIO:
-                //printf("pa\n");
-                AudioMenu();
-            break;
-        
-        }
-
-    }
-
-    EndMode2D();
-
-
-    #ifdef DEV
-    
-    DrawFPS(0, 0);
-    #endif /* ifdef DEV */
-
-    // desenho do hud de debug
-    if (debug)
-    {
-        char debug_pos[200];
-        char debug_move[200];
-        char debug_grid[200];
-        sprintf(debug_pos, "X = %.2lf\nY = %.2lf\n", player.position.x, player.position.y);
-        sprintf(debug_move, "Moving = %d", player.move);
-        sprintf(debug_grid, "Grid X = %d\nGrid Y = %d\n", player.grid_pos.x, player.grid_pos.y);
-
-        DrawText(debug_grid, screen.width -200, screen.height - 100, 20, GREEN);
-        DrawText(debug_pos, screen.width -200, screen.height -40, 20, GREEN);
-        DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
-    }
-
-    // chamada do processo de vitoria
-    if (player.win)
-    {
-
-        if (final_score == 0)
-        {
-            GetFinalScore(); //funcao para pegar a pontuacao
-            if (!FileExists("./save.json"))
-            {
-                CreateSavefile();
-
-            }
-
-            if (IsScoreHigher(level_name))
-            {
-                RegisterScore(level_name, final_score);
-            }
-        }
-        VictoryScreen();
-    }
-
-    // chamada do processo de derrota
-    if (player.dead)
-    {
-        DeathScreen();
-
-    }
-
-    EndDrawing();
-
-}
