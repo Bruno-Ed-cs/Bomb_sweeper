@@ -99,9 +99,11 @@ void StartMenu()
 
     ClearBackground(WHITE);
 
-    DrawText("Jogar", screen.width - 250, 200, 60, c_jogar);
+    //DrawText("Jogar", screen.width - 250, 200, 60, c_jogar);
+    DrawTextPro(custom_font, "Play", (Vector2){screen.width - 250, 195}, (Vector2){0, 0}, 0.0f, 70, 1, c_jogar);
 
-    DrawText("Sair", screen.width - 68, screen.height - 50, 25, c_sair_menu2);
+    //DrawText("Sair", screen.width - 68, screen.height - 50, 25, c_sair_menu2);
+    DrawTextPro(custom_font, "Exit", (Vector2){screen.width - 68, screen.height - 50}, (Vector2){0, 0}, 0.0f, 25, 1, c_sair_menu2);
 
     EndDrawing();
 }
@@ -113,11 +115,11 @@ void menu_levels()
 
     Rectangle Level_1 = {screen.width / 2 - 600, 88, 288, 288};
 
-    Rectangle Level_2 = {screen.width / 2 - 135, 88, 288, 288};
+    Rectangle Level_2 = {screen.width / 2 - 144, 88, 288, 288};
 
     Rectangle Level_3 = {screen.width / 2 + 300, 88, 288, 288};
 
-    Rectangle Tutorial = {screen.width / 2 - 115, screen.height - 300, 224, 224};
+    Rectangle Tutorial = {screen.width / 2 - 112, screen.height - 300, 224, 224};
 
     Rectangle sair_levels = {screen.width - 75, screen.height - 53, 60, 28};
 
@@ -239,24 +241,24 @@ void menu_levels()
     DrawRectangleRec(Tutorial, BLACK);
 
 
-    DrawText("LEVEL 1", screen.width / 2 - 530, 50, 30, c_level_1);
+    DrawTextEx(custom_font,"LEVEL 1", (Vector2){screen.width / 2 - 530, 45}, 46, 1, c_level_1);
 
-    DrawText("LEVEL 2", screen.width / 2 - 50, 50, 30, c_level_2);
+    DrawTextEx(custom_font, "LEVEL 2", (Vector2){screen.width / 2 - 70, 45}, 46, 1, c_level_2);
 
-    DrawText("LEVEL 3", screen.width / 2 + 370, 50, 30, c_level_3);
+    DrawTextEx(custom_font, "LEVEL 3", (Vector2){screen.width / 2 + 370, 45}, 46, 1, c_level_3);
 
 
-    DrawText("Beach Day", screen.width / 2 - 570, 375, 40, c_level_1);
+    DrawTextEx(custom_font, "Beach Day",(Vector2){ screen.width / 2 - 570, 375}, 46, 1,c_level_1);
 
-    DrawText("Dejavu", screen.width / 2 - 60, 375, 40, c_level_2);
+    DrawTextEx(custom_font, "Dejavu", (Vector2){screen.width / 2 - 65, 375}, 46, 1, c_level_2);
 
-    DrawText("Crystal Cove", screen.width / 2 + 310, 375, 40, c_level_3);
+    DrawTextEx(custom_font, "Crystal Cove", (Vector2){screen.width / 2 + 315, 375}, 46, 1, c_level_3);
 
     
 
-    DrawText("Tutorial", screen.width / 2 - 70, screen.height - 60, 30, c_tutorial);
+    DrawTextEx(custom_font, "Tutorial", (Vector2){screen.width / 2 - 60, screen.height - 75}, 36,1, c_tutorial);
 
-    DrawText("Sair", screen.width - 68, screen.height - 50, 25, c_sair_level2);
+    DrawTextEx(custom_font, "Exit", (Vector2){screen.width - 68, screen.height - 50}, 25, 1, c_sair_level2);
 
     EndDrawing();
 

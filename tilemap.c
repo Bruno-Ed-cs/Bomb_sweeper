@@ -522,12 +522,20 @@ void DrawTiles(GridPos start, GridPos end)
 
             }
 
-            char num[10];
-            sprintf(num, "%d" ,tilemap[i][j].sorrounding_mines);
-
             if (tilemap[i][j].type == FLOOR && tilemap[i][j].sorrounding_mines > 0 && tilemap[i][j].visible && !tilemap[i][j].flaged)
             {
-                DrawText(num, (tilemap[i][j].tile.x + (TILE_SIZE /2.0f)) -2, (tilemap[i][j].tile.y + (TILE_SIZE /2.0f)) - 5, 11, WHITE);
+
+                char num[20];
+                sprintf(num, "%d" ,tilemap[i][j].sorrounding_mines);
+                Vector2 lenght = MeasureTextEx(custom_font, num, 16, 0);
+
+                DrawTextEx(custom_font ,num, 
+                           (Vector2){(tilemap[i][j].tile.x + (TILE_SIZE /2.0f)) - lenght.x /2,
+                           (tilemap[i][j].tile.y + (TILE_SIZE /2.0f)) - lenght.y /2},
+                           16,
+                           0,
+                           WHITE);
+
             }
 
             if (tilemap[i][j].bombed)
