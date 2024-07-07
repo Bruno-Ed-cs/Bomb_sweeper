@@ -1,5 +1,6 @@
 {
 
+	"name" : "dejavu",
 	"spawn_x" : 1,
 	"spawn_y" : 1,
 	"music" : "./assets/audio/music/level1_ost.mp3",

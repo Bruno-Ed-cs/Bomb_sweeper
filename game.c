@@ -1,9 +1,9 @@
 #include "globals.h"
+#include "include/raylib.h"
 
 // função para criar a tela de vitoria quando terminar o nível
 void VictoryScreen()
 {
-    GetFinalScore(); //funcao para pegar a pontuacao
 
     //cores personalizadas para os butoes e background
     Color background_color = {51, 255, 51, 120};
@@ -629,6 +629,21 @@ void Game()
     // chamada do processo de vitoria
     if (player.win)
     {
+
+        if (final_score == 0)
+        {
+            GetFinalScore(); //funcao para pegar a pontuacao
+            if (!FileExists("./save.json"))
+            {
+                CreateSavefile();
+
+            }
+
+            if (IsScoreHigher(level_name))
+            {
+                RegisterScore(level_name, final_score);
+            }
+        }
         VictoryScreen();
     }
 

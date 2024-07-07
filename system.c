@@ -1,4 +1,107 @@
 #include "globals.h"
+#include "include/cJSON.h"
+#include <stdio.h>
+
+int GetLevelScore(char * level)
+{
+
+    FILE *file = fopen("./save.json", "r");
+
+    char buffer[1024];
+    int len = fread(buffer, 1, sizeof(buffer), file);
+    fclose(file);
+
+    cJSON *json = cJSON_Parse(buffer);
+
+    cJSON *score = cJSON_GetObjectItem(json, level);
+
+    int level_score = score->valueint;
+
+    cJSON_Delete(json);
+
+    return level_score;
+}   
+
+
+
+void RegisterScore(char *level, int score)
+{
+    FILE *file = fopen("./save.json", "r");
+        
+    char buffer[1024];
+    int len = fread(buffer, 1, sizeof(buffer), file);
+    fclose(file);
+
+    cJSON *json = cJSON_Parse(buffer);
+
+    cJSON *level_score = cJSON_GetObjectItem(json, level);
+
+    cJSON_SetNumberValue(level_score, score);
+    
+    char *json_string = cJSON_Print(json);
+
+
+
+    file = fopen("./save.json", "w");
+
+    printf("%s\n", json_string);
+
+    fputs(json_string, file);
+    fclose(file);
+
+    cJSON_free(json_string);
+    cJSON_Delete(json);
+
+}
+
+bool IsScoreHigher(char *level)
+{
+
+    FILE *file = fopen("./save.json", "r");
+
+    char buffer[1024];
+    int len = fread(buffer, 1, sizeof(buffer), file);
+    printf("%d\n", len);
+    fclose(file);
+
+    cJSON *json = cJSON_Parse(buffer);
+
+    cJSON *score = cJSON_GetObjectItem(json, level);
+
+    if (final_score > score->valueint)
+    {
+        cJSON_Delete(json);
+        return true;
+    } else {
+    
+        cJSON_Delete(json);
+        return false;
+    }
+
+}
+
+void CreateSavefile()
+{
+    FILE *file = fopen("./save.json", "w");
+
+    cJSON *json = cJSON_CreateObject();
+    
+
+    cJSON_AddNumberToObject(json, "beach_day", 0);
+    cJSON_AddNumberToObject(json, "dejavu", 0);
+    cJSON_AddNumberToObject(json, "crystal_cove", 0);
+
+    char *json_string = cJSON_Print(json);
+
+    printf("%s\n", json_string);
+
+    fputs(json_string, file);
+    fclose(file);
+
+    cJSON_free(json_string);
+    cJSON_Delete(json);
+
+}
 
 // função para atualizar o volume dos sons
 // Usa as variaveis globais music_list e sfx_list

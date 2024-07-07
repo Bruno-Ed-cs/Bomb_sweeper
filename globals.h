@@ -210,7 +210,7 @@ extern int animation_index;
 extern Rectangle camera_bounds;
 
 //Ui globals
-//tilemap globals
+//level globals
 
 extern Rectangle tile_frame;
 extern Rectangle tile_view;
@@ -227,6 +227,7 @@ extern bool level_loaded;
 extern GridPos portal_tile;
 extern int bomb_density;
 extern int tile_index;
+extern char level_name[100];
 
 //explosion globals
 extern Explosion explosion_buffer[MAX_EXPLOSIONS];
@@ -306,6 +307,10 @@ void DrawBombs();
 //funções de sistema
 //Localização: system.c
 
+int GetLevelScore(char * level);
+void CreateSavefile();
+bool IsScoreHigher(char *level);
+void RegisterScore(char *level, int score);
 void InitGame(char * level_path);
 int GetTileType(GridPos tile, int type);
 GridPos GetMatrixEnd(GridPos origin, int radius);

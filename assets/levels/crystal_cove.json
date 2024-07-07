@@ -1,5 +1,6 @@
 {
 
+	"name" : "crystal_cove",
 	"spawn_x" : 2,
 	"spawn_y" : 10,
 	"music" : "./assets/audio/music/tutorial_theme.mp3",

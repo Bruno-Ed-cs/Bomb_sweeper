@@ -1,5 +1,8 @@
 #include "globals.h"
+#include "include/cJSON.h"
 #include "include/raylib.h"
+#include <stdio.h>
+#include <string.h>
 
 void AllocMap() {
 
@@ -66,7 +69,10 @@ void LoadLevel(char *level)
     cJSON *music = cJSON_GetObjectItem(json, "music");
     cJSON *level_background= cJSON_GetObjectItem(json, "background");
     cJSON *sheet = cJSON_GetObjectItem(json, "tile_index");
+    cJSON *name = cJSON_GetObjectItem(json, "name");
 
+    strcpy(level_name, name->valuestring);
+    printf("level name: %s\n", level_name);
     map_height = cJSON_GetArraySize(map); // pegamos o tamanho da matriz
     map_width = cJSON_GetArraySize(cJSON_GetArrayItem(map, 0)); // pegamos o tamanho da linha
     bomb_density = density->valueint;

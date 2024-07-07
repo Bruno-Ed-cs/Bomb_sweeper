@@ -119,7 +119,6 @@ void menu_levels()
 
     Rectangle Level_3 = {screen.width / 2 + 300, 88, 288, 288};
 
-    Rectangle Tutorial = {screen.width / 2 - 112, screen.height - 300, 224, 224};
 
     Rectangle sair_levels = {screen.width - 75, screen.height - 53, 60, 28};
 
@@ -135,8 +134,18 @@ void menu_levels()
 
     Color c_level_3 = BLACK;
 
-    Color c_tutorial = BLACK;
+    if (!FileExists("./save.json"))
+    {
+        CreateSavefile();
+    }
 
+    int scores[3] = {GetLevelScore("beach_day"), GetLevelScore("dejavu"), GetLevelScore("crystal_cove")};
+    char score_strigs[3][100];
+
+    for (int i = 0; i < 3; i++)
+    {
+        sprintf(score_strigs[i], "%d $", scores[i]);
+    }
 
         //Botao de sair - Levels
     if(CheckCollisionPointRec(mouse_pos, sair_levels)){
@@ -208,24 +217,6 @@ void menu_levels()
 
     }
 
-    //Botao do tutorial
-    if(CheckCollisionPointRec(mouse_pos, Tutorial)){
-
-            c_tutorial = GREEN;
-
-
-        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-
-            //Tutorial...
-            PlaySound(button_click);
-            InitGame("./assets/levels/mapa1.json");
-            state = GAME;
-
-        }
-
-    }
-
-
     BeginDrawing();
 
 
@@ -238,15 +229,24 @@ void menu_levels()
 
     DrawRectangleRec(Level_3, BLACK);
 
-    DrawRectangleRec(Tutorial, BLACK);
 
+    Vector2 len_beach = MeasureTextEx(custom_font, score_strigs[0], 46, 1);
+    DrawTextEx(custom_font, score_strigs[0], 
+               (Vector2){Level_1.x - (len_beach.x/2 - Level_1.width/2),
+               Level_1.y - len_beach.y},
+               46, 1, c_level_1);
 
-    DrawTextEx(custom_font,"LEVEL 1", (Vector2){screen.width / 2 - 530, 45}, 46, 1, c_level_1);
+    Vector2 len_dejavu = MeasureTextEx(custom_font, score_strigs[1], 46, 1);
+    DrawTextEx(custom_font, score_strigs[1], 
+               (Vector2){Level_2.x - (len_dejavu.x/2 - Level_2.width/2),
+               Level_2.y - len_dejavu.y},
+               46, 1, c_level_2);
 
-    DrawTextEx(custom_font, "LEVEL 2", (Vector2){screen.width / 2 - 70, 45}, 46, 1, c_level_2);
-
-    DrawTextEx(custom_font, "LEVEL 3", (Vector2){screen.width / 2 + 370, 45}, 46, 1, c_level_3);
-
+    Vector2 len_cove = MeasureTextEx(custom_font, score_strigs[2], 46, 1);
+    DrawTextEx(custom_font, score_strigs[2], 
+               (Vector2){Level_3.x - (len_cove.x/2 - Level_2.width/2),
+               Level_3.y - len_cove.y},
+               46, 1, c_level_3);
 
     DrawTextEx(custom_font, "Beach Day",(Vector2){ screen.width / 2 - 570, 375}, 46, 1,c_level_1);
 
@@ -254,9 +254,6 @@ void menu_levels()
 
     DrawTextEx(custom_font, "Crystal Cove", (Vector2){screen.width / 2 + 315, 375}, 46, 1, c_level_3);
 
-    
-
-    DrawTextEx(custom_font, "Tutorial", (Vector2){screen.width / 2 - 60, screen.height - 75}, 36,1, c_tutorial);
 
     DrawTextEx(custom_font, "Exit", (Vector2){screen.width - 68, screen.height - 50}, 25, 1, c_sair_level2);
 

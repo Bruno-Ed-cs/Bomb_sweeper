@@ -89,6 +89,7 @@ Rectangle level_bounds = {0};
 bool level_loaded = false;
 int bomb_density = 0;
 int tile_index;
+char level_name[100];
 
 
 
