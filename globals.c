@@ -35,6 +35,7 @@ Texture2D clock_sprite;
 Texture2D background;
 Texture2D tileset; 
 Texture2D MenuTela;
+Texture2D LevelTela;
 Texture2D thumb_beach;
 Texture2D pause_ui;
 Texture2D volume_slide;

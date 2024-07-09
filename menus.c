@@ -66,7 +66,7 @@ void StartMenu()
 
         c_Jogar_menu2 = WHITE;
 
-        c_jogar = BLACK;
+        c_jogar = WHITE;
 
     }
 
@@ -100,10 +100,10 @@ void StartMenu()
     ClearBackground(WHITE);
 
     //DrawText("Jogar", screen.width - 250, 200, 60, c_jogar);
-    DrawTextPro(custom_font, "Play", (Vector2){screen.width - 250, 195}, (Vector2){0, 0}, 0.0f, 70, 1, c_jogar);
+    DrawTextPro(custom_font, "Play", (Vector2){screen.width - 230, 195}, (Vector2){0, 0}, 0.0f, 70, 1, c_jogar);
 
     //DrawText("Sair", screen.width - 68, screen.height - 50, 25, c_sair_menu2);
-    DrawTextPro(custom_font, "Exit", (Vector2){screen.width - 68, screen.height - 50}, (Vector2){0, 0}, 0.0f, 25, 1, c_sair_menu2);
+    DrawTextPro(custom_font, "Exit", (Vector2){screen.width - 68, screen.height - 53}, (Vector2){0, 0}, 0.0f, 25, 1, c_sair_menu2);
 
     EndDrawing();
 }
@@ -134,6 +134,15 @@ void menu_levels()
 
     Color c_level_3 = BLACK;
 
+     DrawTexturePro(
+            LevelTela,
+            (Rectangle){ 0, 0, LevelTela.width, LevelTela.height },
+            (Rectangle){ 0, 0, screen.width, screen.height },
+            (Vector2){ 0, 0 },
+            0.0f,
+            WHITE
+        );
+
     if (!FileExists("./save.json"))
     {
         CreateSavefile();
@@ -149,7 +158,7 @@ void menu_levels()
 
         //Botao de sair - Levels
     if(CheckCollisionPointRec(mouse_pos, sair_levels)){
-
+        //Modifica as cores do botao de sair
         c_sair_level = BLACK;
 
         c_sair_level2 = RED;
@@ -248,6 +257,8 @@ void menu_levels()
                Level_3.y - len_cove.y},
                46, 1, c_level_3);
 
+
+    //Desenha os textos das telas de level
     DrawTextEx(custom_font, "Beach Day",(Vector2){ Level_1.x + (Level_1.width/2 - MeasureTextEx(custom_font, "Beach Day", 46 , 1).x/2) ,
         Level_1.y + Level_1.height},
                46, 1, c_level_1);
@@ -261,7 +272,7 @@ void menu_levels()
         Level_3.y + Level_3.height},
                46, 1, c_level_3);
 
-    DrawTextEx(custom_font, "Exit", (Vector2){screen.width - 68, screen.height - 50}, 25, 1, c_sair_level2);
+    DrawTextEx(custom_font, "Exit", (Vector2){screen.width - 68, screen.height - 53}, 25, 1, c_sair_level2);
 
     EndDrawing();
 
