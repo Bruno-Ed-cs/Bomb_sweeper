@@ -113,11 +113,11 @@ void menu_levels()
 
     Rectangle frame = {0, 0, 32, 32};
 
-    Rectangle Level_1 = {screen.width / 2 - 600, 88, 288, 288};
+    Rectangle Level_1 = {screen.width / 2 - 600, screen.height/2 -144, 288, 288};
 
-    Rectangle Level_2 = {screen.width / 2 - 144, 88, 288, 288};
+    Rectangle Level_2 = {screen.width / 2 - 144, screen.height/2 -144, 288, 288};
 
-    Rectangle Level_3 = {screen.width / 2 + 300, 88, 288, 288};
+    Rectangle Level_3 = {screen.width / 2 + 300, screen.height/2 - 144, 288, 288};
 
 
     Rectangle sair_levels = {screen.width - 75, screen.height - 53, 60, 28};
@@ -248,12 +248,18 @@ void menu_levels()
                Level_3.y - len_cove.y},
                46, 1, c_level_3);
 
-    DrawTextEx(custom_font, "Beach Day",(Vector2){ screen.width / 2 - 570, 375}, 46, 1,c_level_1);
+    DrawTextEx(custom_font, "Beach Day",(Vector2){ Level_1.x + (Level_1.width/2 - MeasureTextEx(custom_font, "Beach Day", 46 , 1).x/2) ,
+        Level_1.y + Level_1.height},
+               46, 1, c_level_1);
 
-    DrawTextEx(custom_font, "Dejavu", (Vector2){screen.width / 2 - 65, 375}, 46, 1, c_level_2);
+    DrawTextEx(custom_font, "Dejavu",(Vector2){ Level_2.x + (Level_2.width/2 - MeasureTextEx(custom_font, "Dejavu", 46 , 1).x/2) ,
+        Level_2.y + Level_2.height},
+               46, 1, c_level_2);
 
-    DrawTextEx(custom_font, "Crystal Cove", (Vector2){screen.width / 2 + 315, 375}, 46, 1, c_level_3);
 
+    DrawTextEx(custom_font, "Crystal Cove",(Vector2){ Level_3.x + (Level_3.width/2 - MeasureTextEx(custom_font, "Crystal Cove", 46 , 1).x/2) ,
+        Level_3.y + Level_3.height},
+               46, 1, c_level_3);
 
     DrawTextEx(custom_font, "Exit", (Vector2){screen.width - 68, screen.height - 50}, 25, 1, c_sair_level2);
 

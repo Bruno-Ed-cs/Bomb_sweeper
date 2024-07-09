@@ -211,13 +211,11 @@ void InputHandler(int input)
 
             break;
 
-#ifdef DEV
         case KEY_F3:
             debug = !debug;
             break;
 
 
-#endif /* ifdef DEV */
     }
 
 };

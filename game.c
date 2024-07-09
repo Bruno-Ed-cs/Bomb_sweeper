@@ -174,6 +174,7 @@ void Game()
         DrawText(debug_grid, screen.width -200, screen.height - 100, 20, GREEN);
         DrawText(debug_pos, screen.width -200, screen.height -40, 20, GREEN);
         DrawText(debug_move, screen.width -200, screen.height -60, 20, GREEN);
+        DrawFPS(0, 0);
     }
 
     // chamada do processo de vitoria
