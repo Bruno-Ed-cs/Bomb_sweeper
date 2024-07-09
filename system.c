@@ -236,6 +236,7 @@ void LoadAssets()
     MenuTela = LoadTexture("./assets/sprites/MenuThumb.png");
     LevelTela = LoadTexture("./assets/sprites/LevelsThumb.png");
     thumb_beach = LoadTexture("./assets/sprites/beach_thumb.png");
+    thumb_dejavu = LoadTexture("./assets/sprites/dejavu_thumb.png");
     pause_ui = LoadTexture("./assets/sprites/pause_ui.png");
     volume_slide = LoadTexture("./assets/sprites/volume.png");
     guide_ui = LoadTexture("./assets/sprites/guide.png");
@@ -266,6 +267,7 @@ void UnloadAssets()
     UnloadTexture(thumb_beach);
     UnloadTexture(volume_slide);
     UnloadTexture(guide_ui);
+    UnloadTexture(thumb_dejavu);
 
     UnloadSound(explosion_sfx);
     UnloadSound(flag_sfx);

@@ -205,6 +205,7 @@ extern Texture2D thumb_beach;
 extern Texture2D pause_ui;
 extern Texture2D volume_slide;
 extern Texture2D guide_ui;
+extern Texture2D thumb_dejavu;
 
 //player globals
 extern Player player;

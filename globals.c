@@ -37,6 +37,7 @@ Texture2D tileset;
 Texture2D MenuTela;
 Texture2D LevelTela;
 Texture2D thumb_beach;
+Texture2D thumb_dejavu;
 Texture2D pause_ui;
 Texture2D volume_slide;
 Texture2D guide_ui;

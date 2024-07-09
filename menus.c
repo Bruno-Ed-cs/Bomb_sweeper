@@ -54,8 +54,6 @@ void StartMenu()
 
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-
-            if (IsMusicStreamPlaying(menu_theme)) StopMusicStream(menu_theme);
             PlaySound(button_click);
 
             state = SELECT_MENU;
@@ -134,6 +132,10 @@ void menu_levels()
 
     Color c_level_3 = BLACK;
 
+    if (!IsMusicStreamPlaying(menu_theme)) PlayMusicStream(menu_theme);
+    UpdateMusicStream(menu_theme);
+
+
      DrawTexturePro(
             LevelTela,
             (Rectangle){ 0, 0, LevelTela.width, LevelTela.height },
@@ -184,6 +186,8 @@ void menu_levels()
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 
+            if (IsMusicStreamPlaying(menu_theme)) StopMusicStream(menu_theme);
+
             PlaySound(button_click);
             InitGame("./assets/levels/beach_day.json");
             state = GAME;
@@ -199,6 +203,8 @@ void menu_levels()
 
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+            if (IsMusicStreamPlaying(menu_theme)) StopMusicStream(menu_theme);
 
             //Level 2...
             PlaySound(button_click);
@@ -216,6 +222,8 @@ void menu_levels()
 
 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+            if (IsMusicStreamPlaying(menu_theme)) StopMusicStream(menu_theme);
 
             //Level 3...
             PlaySound(button_click);
@@ -235,6 +243,7 @@ void menu_levels()
     DrawTexturePro(thumb_beach, frame, Level_1, (Vector2){0,0}, 0.0f, WHITE);
 
     DrawRectangleRec(Level_2, BLACK);
+    DrawTexturePro(thumb_dejavu, frame, Level_2, (Vector2){0,0}, 0.0f, WHITE);
 
     DrawRectangleRec(Level_3, BLACK);
 
