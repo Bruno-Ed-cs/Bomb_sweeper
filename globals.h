@@ -200,6 +200,7 @@ extern Texture2D background;
 extern Texture2D explosion_sheet;
 extern Texture2D bomb_sheet;
 extern Texture2D MenuTela;
+extern Texture2D LevelTela;
 extern Texture2D thumb_beach;
 extern Texture2D pause_ui;
 extern Texture2D volume_slide;

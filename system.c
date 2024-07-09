@@ -233,7 +233,8 @@ void LoadAssets()
     background = LoadTexture("./assets/sprites/background_dejavu.png");
     clock_sprite = LoadTexture("./assets/sprites/clock.png");
     wallet_sprite = LoadTexture("./assets/sprites/wallet.png");
-    MenuTela = LoadTexture("./assets/sprites/menumap.png");
+    MenuTela = LoadTexture("./assets/sprites/MenuThumb.png");
+    LevelTela = LoadTexture("./assets/sprites/LevelsThumb.png");
     thumb_beach = LoadTexture("./assets/sprites/beach_thumb.png");
     pause_ui = LoadTexture("./assets/sprites/pause_ui.png");
     volume_slide = LoadTexture("./assets/sprites/volume.png");
