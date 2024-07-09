@@ -5,7 +5,7 @@
 	"spawn_y" : 1,
 	"music" : "./assets/audio/music/level1_ost.mp3",
 	"background" : "./assets/sprites/dejavu_background.png",
-	"bomb_density" : 175,
+	"bomb_density" : 0,
 	"tile_index" : 1,
 
 	"map" : [
