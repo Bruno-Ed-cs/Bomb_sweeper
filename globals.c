@@ -1,6 +1,4 @@
 #include "globals.h"
-#include "include/raylib.h"
-#include <stdbool.h>
 
 //assets
 //audio

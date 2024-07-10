@@ -5,7 +5,11 @@ int CreateExplosion(GridPos origin, int power)
 {
     explosion_qtd++;
 
-    if (explosion_qtd > MAX_EXPLOSIONS) return 1;
+    if (explosion_qtd >= MAX_EXPLOSIONS) 
+    {
+        explosion_qtd = MAX_EXPLOSIONS;
+        return 1;
+    }
 
     Explosion *expo = &explosion_buffer[explosion_qtd -1];
 

@@ -10,8 +10,6 @@
 #include <locale.h>
 #include "include/cJSON.h"
 
-
-
 #define TILE_SIZE 16
 
 #define INIT_WIDTH 1280
@@ -40,8 +38,8 @@
 #define PORTAL 3
 #define OBSTACLE 4
 
-#define MAX_EXPLOSIONS 256
-#define MAX_BOMBS 5
+#define MAX_EXPLOSIONS 1024
+#define MAX_BOMBS 10
 
 #define MINE_FUSE 0.25f
 #define MINE_POWER 1
