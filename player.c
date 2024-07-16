@@ -1,10 +1,8 @@
 #include "globals.h"
 #include "include/raylib.h"
-#include <stdbool.h>
 
 void PlayerInit()
 {
-
     player.hitbox = (Rectangle){INIT_X, INIT_Y, TILE_SIZE - 10, TILE_SIZE - 10};
     player.frame = (Rectangle){0, 0, TILE_SIZE, TILE_SIZE * 2};
     player.view = (Rectangle){INIT_X, INIT_Y, TILE_SIZE, TILE_SIZE * 2};
@@ -31,7 +29,7 @@ void IsPlayerMoving()
     if (player.position.x == player.previous_pos.x && player.position.y == player.previous_pos.y)
     {
         player.move = false;
-    } else 
+    } else
     {
         player.move = true;
     }
@@ -62,18 +60,18 @@ void CameraUpdate()
     {
         camera_bounds.y = player.position.y - (camera_bounds.height / 2);
     }
-    
+
 
     if (camera_bounds.x < (level_bounds.x - (TILE_SIZE * 2)))
     {
-    
+
         camera_bounds.x = level_bounds.x - (TILE_SIZE * 2);
 
     }
- 
+
     if (camera_bounds.y <= (level_bounds.y - (TILE_SIZE * 2)))
     {
-    
+
         camera_bounds.y = level_bounds.y - (TILE_SIZE * 2);
 
     }
@@ -82,18 +80,18 @@ void CameraUpdate()
 //dois ifs problematicos, por enquanto so coloque spawn points fora da parte de baixo da fase
     if ((camera_bounds.y - camera_bounds.height) > (level_bounds.height - (TILE_SIZE * 2)))
     {
-    
+
         camera_bounds.y = (level_bounds.height - camera_bounds.height) - TILE_SIZE * 2;
 
     }
 
     if ((camera_bounds.x + camera_bounds.width) > (level_bounds.width + (TILE_SIZE * 2)))
     {
-    
+
         camera_bounds.x = (level_bounds.width - camera_bounds.width) + (TILE_SIZE * 2);
- 
+
     }
- 
+
 **/
     camera.target = (Vector2){ player.position.x, player.position.y};
     camera.offset = (Vector2){screen.width/2, screen.height/2};
@@ -170,7 +168,7 @@ void AnimationHandler()
             {
 
                 cur_frame = 0;
-            }        
+            }
 
         }
 
@@ -183,28 +181,28 @@ void AnimationHandler()
 
         case UP:
             animation_index = 1;
-            
-            player.frame.width = TILE_SIZE; 
+
+            player.frame.width = TILE_SIZE;
         break;
 
         case DOWN:
             animation_index = 0;
 
-            player.frame.width = TILE_SIZE; 
+            player.frame.width = TILE_SIZE;
         break;
 
         case LEFT:
             animation_index = 2;
 
-            player.frame.width = -TILE_SIZE; 
+            player.frame.width = -TILE_SIZE;
         break;
 
         case RIGHT:
             animation_index = 2;
 
-            player.frame.width = TILE_SIZE; 
+            player.frame.width = TILE_SIZE;
         break;
-    
+
     }
 
     player.frame.x = TILE_SIZE * cur_frame;
@@ -253,7 +251,7 @@ void DrawPreviewFlag(GridPos preview)
 
         tile_view.x = tilemap[preview.y][preview.x].tile.x;
         tile_view.y = tilemap[preview.y][preview.x].tile.y;
-        
+
         tile_frame.x = TILE_SIZE;
         tile_frame.y = TILE_SIZE * 4;
 
@@ -281,7 +279,7 @@ void DrawPreviewBomb(GridPos preview)
 
         tile_view.x = tilemap[preview.y][preview.x].tile.x;
         tile_view.y = tilemap[preview.y][preview.x].tile.y;
-        
+
         tile_frame.x = 0;
         tile_frame.y = 0;
 
@@ -321,7 +319,7 @@ void PlayerCollision()
     }
 
 
-    for (int i = mat_ini.y; i < mat_end.y; i++) 
+    for (int i = mat_ini.y; i < mat_end.y; i++)
     {
         for (int j = mat_ini.x ; j < mat_end.x; j++) {
 
@@ -337,7 +335,7 @@ void PlayerCollision()
                 if (tilemap[i][j].type == PORTAL)
                 {
                     if(!player.dead) player.win = true;
-                    
+
                     PlaySound(win_theme);
                     player.final_time = timer;
 
@@ -347,7 +345,7 @@ void PlayerCollision()
                 {
                     ApplyCollision(tilemap[i][j].tile);
                     // Resolve collision by moving the player out of the tile
-                   
+
                 }
 
                     for (int i = 0; i < bombs_qtd; i++)
@@ -400,7 +398,7 @@ void ApplyCollision(Rectangle rect)
 
     overlap = GetCollisionRec(player.hitbox, rect);
     direction = 0;
- 
+
     if (overlap.height > 0 && player.previous_pos.y != player.position.y)
     {
 
@@ -416,7 +414,7 @@ void ApplyCollision(Rectangle rect)
         player.hitbox.x = player.position.x- (player.hitbox.height /2);
         player.hitbox.y = player.position.y- (player.hitbox.height /2);
 
-    }   
+    }
 
 
 
@@ -429,12 +427,12 @@ void PutFlag()
 
     if (tilemap[target.y][target.x].type == FLOOR)
     {
-        
+
         tilemap[target.y][target.x].flaged = !tilemap[target.y][target.x].flaged;
 
         PlaySound(flag_sfx);
     }
-    
+
 };
 
 GridPos GetTargetTile()
@@ -464,10 +462,10 @@ GridPos GetTargetTile()
     if (!ValidateGridPos((GridPos){player.grid_pos.x + target.x, player.grid_pos.y + target.y}))
     {
         return (GridPos){0,0};
-        
+
     }
 
-    
+
     return (GridPos){player.grid_pos.x + target.x, player.grid_pos.y + target.y};
 }
 

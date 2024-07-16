@@ -5,7 +5,7 @@ WINE := false
 CC:= gcc
 WINECC := x86_64-w64-mingw32-gcc
 TARGET := bombsweeper.exe
-INCLUDE ?= 
+INCLUDE ?=
 X11 ?= true
 OLEVEL := -Og
 RELEASE ?= false
@@ -19,11 +19,11 @@ ifeq ($(OS), Windows)
 	X11 = false
 
 else ifeq ($(X11), true)
-	
-	libs :=-Wl,-R ./lib -L ./lib/Linux/x11/lib -lraylib -lm 
+
+	libs :=-Wl,-R ./lib -L ./lib/Linux/x11/lib -lraylib -lm
 	TARGET := bombsweeper.bin
 
-else 
+else
 	libs :=-L ./lib/Linux/wayland -lraylib -lm
 	TARGET := bombsweeper.bin
 
