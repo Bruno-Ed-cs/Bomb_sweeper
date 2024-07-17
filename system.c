@@ -1,7 +1,4 @@
 #include "globals.h"
-#include "include/cJSON.h"
-#include "include/raylib.h"
-#include <stdio.h>
 
 int GetLevelScore(char * level)
 {
@@ -240,6 +237,7 @@ void LoadAssets()
     pause_ui = LoadTexture("./assets/sprites/pause_ui.png");
     volume_slide = LoadTexture("./assets/sprites/volume.png");
     guide_ui = LoadTexture("./assets/sprites/guide.png");
+    crystal_thumb = LoadTexture("./assets/sprites/crystal_thumb.png");
 
     explosion_sfx = LoadSound("./assets/audio/sfx/explosion.mp3");
     flag_sfx = LoadSound("./assets/audio/sfx/flag.mp3");
@@ -268,6 +266,7 @@ void UnloadAssets()
     UnloadTexture(volume_slide);
     UnloadTexture(guide_ui);
     UnloadTexture(thumb_dejavu);
+    UnloadTexture(crystal_thumb);
 
     UnloadSound(explosion_sfx);
     UnloadSound(flag_sfx);

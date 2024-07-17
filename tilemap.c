@@ -1,8 +1,4 @@
 #include "globals.h"
-#include "include/cJSON.h"
-#include "include/raylib.h"
-#include <stdio.h>
-#include <string.h>
 
 void AllocMap() {
 

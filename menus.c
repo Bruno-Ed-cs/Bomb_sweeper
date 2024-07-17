@@ -1,6 +1,4 @@
 #include "globals.h"
-#include "include/raylib.h"
-#include <stdbool.h>
 
 void StartMenu()
 {
@@ -246,6 +244,7 @@ void menu_levels()
     DrawTexturePro(thumb_dejavu, frame, Level_2, (Vector2){0,0}, 0.0f, WHITE);
 
     DrawRectangleRec(Level_3, BLACK);
+    DrawTexturePro(crystal_thumb, frame, Level_3, (Vector2){0,0}, 0.0f, WHITE);
 
 
     Vector2 len_beach = MeasureTextEx(custom_font, score_strigs[0], 46, 1);

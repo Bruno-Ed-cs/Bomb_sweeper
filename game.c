@@ -1,5 +1,4 @@
 #include "globals.h"
-#include "include/raylib.h"
 
 // funcao principal do jogo
 void Game()
