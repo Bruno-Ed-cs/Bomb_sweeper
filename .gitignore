@@ -6,7 +6,10 @@
 *.elf
 
 #Ignore the build folder
-build/
+build
+zig-out
+.zig-cache
+
 
 #ignore save files
 save.json
