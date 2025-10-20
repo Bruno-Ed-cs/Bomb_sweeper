@@ -45,10 +45,31 @@ pub fn build(b: *std.Build) void {
         else => @panic("Target not supported")
 
     };
-    
-    exe.addLibraryPath(lib_path);
 
-    exe.linkSystemLibrary("raylib");
+    const os_tag = target.result.os.tag;
+
+    switch (os_tag) {
+        .windows => {
+            exe.addObjectFile(b.path("lib/Windows/raylib.dll"));
+            exe.linkSystemLibrary("gdi32");
+            exe.linkSystemLibrary("winmm");
+            // On Windows, libraries are typically searched in the same directory as the exe
+        },
+        .linux => {
+
+            exe.addObjectFile(b.path("lib/Linux/x11/lib/libraylib.a"));
+            exe.linkSystemLibrary("X11");
+            exe.linkSystemLibrary("GL");
+            exe.linkSystemLibrary("m");
+            exe.linkSystemLibrary("pthread");
+            exe.linkSystemLibrary("dl");
+            // On Linux, use $ORIGIN to mean "directory of the executable"
+        },
+        else => @panic("Target not supported"),
+    }
+
+
+    //exe.linkSystemLibrary("raylib");
 
     //exe.addIncludePath(b.path("include"));
 
@@ -62,7 +83,7 @@ pub fn build(b: *std.Build) void {
     const lib_folders = b.addInstallDirectory(.{
         .source_dir = lib_path,
         .install_dir = .bin,
-        .install_subdir = "lib"
+        .install_subdir = ""
     });
 
     const asset_folder = b.addInstallDirectory(.{
